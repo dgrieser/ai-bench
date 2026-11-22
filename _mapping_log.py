@@ -184,7 +184,9 @@ class Batch:
                 continue
             kind = record.get("kind")
             subject = str(record.get("subject") or "")
-            if kind == _answers.MAPPING and record.get("route"):
+            # A Models-tab edit is as much an explicit answer as a queue one; a
+            # removal is the line going back to unanswered (None).
+            if kind in (_answers.MAPPING, _answers.MAPPING_EDIT) and record.get("route"):
                 key = (str(record["route"]), subject)
                 mappings.add(key)
                 values[key] = _norm(record.get("value"))

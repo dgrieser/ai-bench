@@ -41,6 +41,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
+import _matching
 import _new_models
 import _preview_cleanup
 import _prompts
@@ -125,6 +126,27 @@ PREVIEW_WATCH = "preview-watch"
 # Enough for every mapping a model is likely to have; a bound, because each
 # one is a file write.
 MAX_PARKS = 40
+# Any line of a model-name mapping file, decided or not, changed from the admin
+# page's Models tab: {"kind": "mapping-edit", "route", "route_kind",
+# "subject", "answer", "if_previous"}. A MAPPING answers a question the queue
+# asked; this one answers none -- it re-points, parks, adds or removes a line
+# that is already decided, which is how a cleanup's park is taken back or a
+# name that went to the wrong model is moved. "answer": null removes the line,
+# so the name is unreviewed again and the queue asks about it afresh. Only the
+# routes whose answers are model names (or AA slugs), the ones
+# _mapping_index.py publishes.
+MAPPING_EDIT = "mapping-edit"
+# The candidates ruled out for one name ("not this one", see _rejections.py),
+# edited from the same place: {"kind": "rejection-edit", "route",
+# "route_kind", "subject", "add": [...], "remove": [...]}. Taking a candidate
+# off the list lets the queue offer it for that name again.
+REJECTION_EDIT = "rejection-edit"
+# How long a source's name may be. The longest in any mapping file today is
+# under a hundred characters; this only keeps a pasted paragraph out.
+MAX_SUBJECT = 200
+# A rejection-edit names a handful of candidates, not a list of every model:
+# a "none of the current ones" is the queue's answer, not this one's.
+MAX_REJECTION_ITEMS = 40
 KINDS = frozenset(
     {
         MAPPING,
@@ -143,6 +165,8 @@ KINDS = frozenset(
         BENCHMARK_ORDER,
         PREVIEW_CLEANUP,
         PREVIEW_WATCH,
+        MAPPING_EDIT,
+        REJECTION_EDIT,
     }
 )
 
@@ -255,6 +279,17 @@ class Answer:
     def describe(self) -> str:
         if self.kind == MAPPING:
             return f"{self.route}: {self.subject!r} -> {self.value!r}"
+        if self.kind == MAPPING_EDIT:
+            if self.value is None:
+                return f"{self.route}: remove {self.subject!r} (asked again)"
+            return f"{self.route}: {self.subject!r} -> {self.value!r} (edited)"
+        if self.kind == REJECTION_EDIT:
+            parts = []
+            if self.value["add"]:
+                parts.append(f"rules out {_listed(self.value['add'])}")
+            if self.value["remove"]:
+                parts.append(f"offers {_listed(self.value['remove'])} again")
+            return f"{self.route}: {self.subject!r} {' and '.join(parts)}"
         if self.kind == CANDIDATES_SKIP:
             return f"{self.route}: {self.subject!r} is none of {_listed(self.value)}"
         if self.kind == AA_IGNORE:
@@ -443,7 +478,8 @@ def needs_aa_slugs(records: Sequence[dict[str, Any]]) -> bool:
             continue
         if record.get("kind") in (AA_IGNORE, REFERENCE_ADD):
             return True
-        if record.get("kind") in (MAPPING, CANDIDATES_SKIP) and record.get("route") == AA_ROUTE:
+        if record.get("kind") in (MAPPING, CANDIDATES_SKIP, MAPPING_EDIT, REJECTION_EDIT) \
+                and record.get("route") == AA_ROUTE:
             return True
     return False
 
@@ -560,6 +596,7 @@ def validate(
             reported.add(answer.index)
         columns.add(answer.subject)
 
+    failures.extend(_mapping_edit_failures(answers, reported))
     failures.extend(_reference_floor_failures(answers, reported))
 
     return answers, failures
@@ -664,6 +701,10 @@ def _validate_one(
         return _validate_mapping(index, record, universes, queue, require_queue, created)
     if kind == CANDIDATES_SKIP:
         return _validate_candidates_skip(index, record, universes, queue, require_queue)
+    if kind == MAPPING_EDIT:
+        return _validate_mapping_edit(index, record, universes, created)
+    if kind == REJECTION_EDIT:
+        return _validate_rejection_edit(index, record, universes)
     if kind == AA_IGNORE:
         return _validate_aa_ignore(index, record, universes, model_names, queue, require_queue)
     if kind == NEW_MODEL:
@@ -786,6 +827,228 @@ def _validate_mapping(
         route_kind=route_kind,
         value=value,
     )
+
+
+# The universes a mapping-edit or rejection-edit may touch: the files whose
+# answers are model names, and the Artificial Analysis file (model -> slug).
+# The benchmark-label files are a question about a column; the Benchmarks tab
+# and the queue answer those.
+EDITABLE_UNIVERSES = (propose.MODELS, propose.AA_SLUGS)
+
+
+def _editable_route(record: dict[str, Any]) -> tuple[str, str, propose.Route]:
+    route_name = record.get("route")
+    route = resolve_route(route_name, record.get("route_kind"))
+    mapping_path(route)  # rejects a route pointing outside the mapping files
+    if route.universe not in EDITABLE_UNIVERSES:
+        raise AnswerError(
+            f"{route_name} maps names onto {route.universe}; only model mappings "
+            "are edited this way"
+        )
+    return route_name, record.get("route_kind") or "*", route
+
+
+def _source_name(record: dict[str, Any]) -> str:
+    subject = _subject_of(record)
+    if subject != subject.strip() or len(subject) > MAX_SUBJECT or any(
+        ord(ch) < 32 or ord(ch) == 127 for ch in subject
+    ):
+        raise AnswerError(
+            f"'subject' must be a source's name as it publishes it: no surrounding "
+            f"spaces, no control characters, at most {MAX_SUBJECT} characters"
+        )
+    return subject
+
+
+def _contradicting_match(subject: str, value: str, model_names: list[str]) -> str | None:
+    """The model the matcher would propose for subject, when it is not value.
+
+    test_propose.py replays every model mapping through the matcher and fails
+    on one it would propose differently, because a name normalizing to exactly
+    one model's name *is* that model by construction. A hand edit is held to
+    the same rule here, so it is refused with a reason instead of reddening the
+    next run.
+    """
+    tail = subject.rsplit("/", 1)[-1] if "/" in subject else subject
+    match, _ = _matching.propose(tail, model_names)
+    if match is not None and match.option != value:
+        return match.option
+    return None
+
+
+def _validate_mapping_edit(
+    index: int,
+    record: dict[str, Any],
+    universes: dict[str, list[str]],
+    created: frozenset[str] = frozenset(),
+) -> Answer:
+    """Re-point, park, add or remove any line of a model mapping file.
+
+    No queue check: the line is usually one the queue stopped asking about long
+    ago, which is the point. What holds it instead is everything else a
+    MAPPING is held to -- the route from the table, the answer from the route's
+    own list, if_previous against the file -- plus the matcher's exact tier,
+    and the AA file's key having to be a model.
+    """
+    route_name, route_kind, route = _editable_route(record)
+    subject = _source_name(record)
+    if "answer" not in record:
+        raise AnswerError("'answer' is required: a name from the route's list, "
+                          "__unmappable__, or null to remove the line")
+    value = record.get("answer")
+    models = universes.get(propose.MODELS) or []
+    if value is not None:
+        if not isinstance(value, str) or not value:
+            raise AnswerError("'answer' must be a non-empty string, or null to remove the line")
+        if value == PENDING:
+            raise AnswerError(
+                "__pending__ is a parking marker, not an answer; send null to "
+                "remove the line and have the name asked again"
+            )
+        if value == CLOSED_WEIGHTS:
+            raise AnswerError(
+                "__closed_weights__ is recorded from the source's own claim, not by "
+                "hand; use __unmappable__ to decline a name"
+            )
+        if value not in HUMAN_SENTINELS and not (route.universe == propose.MODELS and value in created):
+            options = universes.get(route.universe) or []
+            if not options:
+                raise AnswerError(
+                    f"the {route.universe} list is empty (its source was unreachable), "
+                    "so no answer for this route can be checked"
+                )
+            if value not in options:
+                raise AnswerError(f"{value!r} is not one of the known {route.universe}")
+        if route.universe == propose.MODELS and value not in SENTINELS:
+            other = _contradicting_match(subject, value, sorted({*models, *created}))
+            if other is not None:
+                raise AnswerError(
+                    f"{subject!r} normalizes to exactly {other!r}, so it cannot be "
+                    f"mapped onto {value!r}; the matcher, and the test that replays "
+                    "every mapping through it, would disagree"
+                )
+    if route_name == AA_ROUTE and subject not in models:
+        raise AnswerError(f"{subject!r} is not a model in llm.json")
+
+    actual = current_value(route, subject)
+    _check_previous(record, actual)
+    if value is None and actual is None:
+        raise AnswerError(f"{subject!r} is not in {mapping_path(route).name}; nothing to remove")
+    if value is not None and actual == [value]:
+        raise AnswerError(f"{subject!r} already maps to {value!r}")
+    return Answer(
+        index=index,
+        kind=MAPPING_EDIT,
+        subject=subject,
+        route=route_name,
+        route_kind=route_kind,
+        value=value,
+    )
+
+
+def _validate_rejection_edit(
+    index: int,
+    record: dict[str, Any],
+    universes: dict[str, list[str]],
+) -> Answer:
+    """Add candidates to, or take them off, one name's "not these" list.
+
+    A candidate added has to be in the route's list, like a candidates-skip's;
+    one taken off only has to be on the list now -- a model since deleted is
+    exactly the stale entry worth clearing.
+    """
+    route_name, route_kind, route = _editable_route(record)
+    subject = _source_name(record)
+    lists: dict[str, list[str]] = {}
+    for name in ("add", "remove"):
+        items = record.get(name) or []
+        if not isinstance(items, list) or not all(isinstance(i, str) and i for i in items):
+            raise AnswerError(f"{name!r} must be a list of names")
+        if len(items) > MAX_REJECTION_ITEMS:
+            raise AnswerError(f"{name!r} names {len(items)}; at most {MAX_REJECTION_ITEMS} per record")
+        lists[name] = sorted(set(items))
+    if not lists["add"] and not lists["remove"]:
+        raise AnswerError("nothing to change: 'add' and 'remove' are both empty")
+    both = set(lists["add"]) & set(lists["remove"])
+    if both:
+        raise AnswerError(f"both added and removed: {', '.join(sorted(both))}")
+    if any(o in SENTINELS for o in lists["add"]):
+        raise AnswerError("a sentinel is an answer, not a candidate; it cannot be ruled out")
+    if route_name == AA_ROUTE and subject not in (universes.get(propose.MODELS) or []):
+        raise AnswerError(f"{subject!r} is not a model in llm.json")
+    if lists["add"]:
+        known = universes.get(route.universe) or []
+        if not known:
+            raise AnswerError(
+                f"the {route.universe} list is empty (its source was unreachable), "
+                "so the candidates cannot be checked"
+            )
+        unknown = [o for o in lists["add"] if o not in known]
+        if unknown:
+            raise AnswerError(f"not among the known {route.universe}: {', '.join(unknown)}")
+    current = _rejections.rejected(route_name, subject)
+    missing = [o for o in lists["remove"] if o not in current]
+    if missing:
+        raise AnswerError(
+            f"stale: {', '.join(missing)} {'is' if len(missing) == 1 else 'are'} not ruled "
+            f"out for {subject!r} now; re-read the page"
+        )
+    already = [o for o in lists["add"] if o in current]
+    if already:
+        raise AnswerError(f"already ruled out for {subject!r}: {', '.join(already)}")
+    return Answer(
+        index=index,
+        kind=REJECTION_EDIT,
+        subject=subject,
+        route=route_name,
+        route_kind=route_kind,
+        value=lists,
+    )
+
+
+def _mapping_edit_failures(answers: Sequence[Answer], reported: set[int]) -> list[Failure]:
+    """Refuse a mapping-edit that collides with another record of the batch.
+
+    Two records about one line -- a queue answer and an edit, or two edits
+    under different route kinds -- would be applied in turn, the second over
+    the first, each checked against the file as it was before either. And an
+    edit onto a model the batch renames or deletes names a model that is not
+    there by the time it is written.
+    """
+    failures: list[Failure] = []
+    lines: dict[tuple[str, str], int] = {}
+    for answer in answers:
+        if answer.kind not in (MAPPING, MAPPING_EDIT):
+            continue
+        route = resolve_route(answer.route, answer.route_kind)
+        line = (mapping_path(route).name, answer.subject)
+        if line in lines and answer.index not in reported:
+            failures.append(Failure(
+                answer.index,
+                f"{answer.subject!r} in {line[0]} is answered twice in one batch",
+            ))
+            reported.add(answer.index)
+        lines.setdefault(line, answer.index)
+
+    going: dict[str, str] = {}
+    for answer in answers:
+        if answer.kind in (MODEL_RENAME, MODEL_DELETE):
+            going[answer.subject] = answer.kind
+        elif answer.kind == PREVIEW_CLEANUP and answer.value.action == "apply" and answer.value.rename:
+            going[answer.subject] = PREVIEW_CLEANUP
+    for answer in answers:
+        if answer.kind != MAPPING_EDIT or answer.index in reported:
+            continue
+        # The AA file is keyed by the model, every other file names it as the value.
+        named = answer.subject if answer.route == AA_ROUTE else answer.value
+        if named in going:
+            failures.append(Failure(
+                answer.index,
+                f"{named!r} is also changed by a {going[named]} record in this batch; "
+                "edit its mappings after this run",
+            ))
+            reported.add(answer.index)
+    return failures
 
 
 def _listed(options: list[str], limit: int = 8) -> str:
@@ -1610,8 +1873,10 @@ def touchable_paths(answers: Iterable[Answer], llm_path: Path) -> list[Path]:
     }
     aa_module = importlib.import_module(AA_MODULE)
     for answer in answers:
-        if answer.kind == MAPPING:
+        if answer.kind in (MAPPING, MAPPING_EDIT):
             paths.add(mapping_path(resolve_route(answer.route, answer.route_kind)))
+        elif answer.kind == REJECTION_EDIT:
+            paths.add(_rejections.path_for(answer.route))
         elif answer.kind == AA_IGNORE:
             paths.add(aa_module.AA_MODEL_IGNORES)
         elif answer.kind == CANDIDATES_SKIP:
@@ -1693,6 +1958,22 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
         writer_for(route)(answer.subject, answer.value)
         return [f"{mapping_path(route).name}: {answer.subject!r} -> {answer.value}"]
 
+    if answer.kind == MAPPING_EDIT:
+        route = resolve_route(answer.route, answer.route_kind)
+        path = mapping_path(route)
+        if answer.value is None:
+            _remove_line(path, answer.subject)
+            return [f"{path.name}: removed {answer.subject!r}; the queue asks about it again"]
+        writer_for(route)(answer.subject, answer.value)
+        return [f"{path.name}: {answer.subject!r} -> {answer.value} (edited)"]
+
+    if answer.kind == REJECTION_EDIT:
+        written = _rejections.edit(
+            answer.route, answer.subject,
+            add=answer.value["add"], remove=answer.value["remove"],
+        )
+        return [f"{written.name}: {answer.describe().split(': ', 1)[1]}"]
+
     if answer.kind == CANDIDATES_SKIP:
         written = _rejections.add(answer.route, answer.subject, list(answer.value))
         return [f"{written.name}: {answer.subject!r} is none of {_listed(answer.value)}"]
@@ -1758,6 +2039,26 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
             raise AnswerError(str(exc)) from None
 
     return _apply_edit(answer, llm_path)
+
+
+def _remove_line(path: Path, subject: str) -> None:
+    """Take one key out of a mapping file, keeping the file's own layout.
+
+    The writers only ever add or overwrite, so removal is done here. Every
+    mapping file is a JSON object at indent 2; most are key-sorted, the
+    SWE-Rebench one keeps the order it was written in, and whichever it is
+    stays that way.
+    """
+    text = path.read_text(encoding="utf-8")
+    raw = json.loads(text)
+    if not isinstance(raw, dict) or subject not in raw:
+        raise AnswerError(f"{subject!r} is not in {path.name}")
+    sort_keys = text == json.dumps(raw, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
+    del raw[subject]
+    path.write_text(
+        json.dumps(raw, indent=2, ensure_ascii=False, sort_keys=sort_keys) + "\n",
+        encoding="utf-8",
+    )
 
 
 # The order a benchmark's keys are written in, so a column added from the page

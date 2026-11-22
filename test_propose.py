@@ -71,6 +71,12 @@ class TestMatcher(unittest.TestCase):
             raw = json.loads(path.read_text(encoding="utf-8"))
             if not isinstance(raw, dict) or not all(isinstance(v, str) for v in raw.values()):
                 continue  # the AA "ignored" file maps to lists
+            if path.name == "model-name-mapping-llm-to-artificialanalysis.json":
+                # Runs the other way round, model -> AA slug: its keys are
+                # llm.json names, so the matcher would "propose" the key itself.
+                # Skipped by name, not only for holding lists, since the admin
+                # page can edit its lists down to strings.
+                continue
             options = BENCHMARK_KEYS if "benchmark" in path.name else MODEL_NAMES
             for key, truth in raw.items():
                 if truth in (UNMAPPABLE, CLOSED_WEIGHTS, PENDING):
