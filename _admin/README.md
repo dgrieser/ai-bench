@@ -430,6 +430,16 @@ tells you why.
   *Keep it* takes it back. A reference model has no Delete; *Stop carrying it*
   on the Reference tab removes the slug and the entry together, and
   `answer.py` refuses a `model-delete` for one.
+  At the top of the card is **not this**: the model's hints for whoever maps a
+  name onto it, one per line ("Muse Spark (the closed API model)", "the -fp8
+  quant"). They are stored as `excludes` on the model's entry in `llm.json`,
+  the model-side twin of a column's "Not this" list, and the Queue shows them
+  under the model wherever it is offered as a candidate, with an **edit** link
+  back to this card. Sent as a `model-hints` record (with `if_previous`, the
+  hints the page showed); it may share a batch with an edit of the model, not
+  with its rename or delete. The score list below the fields is folded, and
+  unfolds by itself while the draft changes a score.
+
   **Mappings**, folded under the delete block, is every name a source publishes
   that feeds this model -- from every fetcher's mapping file, grouped by source
   -- with the columns each source supplies to it now (read off the page each

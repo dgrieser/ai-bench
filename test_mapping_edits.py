@@ -412,5 +412,56 @@ class TestMappingIndex(unittest.TestCase):
         self.assertTrue(any(doc["files"].values()), "every mapping file read empty")
 
 
+class TestModelHints(unittest.TestCase):
+    """A model's "not this" hints: llm.json `excludes` on the entry."""
+
+    def setUp(self) -> None:
+        self.tmp = Path(tempfile.mkdtemp())
+        self.llm = self.tmp / "llm.json"
+        doc = json.loads(json.dumps(LLM_DOC))
+        doc["models"][2]["excludes"] = ["Hy4 (API)"]
+        self.llm.write_text(json.dumps(doc), encoding="utf-8")
+
+    def validate(self, record):
+        return _answers.validate([record], llm_path=self.llm, universes=UNIVERSES, queue=set())
+
+    def record(self, **overrides):
+        r = {"kind": _answers.MODEL_HINTS, "name": "hy4", "excludes": ["Hy4 (API)", "the -fp8 quant"],
+             "if_previous": ["Hy4 (API)"]}
+        r.update(overrides)
+        return r
+
+    def test_hints_are_set_and_cleared(self) -> None:
+        answers, failures = self.validate(self.record(excludes=[" Hy4 (API) ", "the -fp8 quant", ""]))
+        self.assertEqual(failures, [])
+        self.assertEqual(answers[0].value, ["Hy4 (API)", "the -fp8 quant"])
+        _answers._apply_one(answers[0], self.llm)
+        model = json.loads(self.llm.read_text())["models"][2]
+        self.assertEqual(model["excludes"], ["Hy4 (API)", "the -fp8 quant"])
+        answers, failures = self.validate(self.record(excludes=[], if_previous=model["excludes"]))
+        self.assertEqual(failures, [])
+        _answers._apply_one(answers[0], self.llm)
+        self.assertNotIn("excludes", json.loads(self.llm.read_text())["models"][2])
+
+    def test_refusals(self) -> None:
+        for record, needle in (
+            (self.record(name="nope"), "not a model"),
+            (self.record(if_previous=None), "stale"),
+            (self.record(excludes=["a\nb"]), "one line"),
+            (self.record(excludes=["x" * 161]), "at most 160"),
+            (self.record(excludes=["Hy4 (API)"]), "already has exactly"),
+            (self.record(excludes="Hy4"), "must be a list"),
+        ):
+            answers, failures = self.validate(record)
+            self.assertEqual(answers, [], record)
+            self.assertIn(needle, failures[0].message)
+
+    def test_hints_on_a_model_the_batch_renames_are_refused(self) -> None:
+        _out, failures = _answers.validate(
+            [self.record(), {"kind": MODEL_RENAME, "name": "hy4", "new_name": "hy4-final"}],
+            llm_path=self.llm, universes=UNIVERSES, queue=set())
+        self.assertTrue(any("edit its hints after this run" in f.message for f in failures))
+
+
 if __name__ == "__main__":
     unittest.main()
