@@ -136551,9 +136551,9 @@
       "params": "572B",
       "context": "1m",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 1247,
+        "int8": 624,
+        "int4": 312
       },
       "creator": {
         "name": "InclusionAI",
@@ -136937,6 +136937,11 @@
       "aa_variant": {
         "slug": "lingsante-3-1-flash",
         "name": "LingSante-3.1-flash"
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/LingSante-3.1-flash/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/LingSante-3.1-flash/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/LingSante-3.1-flash/"
       }
     }
   ],
