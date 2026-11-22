@@ -495,6 +495,29 @@ tells you why.
   column is offered there as soon as the form is complete — and so can a
   mapping onto it from the Queue; `answer.py` applies the columns first.
 
+  **Label mappings**, folded under each non-derived column, lists every label a
+  source prints that is filed under it -- a Hugging Face card's heading
+  (`huggingface-benchmark-name-mapping.json`) or an llm-stats benchmark id
+  (`llmstats-benchmark-name-mapping.json`) -- each with pills for the model
+  and score it delivers right now. A pill is shown only while that score is
+  still the stored one: its page is the label route's (the model's card, or
+  an llm-stats page), so a number Artificial Analysis or another board has
+  replaced is not the label's any more and gets none. When several labels of
+  one source feed the column, the card crawl the refresh cached says which
+  label printed the stored number (a card printing it under two headings
+  credits both, and one it no longer prints credits none); without a crawl
+  the last published index decides, and failing that the pill is drawn under
+  each candidate label, dashed and marked ≈. llm-stats' two-ids-one-column
+  cases (OSWorld 2.0, Toolathlon) are always the last kind: its per-model
+  scores are not cached. All of it is `received` in `_pending/mappings.json`.
+
+  Each label is **kept**, **moved** to another column, **parked** or
+  **removed** (the Queue asks about it again), and **File a label under this
+  column** adds or moves one -- the same `mapping-edit` record the Models tab
+  sends, held to the same rules: the column must exist (or be created in the
+  batch) and not be derived, and a label normalizing to exactly one column's
+  key cannot be filed under another.
+
   **Column order** lists every column in `llm.json`'s order, which is the order
   the site lists them in (grouped by category, in the order each category first
   appears). Drag a row by its handle — the page scrolls near the edges, so a

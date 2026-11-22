@@ -60,6 +60,22 @@ PUBLISHED = HERE / "_pending" / "mappings.json"
 # column, which is a question about a benchmark, not about a model; the
 # Benchmarks tab is where those live.
 COVERED = (propose.MODELS, propose.AA_SLUGS)
+# The benchmark-label routes, listed too since the Benchmarks tab edits them:
+# a label a source prints over a column (a Hugging Face card's "SWE-bench
+# Verified (500)", an llm-stats benchmark id) onto the column it fills.
+LABEL_UNIVERSES = (propose.BENCHMARKS,)
+HF_LABEL_ROUTE = "update_huggingface_mapping.py *"
+LLMSTATS_LABEL_ROUTE = "update_llmstats_mapping.py llmstats-benchmark"
+# The model route whose pages a label route's scores are credited to: a card
+# label's score cites the model's card, an llm-stats id's one of llm-stats'
+# pages.
+LABEL_OWNER = {
+    HF_LABEL_ROUTE: "card",  # CARD, defined below
+    LLMSTATS_LABEL_ROUTE: "update_llmstats_mapping.py llmstats-model",
+}
+# How far a stored score may sit from the card's printed number and still be
+# that number: the column's rounding, at most a tenth.
+VALUE_SLACK = 0.051
 
 # Scores credited to a page no route owns. A model card is read off the
 # entry's own `url` field rather than through a mapping, and anything else is
@@ -159,12 +175,12 @@ def attribute(url: str | None, table: list[tuple[str, str]]) -> str:
     return OTHER
 
 
-def covered_routes() -> list[dict[str, str]]:
+def covered_routes(universes: tuple[str, ...] = COVERED) -> list[dict[str, str]]:
     """The routes the Models tab can edit, in propose.ROUTES' order."""
     routes = []
     for script, by_kind in propose.ROUTES.items():
         for kind, route in by_kind.items():
-            if route.universe not in COVERED:
+            if route.universe not in universes:
                 continue
             module = importlib.import_module(route.module)
             path = getattr(module, route.mapping_const)
@@ -225,7 +241,7 @@ def contributions(doc: dict[str, Any], pages: dict[str, list[str]] | None = None
 
 def rejections() -> dict[str, dict[str, list[str]]]:
     """Route id -> queued name -> the candidates ruled out for it."""
-    ids = {r["route"]: r["id"] for r in covered_routes()}
+    ids = {r["route"]: r["id"] for r in covered_routes((*COVERED, *LABEL_UNIVERSES))}
     out: dict[str, dict[str, list[str]]] = {}
     for route, by_subject in _rejections.load().items():
         rid = ids.get(route)
@@ -287,18 +303,145 @@ def parked(
     return out
 
 
-def build(llm_path: Path = DEFAULT_LLM_JSON) -> dict[str, Any]:
+def hf_crawl(doc: dict[str, Any]) -> dict[str, dict[str, float]] | None:
+    """Model -> {card label: value}, from the crawl a refresh cached, or None.
+
+    fetch_huggingface.crawl_all_models() caches what it read under a key of
+    the (slug, repo) list and its parser; the same key is asked for here, with
+    no age limit, since a card read hours ago still says which label a stored
+    number came from. Never fetches: on a runner that has not crawled (an
+    answers-only commit) this is None and received() falls back.
+    """
+    try:
+        import _cache
+        import fetch_huggingface as hf
+    except Exception:
+        return None
+    key = _cache.digest([sorted(hf.iter_hf_models(doc)), hf._PARSER_DIGEST])
+    rows = _cache.load("huggingface-cards", key, 10 * 365 * 86400, label="Hugging Face model cards")
+    if not isinstance(rows, list):
+        return None
+    out: dict[str, dict[str, float]] = {}
+    for row in rows:
+        if isinstance(row, dict) and isinstance(row.get("model"), str) and isinstance(row.get("scores"), dict):
+            out[row["model"]] = {
+                k: v for k, v in row["scores"].items()
+                if isinstance(k, str) and isinstance(v, (int, float))
+            }
+    return out
+
+
+def _prior_received(path: Path = PUBLISHED) -> dict[str, dict[str, list[list[Any]]]]:
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    got = doc.get("received") if isinstance(doc, dict) else None
+    return got if isinstance(got, dict) else {}
+
+
+def _owned(model: dict[str, Any], key: str, owner: str, table: list[tuple[str, str]]) -> bool:
+    """Whether the stored score is still the label route's: its page is that
+    route's, so no other board or AA has replaced it. A card label's score has
+    to cite a model card, not a dataset page someone cited by hand."""
+    url = (model.get("scores_source") or {}).get(key)
+    if attribute(url, table) != owner:
+        return False
+    return owner != CARD or "/datasets/" not in canonical(url)
+
+
+def received(
+    doc: dict[str, Any],
+    files: dict[str, dict[str, Any]],
+    crawl: dict[str, dict[str, float]] | None = None,
+    prior: dict[str, dict[str, list[list[Any]]]] | None = None,
+) -> dict[str, dict[str, list[list[Any]]]]:
+    """Label route id -> label -> [[model, value, shared], ...].
+
+    The scores a label delivers right now: for each column the label maps to,
+    every model whose stored score is credited to the label route's pages --
+    a score another fetcher or AA has since overridden is not the label's any
+    more, and is left out. When several labels of one route map onto the same
+    column, which one a model's number came from is read off the card crawl
+    (the label whose printed value is the stored one; a card that prints it
+    under none of them delivers it under none), else off the last published
+    index; failing both, the score is listed under each of them with `shared`
+    set to how many it may have come from. Labels the crawl
+    confirms -- a card printing one number under two headings -- each deliver
+    it, and are not marked.
+    """
+    table = _prefix_table(route_pages())
+    crawl = crawl or {}
+    prior = prior or {}
+    models = [m for m in doc.get("models") or [] if isinstance(m, dict) and isinstance(m.get("name"), str)]
+    out: dict[str, dict[str, list[list[Any]]]] = {}
+    for rid, owner in LABEL_OWNER.items():
+        by_key: dict[str, list[str]] = {}
+        for label, value in (files.get(rid) or {}).items():
+            if isinstance(value, str) and value not in SENTINELS:
+                by_key.setdefault(value, []).append(label)
+        got: dict[str, list[list[Any]]] = {}
+        for key, labels in by_key.items():
+            for model in models:
+                value = (model.get("scores") or {}).get(key)
+                if not isinstance(value, (int, float)) or not _owned(model, key, owner, table):
+                    continue
+                name = model["name"]
+                which = labels
+                guessed = False
+                if len(labels) > 1:
+                    crawled = rid == HF_LABEL_ROUTE and name in crawl
+                    if crawled:
+                        # The card as read today: the labels printing the stored
+                        # number. None -- a number the card no longer prints, left
+                        # over from an earlier read -- is no label's.
+                        printed = crawl[name]
+                        which = [l for l in labels if l in printed and abs(printed[l] - value) <= VALUE_SLACK]
+                    elif rid in prior:
+                        # The last index that knew; it left the score out if no
+                        # label delivered it, and so does this one.
+                        which = [
+                            l for l in labels
+                            if any(e[0] == name and not e[2] and abs(e[1] - value) <= VALUE_SLACK
+                                   for e in prior[rid].get(l, []) if isinstance(e, list) and len(e) == 3)
+                        ]
+                        if not which and not any(
+                            e[0] == name for l in labels for e in prior[rid].get(l, []) if isinstance(e, list)
+                        ):
+                            which, guessed = labels, True
+                    else:
+                        which, guessed = labels, True
+                    if not which:
+                        continue
+                # Several labels confirmed (a card printing one number under two
+                # headings) all deliver it; only a guess is marked shared.
+                shared = len(which) if guessed else 0
+                for label in which:
+                    got.setdefault(label, []).append([name, value, shared])
+        if got:
+            out[rid] = {label: sorted(entries) for label, entries in sorted(got.items())}
+    return out
+
+
+def build(llm_path: Path = DEFAULT_LLM_JSON, *, crawl: dict[str, dict[str, float]] | None = None,
+          prior: dict[str, dict[str, list[list[Any]]]] | None = None) -> dict[str, Any]:
     doc = json.loads(Path(llm_path).read_text(encoding="utf-8"))
     routes = covered_routes()
-    files = {r["id"]: _read_file(r["file"]) for r in routes}
+    label_routes = covered_routes(LABEL_UNIVERSES)
+    files = {r["id"]: _read_file(r["file"]) for r in [*routes, *label_routes]}
     models = [m["name"] for m in doc.get("models") or [] if isinstance(m, dict) and isinstance(m.get("name"), str)]
     return {
         "generated": date.today().isoformat(),
-        "routes": routes,
+        "routes": [*routes, *label_routes],
         "files": files,
         "rejections": rejections(),
         "parked": parked(models, routes, files),
         "contributions": contributions(doc),
+        "received": received(
+            doc, files,
+            crawl if crawl is not None else hf_crawl(doc),
+            prior if prior is not None else _prior_received(),
+        ),
     }
 
 

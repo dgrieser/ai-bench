@@ -702,7 +702,7 @@ def _validate_one(
     if kind == CANDIDATES_SKIP:
         return _validate_candidates_skip(index, record, universes, queue, require_queue)
     if kind == MAPPING_EDIT:
-        return _validate_mapping_edit(index, record, universes, created)
+        return _validate_mapping_edit(index, record, universes, created, doc)
     if kind == REJECTION_EDIT:
         return _validate_rejection_edit(index, record, universes)
     if kind == AA_IGNORE:
@@ -829,21 +829,24 @@ def _validate_mapping(
     )
 
 
-# The universes a mapping-edit or rejection-edit may touch: the files whose
-# answers are model names, and the Artificial Analysis file (model -> slug).
-# The benchmark-label files are a question about a column; the Benchmarks tab
-# and the queue answer those.
-EDITABLE_UNIVERSES = (propose.MODELS, propose.AA_SLUGS)
+# The universes a mapping-edit may touch: the files whose answers are model
+# names, the Artificial Analysis file (model -> slug), and the benchmark-label
+# files (a card's or llm-stats' label -> column), which the Benchmarks tab
+# edits. A rejection-edit is about the queue's model candidates only.
+EDITABLE_UNIVERSES = (propose.MODELS, propose.AA_SLUGS, propose.BENCHMARKS)
+REJECTION_UNIVERSES = (propose.MODELS, propose.AA_SLUGS)
 
 
-def _editable_route(record: dict[str, Any]) -> tuple[str, str, propose.Route]:
+def _editable_route(
+    record: dict[str, Any], universes: tuple[str, ...] = EDITABLE_UNIVERSES
+) -> tuple[str, str, propose.Route]:
     route_name = record.get("route")
     route = resolve_route(route_name, record.get("route_kind"))
     mapping_path(route)  # rejects a route pointing outside the mapping files
-    if route.universe not in EDITABLE_UNIVERSES:
+    if route.universe not in universes:
         raise AnswerError(
-            f"{route_name} maps names onto {route.universe}; only model mappings "
-            "are edited this way"
+            f"{route_name} maps names onto {route.universe}; only "
+            f"{' and '.join(universes)} mappings are edited this way"
         )
     return route_name, record.get("route_kind") or "*", route
 
@@ -860,7 +863,7 @@ def _source_name(record: dict[str, Any]) -> str:
     return subject
 
 
-def _contradicting_match(subject: str, value: str, model_names: list[str]) -> str | None:
+def _contradicting_match(subject: str, value: str, options: list[str]) -> str | None:
     """The model the matcher would propose for subject, when it is not value.
 
     test_propose.py replays every model mapping through the matcher and fails
@@ -870,7 +873,7 @@ def _contradicting_match(subject: str, value: str, model_names: list[str]) -> st
     next run.
     """
     tail = subject.rsplit("/", 1)[-1] if "/" in subject else subject
-    match, _ = _matching.propose(tail, model_names)
+    match, _ = _matching.propose(tail, options)
     if match is not None and match.option != value:
         return match.option
     return None
@@ -881,6 +884,7 @@ def _validate_mapping_edit(
     record: dict[str, Any],
     universes: dict[str, list[str]],
     created: frozenset[str] = frozenset(),
+    doc: dict[str, Any] | None = None,
 ) -> Answer:
     """Re-point, park, add or remove any line of a model mapping file.
 
@@ -919,8 +923,14 @@ def _validate_mapping_edit(
                 )
             if value not in options:
                 raise AnswerError(f"{value!r} is not one of the known {route.universe}")
-        if route.universe == propose.MODELS and value not in SENTINELS:
-            other = _contradicting_match(subject, value, sorted({*models, *created}))
+        if route.universe in (propose.MODELS, propose.BENCHMARKS) and value not in SENTINELS:
+            # The options test_propose.py replays against: every model, or
+            # every column key -- the derived ones included, as there.
+            options = (
+                sorted({*models, *created}) if route.universe == propose.MODELS
+                else sorted({*(doc or {}).get("benchmarks", {}), *(universes.get(propose.BENCHMARKS) or [])})
+            )
+            other = _contradicting_match(subject, value, options)
             if other is not None:
                 raise AnswerError(
                     f"{subject!r} normalizes to exactly {other!r}, so it cannot be "
@@ -957,7 +967,7 @@ def _validate_rejection_edit(
     one taken off only has to be on the list now -- a model since deleted is
     exactly the stale entry worth clearing.
     """
-    route_name, route_kind, route = _editable_route(record)
+    route_name, route_kind, route = _editable_route(record, REJECTION_UNIVERSES)
     subject = _source_name(record)
     lists: dict[str, list[str]] = {}
     for name in ("add", "remove"):

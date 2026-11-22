@@ -11268,6 +11268,1704 @@
    "Muse Spark Open": "muse-spark-open",
    "Muse Wonder": "muse-wonder"
   },
+  "update_huggingface_mapping.py *": {
+   "# Activated Params": "__unmappable__",
+   "# Backbone Params": "__unmappable__",
+   "# Params": "__unmappable__",
+   "# Total Params": "__unmappable__",
+   "# Total Params (MoE)": "__unmappable__",
+   "% of Questions Answered": "__unmappable__",
+   "(\\tau^2)-Bench": "__unmappable__",
+   "1 loop": "__unmappable__",
+   "16 x 80G GPUs (GBS=256)": "__unmappable__",
+   "32 x 80G GPUs (GBS=512)": "__unmappable__",
+   "8 x 80G GPUs (GBS=128)": "__unmappable__",
+   "A100(GPUs)": "__unmappable__",
+   "AA Index (v4.1)": "aa_intelligence_index_4_1",
+   "AA Index (v5.0)": "__unmappable__",
+   "AA LCR": "aa_lcr",
+   "AA Omniscience (index)": "aa_omniscience_1_0",
+   "AA-AnalystAgent": "__unmappable__",
+   "AA-Briefcase": "aa_briefcase",
+   "AA-Briefcase (Elo)": "aa_briefcase",
+   "AA-Briefcase v1.1": "aa_briefcase",
+   "AA-Briefcase v1.1 (Elo-score)": "aa_briefcase",
+   "AA-LCR": "aa_lcr",
+   "AA-LCR Long-context reasoning": "aa_lcr",
+   "AA-LCR v1.1": "aa_lcr",
+   "AA-Omni-Public Acc": "__unmappable__",
+   "AA-Omni-Public Index": "aa_omniscience_1_0",
+   "AA-Omni-Public Non-hallu": "__unmappable__",
+   "AA-Omni. Accuracy": "aa_omniscience_accuracy_1_0",
+   "AA-Omni. Index": "aa_omniscience_1_0",
+   "AA-Omni. Non-Halluc.": "aa_omniscience_hallucination_1_0",
+   "AA-Omniscience": "aa_omniscience_1_0",
+   "AA-Omniscience (accuracy)": "aa_omniscience_accuracy_1_0",
+   "AA-Omniscience (public)": "aa_omniscience_1_0",
+   "AA-Omniscience Accuracy": "aa_omniscience_accuracy_1_0",
+   "AA-Omniscience Accuracy (public set)": "aa_omniscience_accuracy_1_0",
+   "AA-Omniscience Accuracy Factual accuracy": "aa_omniscience_accuracy_1_0",
+   "AA-Omniscience Index": "aa_omniscience_1_0",
+   "AA-Omniscience Index (public set)": "aa_omniscience_1_0",
+   "AA-Omniscience Non-Hallucination Non-hallucination rate": "__unmappable__",
+   "AA-Omniscience Non-Hallucination Rate": "aa_omniscience_hallucination_1_0",
+   "AA-Omniscience Non-Hallucination Rate (1 − Hallucination Rate, public set)": "__unmappable__",
+   "AA-Omniscience accuracy (public)": "aa_omniscience_accuracy_1_0",
+   "AA-Omniscience non-hallucination (public)": "aa_omniscience_hallucination_1_0",
+   "AA-Omniscience v1.1 non-hallucination rate": "aa_omniscience_hallucination_1_1",
+   "AA-Omniscience v1.1 score": "aa_omniscience_1_1",
+   "AA.LCR": "aa_lcr",
+   "AE 2": "__unmappable__",
+   "AGI EVAL": "__unmappable__",
+   "AGI Eval": "__unmappable__",
+   "AGI Eval English": "__unmappable__",
+   "AGIEval (Chinese)": "__unmappable__",
+   "AGIEval (EM)": "__unmappable__",
+   "AGIEval (English)": "__unmappable__",
+   "AGIEval 5-shot": "__unmappable__",
+   "AGIEval-En (acc)": "__unmappable__",
+   "AI2D Test": "__unmappable__",
+   "AI2D_TEST": "__unmappable__",
+   "AIME": "__unmappable__",
+   "AIME 2024": "__unmappable__",
+   "AIME 2024 (Pass@1)": "__unmappable__",
+   "AIME 2025": "aime_2025",
+   "AIME 2025 (DE)": "__unmappable__",
+   "AIME 2025 (EN)": "aime_2025",
+   "AIME 2025 (Pass@1)": "aime_2025",
+   "AIME 2025 Competition mathematics": "aime_2025",
+   "AIME 2026": "aime_2026",
+   "AIME 2026 (DE)": "__unmappable__",
+   "AIME 2026 (EN)": "aime_2026",
+   "AIME 2026 Competition mathematics": "aime_2026",
+   "AIME 2026 I": "__unmappable__",
+   "AIME 2026 no tools": "aime_2026",
+   "AIME 24": "__unmappable__",
+   "AIME 24&25": "__unmappable__",
+   "AIME 25": "aime_2025",
+   "AIME 25 (w/ Tools)": "__unmappable__",
+   "AIME-24": "__unmappable__",
+   "AIME-25": "aime_2025",
+   "AIME2025": "aime_2025",
+   "AIME2026": "aime_2026",
+   "AIME24": "__unmappable__",
+   "AIME24 (Avg@32)": "__unmappable__",
+   "AIME24 (Mean@32)": "__unmappable__",
+   "AIME24 (avg@10)": "__unmappable__",
+   "AIME24(avg@32)": "__unmappable__",
+   "AIME25": "aime_2025",
+   "AIME25 (Avg@32)": "aime_2025",
+   "AIME25 (Mean@32)": "aime_2025",
+   "AIME25 (avg@10)": "aime_2025",
+   "AIME25 (no tools)": "aime_2025",
+   "AIME25 (with tools)": "__unmappable__",
+   "AIME25(avg@32)": "aime_2025",
+   "AIME26": "aime_2026",
+   "AIR-Bench": "__unmappable__",
+   "AMC-23": "__unmappable__",
+   "AMO-BENCH": "__unmappable__",
+   "AMO-Bench": "__unmappable__",
+   "APEX-Agents": "apex_agents",
+   "ARC-AGI": "__unmappable__",
+   "ARC-AGI (Mean@1)": "__unmappable__",
+   "ARC-AGI v1 / v2": "__unmappable__",
+   "ARC-AGI-1": "__unmappable__",
+   "ARC-AGI-2": "__unmappable__",
+   "ARC-C": "__unmappable__",
+   "ARC-Challenge": "__unmappable__",
+   "ARC-Challenge (MC acc)": "__unmappable__",
+   "ARTPARK-IISc/Vaani-Benchmark-V1.0 (Hindi_WER)": "__unmappable__",
+   "Acc avg": "__unmappable__",
+   "AceBench (acc)": "__unmappable__",
+   "ActivityNet-QA (test)": "__unmappable__",
+   "Aerospace": "__unmappable__",
+   "Agent": "__unmappable__",
+   "Agent IF": "__unmappable__",
+   "Agent's Last Exam (Pass@1)": "agents_last_exam_1_0",
+   "Agentic": "__unmappable__",
+   "Agentic Tool Use": "__unmappable__",
+   "Agentic Wiki QA (DE)": "__unmappable__",
+   "Agentic Workflows": "__unmappable__",
+   "Agentic coding DeepSWE 1.1": "deepswe_1_1",
+   "Agentic coding SWE-bench Pro": "swe_bench_pro",
+   "Agentic terminal coding Terminal Bench 2.1 (Terminus)": "terminal_bench_2_1",
+   "Agents' Last Exam": "agents_last_exam_1_0",
+   "Agents' Last Exam (ALE-CLI)": "__unmappable__",
+   "Agents' Last Exam (ALL)": "agents_last_exam_1_0",
+   "Agents' Last Exam (CLI)": "__unmappable__",
+   "Agents’ Last Exam": "agents_last_exam_1_0",
+   "Aider Polyglot": "__unmappable__",
+   "Aider-Polyglot": "__unmappable__",
+   "Aider-Polyglot (Acc.)": "__unmappable__",
+   "Airline": "__unmappable__",
+   "AlignBench": "__unmappable__",
+   "Alignment": "__unmappable__",
+   "Alpaca-Eval": "__unmappable__",
+   "AlpacaEval 2 LC": "__unmappable__",
+   "AlpacaEval 2.0": "__unmappable__",
+   "AndroidWorld": "__unmappable__",
+   "Apex": "__unmappable__",
+   "Apex (Pass@1)": "__unmappable__",
+   "Apex 2025": "__unmappable__",
+   "Apex Bench v1.1": "__unmappable__",
+   "Apex Shortlist (Pass@1)": "__unmappable__",
+   "Apex-Agents": "apex_agents",
+   "Apex-Agents (pass@1) Long-horizon professional workflows": "apex_agents",
+   "Apex-Shortlist": "__unmappable__",
+   "Apex-Shortlist (no tools)": "__unmappable__",
+   "Apex-Shortlist (with tools)": "__unmappable__",
+   "Apex-shortlist": "__unmappable__",
+   "ApexBench (Pass@1)": "__unmappable__",
+   "Application recreation RecreationBench": "__unmappable__",
+   "ArcAGI V2": "__unmappable__",
+   "Arena Hard": "__unmappable__",
+   "Arena Hard v2": "__unmappable__",
+   "Arena-Hard (Creative Writing)": "__unmappable__",
+   "Arena-Hard (Hard Prompt)": "__unmappable__",
+   "Arena-Hard (hard prompt gemini)": "__unmappable__",
+   "Arena-Hard v2": "__unmappable__",
+   "Arena-Hard v2$": "__unmappable__",
+   "Arena-Hard-V2": "__unmappable__",
+   "Arena-Hard-V2 (Average)": "__unmappable__",
+   "Arena-Hard-V2 (Creative Writing)": "__unmappable__",
+   "Arena-Hard-V2 (Hard Prompt)": "__unmappable__",
+   "Arena-Hard-v2": "__unmappable__",
+   "Arena-Hard-v2.0": "__unmappable__",
+   "ArenaHard": "__unmappable__",
+   "ArenaHard-V2 (acc)": "__unmappable__",
+   "ArtifactsBench": "__unmappable__",
+   "AttaQ": "__unmappable__",
+   "Attention": "__unmappable__",
+   "Audio MC": "__unmappable__",
+   "Automation Bench": "__unmappable__",
+   "Automation Bench Public Workflow automation": "__unmappable__",
+   "Automation Bench-AA": "automation_bench_aa",
+   "Automation-Bench v1.0.6": "__unmappable__",
+   "AutomationBench": "__unmappable__",
+   "AutomationBench (Pass@1)": "__unmappable__",
+   "AutomationBench (Public)": "__unmappable__",
+   "AutomationBench (public)": "__unmappable__",
+   "AutomationBench (v1.0.6)": "__unmappable__",
+   "AutomationBench Public": "__unmappable__",
+   "AutomationBench v1.0.6": "__unmappable__",
+   "AutomationBench-AA": "__unmappable__",
+   "AutomationBench-AA v1.0.6": "automation_bench_aa",
+   "Automotive Supplier": "__unmappable__",
+   "Average": "__unmappable__",
+   "Average (DE)": "__unmappable__",
+   "Average (EN)": "__unmappable__",
+   "Average Score": "__unmappable__",
+   "Average Score (out of 4)": "__unmappable__",
+   "BBEH (EM)": "__unmappable__",
+   "BBH": "__unmappable__",
+   "BBH (CoT EM)": "__unmappable__",
+   "BBH (EM)": "__unmappable__",
+   "BBH (EM, CoT)": "__unmappable__",
+   "BBH (EM, direct)": "__unmappable__",
+   "BCFLv4": "__unmappable__",
+   "BFCL": "__unmappable__",
+   "BFCL (v4)": "bfcl_v4",
+   "BFCL V3 (full)": "__unmappable__",
+   "BFCL V4": "bfcl_v4",
+   "BFCL v3": "__unmappable__",
+   "BFCL v3 (multi-turn)": "__unmappable__",
+   "BFCL v3 only": "__unmappable__",
+   "BFCL v4": "bfcl_v4",
+   "BFCL v4 (live)": "__unmappable__",
+   "BFCL v4 (memory)": "__unmappable__",
+   "BFCL v4 (multi-turn)": "__unmappable__",
+   "BFCL v4 (non-live AST)": "__unmappable__",
+   "BFCL v4 (overall)": "bfcl_v4",
+   "BFCL v4 (web search)": "__unmappable__",
+   "BFCL v4 Function calling": "bfcl_v4",
+   "BFCL(avg v1&v2)": "__unmappable__",
+   "BFCL-V4": "bfcl_v4",
+   "BFCL-v3": "__unmappable__",
+   "BFCL_v3_MultiTurn (Acc)": "__unmappable__",
+   "BFCLv3": "__unmappable__",
+   "BFCLv4": "bfcl_v4",
+   "BIRD Bench": "__unmappable__",
+   "BLINK": "__unmappable__",
+   "BS-Bench": "__unmappable__",
+   "BVB": "__unmappable__",
+   "BabyVision": "__unmappable__",
+   "BabyVision (w/ python)": "__unmappable__",
+   "BabyVision (w/tools)": "__unmappable__",
+   "BabyVision (with tools)": "__unmappable__",
+   "BabyVision w/ python": "__unmappable__",
+   "BabyVision w/ tools (Pass@1)": "__unmappable__",
+   "BankerToolBench": "__unmappable__",
+   "Base Model": "__unmappable__",
+   "Batch Size (per GPU)": "__unmappable__",
+   "Beam128K": "__unmappable__",
+   "Belebele (5-language subset)": "__unmappable__",
+   "BenchCAD w/ tools": "__unmappable__",
+   "BenchCAD w/o tools": "__unmappable__",
+   "Benchmark avg": "__unmappable__",
+   "Beyond AIME": "__unmappable__",
+   "BeyondAIME": "__unmappable__",
+   "BeyondAIME (Mean@10)": "__unmappable__",
+   "BeyondAIME (avg@10)": "__unmappable__",
+   "BigBench Extra Hard": "__unmappable__",
+   "BigBenchHard": "__unmappable__",
+   "BigCodeBench": "__unmappable__",
+   "BigCodeBench (Pass@1)": "__unmappable__",
+   "BigCodeBench (pass@1, n=5, T=0.8)": "__unmappable__",
+   "BioMysteryBench": "__unmappable__",
+   "BirdBench": "__unmappable__",
+   "Bits/weight (language model)": "__unmappable__",
+   "Browse-Comp": "browsecomp",
+   "Browse-Comp-ZH": "__unmappable__",
+   "BrowseComp": "browsecomp",
+   "BrowseComp (Agent Swarm)": "__unmappable__",
+   "BrowseComp (Pass@1)": "browsecomp",
+   "BrowseComp (w/ Context Manage)": "__unmappable__",
+   "BrowseComp (w/ Context Manager)": "__unmappable__",
+   "BrowseComp (w/ctx manage)": "__unmappable__",
+   "BrowseComp (with context management)": "__unmappable__",
+   "BrowseComp (≤10 searches)": "__unmappable__",
+   "BrowseComp Deep web research": "__unmappable__",
+   "BrowseComp Inkling 2 Mini with compaction": "browsecomp",
+   "BrowseComp Top100": "__unmappable__",
+   "BrowseComp Web browsing": "browsecomp",
+   "BrowseComp with Search": "browsecomp",
+   "BrowseComp+ (OpenClaw)": "__unmappable__",
+   "BrowseComp-Plus (OpenClaw subset)": "__unmappable__",
+   "BrowseComp-ZH": "__unmappable__",
+   "BrowseComp-ZH (w/ Context Manager)": "__unmappable__",
+   "BrowseComp-Zh": "__unmappable__",
+   "BrowseComp-zh": "__unmappable__",
+   "Browsecomp": "browsecomp",
+   "Browsecomp-zh": "__unmappable__",
+   "Browser use WebArena-Verified": "__unmappable__",
+   "Business Operation (Internal)": "__unmappable__",
+   "C-Eval": "__unmappable__",
+   "C-Eval (EM)": "__unmappable__",
+   "C-Eval (MC acc)": "__unmappable__",
+   "C-SimpleQA": "__unmappable__",
+   "CC-OCR": "__unmappable__",
+   "CEval (acc)": "__unmappable__",
+   "CEval(acc)": "__unmappable__",
+   "CFBench": "__unmappable__",
+   "CFEval": "__unmappable__",
+   "CLIcK": "__unmappable__",
+   "CLUEWSC (EM)": "__unmappable__",
+   "CMATH": "__unmappable__",
+   "CMMLU": "__unmappable__",
+   "CMMLU (EM)": "__unmappable__",
+   "CMMLU (acc)": "__unmappable__",
+   "CMMLU(acc)": "__unmappable__",
+   "CMath": "__unmappable__",
+   "CMath (EM)": "__unmappable__",
+   "CNB": "__unmappable__",
+   "CNMO 2024 (Pass@1)": "__unmappable__",
+   "COLLIE (acc)": "__unmappable__",
+   "CRUX-I": "__unmappable__",
+   "CRUX-O": "__unmappable__",
+   "CRUXEval": "__unmappable__",
+   "CRUXEval-I": "__unmappable__",
+   "CRUXEval-O": "__unmappable__",
+   "CSimpleQA": "__unmappable__",
+   "CV-Bench": "__unmappable__",
+   "CVBench": "__unmappable__",
+   "CVBench (EM)": "__unmappable__",
+   "CVBench2D": "__unmappable__",
+   "CharXiv (RQ)": "charxiv_reasoning",
+   "CharXiv (RQ) (w/ python)": "__unmappable__",
+   "CharXiv (RQ) w/ python": "__unmappable__",
+   "CharXiv (descriptive)": "__unmappable__",
+   "CharXiv (descriptive, val)": "__unmappable__",
+   "CharXiv (reasoning)": "charxiv_reasoning",
+   "CharXiv (reasoning, val)": "charxiv_reasoning",
+   "CharXiv RQ": "charxiv_reasoning",
+   "CharXiv(RQ)": "charxiv_reasoning",
+   "Chart Reasoning": "__unmappable__",
+   "ChartQA (test)": "__unmappable__",
+   "ChartQA_TEST": "__unmappable__",
+   "ChartoGraphy w/ python": "__unmappable__",
+   "Chartography": "__unmappable__",
+   "Chartography (w/tools)": "__unmappable__",
+   "Chartography original / with Python": "__unmappable__",
+   "Chartography w/ tools (Pass@1)": "__unmappable__",
+   "Charxiv RQ (original / with python)": "__unmappable__",
+   "Charxiv Reasoning": "charxiv_reasoning",
+   "Chat": "__unmappable__",
+   "ChemBench": "__unmappable__",
+   "Chinese": "__unmappable__",
+   "Chinese-SimpleQA": "__unmappable__",
+   "Chinese-SimpleQA (Pass@1)": "__unmappable__",
+   "Chinese-simpleQA": "__unmappable__",
+   "ChineseSimpleQA (LLM-Judge)": "__unmappable__",
+   "Claw Eval (pass@3)": "__unmappable__",
+   "Claw Eval (pass^3)": "__unmappable__",
+   "Claw-Eval": "__unmappable__",
+   "Claw-Eval Avg": "__unmappable__",
+   "Claw-Eval General (EN), average": "claw_eval",
+   "Claw-Eval General (EN), pass^3": "__unmappable__",
+   "Claw-Eval Pass^3": "__unmappable__",
+   "Claw-Eval average (EN)": "__unmappable__",
+   "Claw-Eval pass^3": "__unmappable__",
+   "Claw-Gym": "__unmappable__",
+   "Claw-eval Avg": "__unmappable__",
+   "ClawEval": "__unmappable__",
+   "CoVoST": "__unmappable__",
+   "Code": "__unmappable__",
+   "Code Generation": "__unmappable__",
+   "CodeForces": "__unmappable__",
+   "Codeforces": "__unmappable__",
+   "Codeforces (Rating)": "__unmappable__",
+   "Codeforces ELO": "__unmappable__",
+   "Codeforces-Div1 (Rating)": "__unmappable__",
+   "Coding": "__unmappable__",
+   "Competitive coding LiveCodeBench v6": "livecodebench",
+   "ComplexConstraints v1.1 openhands v1.45.0": "__unmappable__",
+   "ComplexFuncBench": "__unmappable__",
+   "Computer Use": "__unmappable__",
+   "Computer use OSWorld 2.0": "osworld_2_0_vendor",
+   "Computer use OSWorld-Verified": "osworld_verified",
+   "Computing Resources": "__unmappable__",
+   "Context": "__unmappable__",
+   "CorpFin v2": "__unmappable__",
+   "CorpusQA 1M (ACC)": "__unmappable__",
+   "CountBench": "__unmappable__",
+   "CountBenchQA": "__unmappable__",
+   "Creative Writing": "__unmappable__",
+   "Creative Writing v3": "__unmappable__",
+   "Creative writing v3 / EQ Bench": "__unmappable__",
+   "Criminal": "__unmappable__",
+   "CritPt": "critpt",
+   "CritPt (no tools)": "critpt",
+   "CritPt Frontier physics reasoning": "critpt",
+   "CritPt v2 Full / Hard": "critpt_hard_2_0",
+   "CyberGym": "cybergym",
+   "CyberGym (Pass@1)": "cybergym",
+   "Cybergym": "cybergym",
+   "C³": "__unmappable__",
+   "DECK-Arena (Internal, Elo-score)": "__unmappable__",
+   "DPO": "__unmappable__",
+   "DROP": "__unmappable__",
+   "DROP (F1)": "__unmappable__",
+   "DROP (f1)": "__unmappable__",
+   "DSBench-FullStack": "__unmappable__",
+   "DSBench-Hard": "__unmappable__",
+   "Daily Omni": "__unmappable__",
+   "DeepMind Math": "__unmappable__",
+   "DeepPlanning": "__unmappable__",
+   "DeepResearch Bench II": "__unmappable__",
+   "DeepSWE": "__unmappable__",
+   "DeepSWE (v1.1)": "deepswe_1_1",
+   "DeepSWE 1.1": "deepswe_1_1",
+   "DeepSWE v1.1": "deepswe_1_1",
+   "DeepSWE v1.1 (Resolved)": "deepswe_1_1",
+   "DeepSWE v1.1 mini-swe-agent v2.4.6": "deepswe_1_1",
+   "DeepSearch QA": "__unmappable__",
+   "DeepSearchQA": "__unmappable__",
+   "DeepSearchQA (F1)": "__unmappable__",
+   "DeepSearchQA (accuracy)": "__unmappable__",
+   "DeepSearchQA (f1-score)": "__unmappable__",
+   "DeepSearchQA Inkling 2 Mini with compaction": "__unmappable__",
+   "DeepresearchBII": "__unmappable__",
+   "DeepresearchBench": "__unmappable__",
+   "Delores-Lin/MDPBench (ar)": "__unmappable__",
+   "Delores-Lin/MDPBench (de)": "__unmappable__",
+   "Delores-Lin/MDPBench (digital)": "__unmappable__",
+   "Delores-Lin/MDPBench (en)": "__unmappable__",
+   "Delores-Lin/MDPBench (es)": "__unmappable__",
+   "Delores-Lin/MDPBench (fr)": "__unmappable__",
+   "Delores-Lin/MDPBench (hi)": "__unmappable__",
+   "Delores-Lin/MDPBench (id)": "__unmappable__",
+   "Delores-Lin/MDPBench (it)": "__unmappable__",
+   "Delores-Lin/MDPBench (jp)": "__unmappable__",
+   "Delores-Lin/MDPBench (ko)": "__unmappable__",
+   "Delores-Lin/MDPBench (latin)": "__unmappable__",
+   "Delores-Lin/MDPBench (nl)": "__unmappable__",
+   "Delores-Lin/MDPBench (non_latin)": "__unmappable__",
+   "Delores-Lin/MDPBench (overall)": "__unmappable__",
+   "Delores-Lin/MDPBench (photographed)": "__unmappable__",
+   "Delores-Lin/MDPBench (private)": "__unmappable__",
+   "Delores-Lin/MDPBench (pt)": "__unmappable__",
+   "Delores-Lin/MDPBench (ru)": "__unmappable__",
+   "Delores-Lin/MDPBench (th)": "__unmappable__",
+   "Delores-Lin/MDPBench (vi)": "__unmappable__",
+   "Delores-Lin/MDPBench (zh)": "__unmappable__",
+   "Delores-Lin/MDPBench (zh_t)": "__unmappable__",
+   "Dense FFN Intermediate Size": "__unmappable__",
+   "Dense Intermediate Size": "__unmappable__",
+   "Design Bench (Internal, Elo-score)": "__unmappable__",
+   "Diligence Bench Best harness": "__unmappable__",
+   "DocVQA (LLM-Judge)": "__unmappable__",
+   "DocVQA (val)": "__unmappable__",
+   "Document": "__unmappable__",
+   "Document intelligence OmniDocBench 1.5": "__unmappable__",
+   "Document, OCR & Chart": "__unmappable__",
+   "Documented context configuration": "__unmappable__",
+   "Download Link": "__unmappable__",
+   "Download Links": "__unmappable__",
+   "Draco": "__unmappable__",
+   "DynaMath": "__unmappable__",
+   "DynaMath (average accuracy)": "__unmappable__",
+   "ERQA": "__unmappable__",
+   "EmbSpatial-Bench": "__unmappable__",
+   "EmbSpatialBench": "__unmappable__",
+   "Embodied intelligence ERQA": "__unmappable__",
+   "Embodied reasoning": "__unmappable__",
+   "English": "__unmappable__",
+   "EnterpriseOps-Gym": "__unmappable__",
+   "Est. decoding cost @ 128K context, Hopper GPU": "__unmappable__",
+   "Eval+ Avg": "__unmappable__",
+   "EvalPlus": "__unmappable__",
+   "ExploitBench": "exploitbench",
+   "ExploitGym": "exploitgym",
+   "ExploitGym (2h / 6h)": "__unmappable__",
+   "ExploitGym (Pass@1)": "exploitgym",
+   "Extended Thinking": "__unmappable__",
+   "FACTS Parametric (EM)": "__unmappable__",
+   "FLEURS (lower is better)": "__unmappable__",
+   "FORTE ↗": "__unmappable__",
+   "FORTRESS (adversarial)": "__unmappable__",
+   "FORTRESS (adversarial) Public": "__unmappable__",
+   "FORTRESS (benign)": "__unmappable__",
+   "FORTRESS (benign) Public": "__unmappable__",
+   "FORTRESS Adversarial": "__unmappable__",
+   "FORTRESS Benign": "__unmappable__",
+   "FRAMES (<24k)": "__unmappable__",
+   "FRAMES (>24k)": "__unmappable__",
+   "FRAMES (Acc.)": "__unmappable__",
+   "Factual Knowledge": "__unmappable__",
+   "Factuality": "__unmappable__",
+   "FinSearchComp-T3": "__unmappable__",
+   "FinSearchCompT2&T3": "__unmappable__",
+   "FinStepBench-CorporateValuation": "__unmappable__",
+   "FinStepBench-FinanceDR": "__unmappable__",
+   "FinStepBench-LiveSearch": "__unmappable__",
+   "Final Models (RLVR)": "__unmappable__",
+   "Finance Agent v2": "__unmappable__",
+   "FlenQA [3K-token subset]": "__unmappable__",
+   "Footprint": "__unmappable__",
+   "Frames": "__unmappable__",
+   "Frontier Finance": "__unmappable__",
+   "Frontier agentic tasks Agents' Last Exam": "agents_last_exam_1_0",
+   "Frontier-Bench v0.1": "__unmappable__",
+   "FrontierCode v2.0 stirrup v0.2.1": "frontiercode_2_0",
+   "FrontierFinance": "__unmappable__",
+   "FrontierSWE": "__unmappable__",
+   "FrontierSWE (Dominance)": "__unmappable__",
+   "FrontierScience-Olympiad": "__unmappable__",
+   "FrontierScience-Research": "__unmappable__",
+   "FullStackBench": "__unmappable__",
+   "FullStackBench (Pass@1)": "__unmappable__",
+   "FullStackBench en": "__unmappable__",
+   "FullStackBench zh": "__unmappable__",
+   "Function Calling": "__unmappable__",
+   "FutureMa/EvasionBench": "__unmappable__",
+   "GA Heads (Q/KV)": "__unmappable__",
+   "GAIA": "__unmappable__",
+   "GAIA (Text-only)": "__unmappable__",
+   "GAIA (no file)": "__unmappable__",
+   "GAIA Text-103": "__unmappable__",
+   "GDP.pdf": "__unmappable__",
+   "GDP.pdf AA": "__unmappable__",
+   "GDP.pdf w/ python": "__unmappable__",
+   "GDPVal": "__unmappable__",
+   "GDPVal v2": "gdpval_aa",
+   "GDPVal-AA Real-world professional tasks (Elo)": "gdpval_aa",
+   "GDPVal-AA v2": "gdpval_aa",
+   "GDPVal-AA v2.1": "gdpval_aa",
+   "GDPval": "__unmappable__",
+   "GDPval* (Elo)": "__unmappable__",
+   "GDPval-AA (Elo)": "__unmappable__",
+   "GDPval-AA 2.1": "gdpval_aa",
+   "GDPval-AA v2": "gdpval_aa",
+   "GDPval-AA v2 (ELO)": "__unmappable__",
+   "GDPval-AA v2 (Elo)": "gdpval_aa",
+   "GDPval-AA v2.1 (Elo-score)": "gdpval_aa",
+   "GDPval-AA-V2": "gdpval_aa",
+   "GDPval-AA-V2 (Elo)": "gdpval_aa",
+   "GPQA": "__unmappable__",
+   "GPQA (EM)": "__unmappable__",
+   "GPQA (no tools)": "gpqa_diamond",
+   "GPQA (with tools)": "__unmappable__",
+   "GPQA Diamond": "gpqa_diamond",
+   "GPQA Diamond (AA)": "gpqa_diamond",
+   "GPQA Diamond (DE)": "__unmappable__",
+   "GPQA Diamond (EN)": "gpqa_diamond",
+   "GPQA Diamond (Pass@1)": "gpqa_diamond",
+   "GPQA Diamond (no tools)": "gpqa_diamond",
+   "GPQA Diamond Graduate-level science QA": "gpqa_diamond",
+   "GPQA main (CoT EM)": "__unmappable__",
+   "GPQA-D": "gpqa_diamond",
+   "GPQA-Diamond": "gpqa_diamond",
+   "GPQA-Diamond (CoT EM)": "__unmappable__",
+   "GPQA-Diamond (Mean@16)": "gpqa_diamond",
+   "GPQA-Diamond (Pass@1)": "gpqa_diamond",
+   "GPQA-Diamond(avg@16)": "gpqa_diamond",
+   "GPQA-diamond": "gpqa_diamond",
+   "GPQA-diamond (acc)": "gpqa_diamond",
+   "GPQA_Diamond": "gpqa_diamond",
+   "GPU Type and Count": "__unmappable__",
+   "GSM Symbolic": "__unmappable__",
+   "GSM-Infinite Hard": "__unmappable__",
+   "GSM-Plus": "__unmappable__",
+   "GSM1K (CoT EM)": "__unmappable__",
+   "GSM8K": "__unmappable__",
+   "GSM8K (CoT EM)": "__unmappable__",
+   "GSM8K (EM)": "__unmappable__",
+   "GSM8K, MATH-500, AIME25, AIME26": "__unmappable__",
+   "GSM8k": "__unmappable__",
+   "GSMPlus": "__unmappable__",
+   "GUI understanding": "__unmappable__",
+   "Gaia2": "__unmappable__",
+   "General": "__unmappable__",
+   "General Assistant": "__unmappable__",
+   "General Coding": "__unmappable__",
+   "General Knowledge & Reasoning": "__unmappable__",
+   "General visual reasoning BabyVision": "__unmappable__",
+   "German Public Sector": "__unmappable__",
+   "Global PIQA": "__unmappable__",
+   "Global-MMLU-Lite": "__unmappable__",
+   "GlobalMMLU": "__unmappable__",
+   "GraphWalks BFS 256K": "__unmappable__",
+   "GraphWalks-128k (precision)": "__unmappable__",
+   "Grounding": "__unmappable__",
+   "H100(GPUs)": "__unmappable__",
+   "H200(GPUs)": "__unmappable__",
+   "H800(GPUs)": "__unmappable__",
+   "HAE-RAE v1.1": "__unmappable__",
+   "HANDBOOK.md": "__unmappable__",
+   "HELMET": "__unmappable__",
+   "HELMET-ICL (EM)": "__unmappable__",
+   "HELMET-RAG (SubEM)": "__unmappable__",
+   "HELMET-Rerank (NDCG@10)": "__unmappable__",
+   "HLE": "hle",
+   "HLE (Pass@1)": "hle",
+   "HLE (Text-only)": "hle",
+   "HLE (no tools)": "hle",
+   "HLE (text only)": "hle",
+   "HLE (text)": "hle",
+   "HLE (text-only, no tools)": "hle",
+   "HLE (w/ Tools)": "__unmappable__",
+   "HLE (w/o tools)": "hle",
+   "HLE (with tools)": "__unmappable__",
+   "HLE (without tools)": "hle",
+   "HLE *(no tools)": "hle",
+   "HLE Diamond": "hle_diamond",
+   "HLE Expert-level reasoning": "__unmappable__",
+   "HLE Text (AA)": "hle",
+   "HLE no tools": "hle",
+   "HLE w/ CoT": "__unmappable__",
+   "HLE w/ Tools": "__unmappable__",
+   "HLE w/ tool": "__unmappable__",
+   "HLE w/ tools": "__unmappable__",
+   "HLE w/ tools (Pass@1)": "__unmappable__",
+   "HLE w/o tools": "hle",
+   "HLE with search": "__unmappable__",
+   "HLE-Diamond": "hle_diamond",
+   "HLE-Diamond (no tools)": "hle_diamond",
+   "HLE-Diamond (w/ tools)": "__unmappable__",
+   "HLE-Diamond (w/o tools)": "hle_diamond",
+   "HLE-Diamond (with tools)": "__unmappable__",
+   "HLE-Diamond w/ tools": "__unmappable__",
+   "HLE-Full": "__unmappable__",
+   "HLE-Full (w/ tools)": "__unmappable__",
+   "HLE-Full w/ tools": "__unmappable__",
+   "HLE-Verified¹": "__unmappable__",
+   "HMMT (Feb 25)": "__unmappable__",
+   "HMMT (Nov 25)": "__unmappable__",
+   "HMMT 2025": "__unmappable__",
+   "HMMT 2025 (Feb)": "__unmappable__",
+   "HMMT 2025 (Feb.)": "__unmappable__",
+   "HMMT 2025 (Nov)": "__unmappable__",
+   "HMMT 2025 (Nov.)": "__unmappable__",
+   "HMMT 2025 (Pass@1)": "__unmappable__",
+   "HMMT 2026 (Feb)": "hmmt_feb_2026",
+   "HMMT 2026 Feb (Pass@1)": "hmmt_feb_2026",
+   "HMMT Feb 2025": "__unmappable__",
+   "HMMT Feb 2026": "hmmt_feb_2026",
+   "HMMT Feb 2026 Competition mathematics": "hmmt_feb_2026",
+   "HMMT Feb 25": "__unmappable__",
+   "HMMT Feb 26": "hmmt_feb_2026",
+   "HMMT Feb. 2025": "__unmappable__",
+   "HMMT Feb. 2026": "hmmt_feb_2026",
+   "HMMT Feb25": "__unmappable__",
+   "HMMT Feb25 (no tools)": "__unmappable__",
+   "HMMT Feb25 (with tools)": "__unmappable__",
+   "HMMT Nov": "__unmappable__",
+   "HMMT Nov 25": "__unmappable__",
+   "HMMT Nov. 2025": "__unmappable__",
+   "HMMT25": "__unmappable__",
+   "HMMT25 (Mean@32)": "__unmappable__",
+   "HMMT2602": "hmmt_feb_2026",
+   "HPCT": "__unmappable__",
+   "HR-Bench (4K)": "__unmappable__",
+   "HR-Bench (8K)": "__unmappable__",
+   "HRM8K": "__unmappable__",
+   "HallusionBench": "__unmappable__",
+   "Hardware requirements": "__unmappable__",
+   "HarmBench (↓)": "__unmappable__",
+   "Harmful": "__unmappable__",
+   "Harvey Lab-AA": "__unmappable__",
+   "Harvey Legal Agent": "__unmappable__",
+   "Head Dim (QK / V)": "__unmappable__",
+   "Head Dimensions (QK / V)": "__unmappable__",
+   "HealthBench": "__unmappable__",
+   "HealthBench-Consensus": "__unmappable__",
+   "HealthBench-Hard": "__unmappable__",
+   "HellaSwag": "__unmappable__",
+   "HellaSwag (3,000-item subset)": "__unmappable__",
+   "HellaSwag (EM)": "__unmappable__",
+   "HellaSwag (acc_norm)": "__unmappable__",
+   "HiPhO": "__unmappable__",
+   "Honeypot": "__unmappable__",
+   "HotpotQA (LLM-Judge)": "__unmappable__",
+   "HumanEval": "__unmappable__",
+   "HumanEval (Pass@1)": "__unmappable__",
+   "HumanEval (pass@1, n=20, T=0.2)": "__unmappable__",
+   "HumanEval+": "__unmappable__",
+   "HumanEval+ (Pass@1)": "__unmappable__",
+   "HumanEval+ Code generation": "__unmappable__",
+   "HumanEval+, MBPP+, LiveCodeBench": "__unmappable__",
+   "HumanEvalPlus": "__unmappable__",
+   "Humaneval+ (pass@1)": "__unmappable__",
+   "Humanity's Last Exam": "hle",
+   "Humanity's Last Exam (DE)": "__unmappable__",
+   "Humanity's Last Exam (EN)": "hle",
+   "Humanity's Last Exam (HLE)": "hle",
+   "Humanity's Last Exam (Pass@1)": "hle",
+   "Humanity's Last Exam (no tools)": "hle",
+   "Humanity's Last Exam (with tools)": "__unmappable__",
+   "Humanity's Last Exam (without tools) Expert-level reasoning": "__unmappable__",
+   "Humanity's Last Exam Diamond": "hle_diamond",
+   "Humanity's Last Exam: Diamond": "hle_diamond",
+   "Humanity’s Last Exam": "hle",
+   "Hypersim": "__unmappable__",
+   "IF": "__unmappable__",
+   "IF Bench": "ifbench",
+   "IF Eval": "__unmappable__",
+   "IFBench": "ifbench",
+   "IFBench (loose)": "__unmappable__",
+   "IFBench (loose-prompt)": "__unmappable__",
+   "IFBench (prompt loose)": "__unmappable__",
+   "IFBench (prompt)": "__unmappable__",
+   "IFBench (prompt-loose)": "__unmappable__",
+   "IFEval": "__unmappable__",
+   "IFEval (acc)": "__unmappable__",
+   "IFEval (loose)": "__unmappable__",
+   "IFEval (strict prompt)": "__unmappable__",
+   "IFEval Avg": "__unmappable__",
+   "IFEval Strict": "__unmappable__",
+   "IFEval, IFBench": "__unmappable__",
+   "IFStruct": "__unmappable__",
+   "IMO-Answer-Bench": "__unmappable__",
+   "IMO-AnswerBench": "__unmappable__",
+   "IMOAnswerBench": "__unmappable__",
+   "IMOAnswerBench (Pass@1)": "__unmappable__",
+   "IMOAnswerBench (no tools)": "__unmappable__",
+   "IMOAnswerBench (with tools)": "__unmappable__",
+   "INCLUDE": "__unmappable__",
+   "INCLUDE-lite (EM)": "__unmappable__",
+   "IOI 2025": "__unmappable__",
+   "ITBench": "itbench_aa",
+   "Idavidrein/gpqa (diamond)": "gpqa_diamond",
+   "Idavidrein/gpqa (gpqa_diamond)": "gpqa_diamond",
+   "Idavidrein/gpqa (main)": "__unmappable__",
+   "Industrial Drive Technology": "__unmappable__",
+   "InfiniteBench (Avg)": "__unmappable__",
+   "InfoVQA (val)": "__unmappable__",
+   "InfographicVQA (val)": "__unmappable__",
+   "Instruction Following": "__unmappable__",
+   "Instruction following IFBench": "ifbench",
+   "Intelligence Density (1/GB)": "__unmappable__",
+   "IntelligenceLab/Long-Horizon-Terminal-Bench (lhtb)": "__unmappable__",
+   "IntelligenceLab/Long-Horizon-Terminal-Bench (lhtb2_solved)": "__unmappable__",
+   "IntelligenceLab/Long-Horizon-Terminal-Bench (lhtb_solved)": "__unmappable__",
+   "InternScience/ResearchClawBench (overall)": "__unmappable__",
+   "JetBrains pairwise": "__unmappable__",
+   "Job Bench": "__unmappable__",
+   "JobBench": "__unmappable__",
+   "KBL": "__unmappable__",
+   "KBank-MMLU": "__unmappable__",
+   "KBankMMLU (in-house)": "__unmappable__",
+   "KMMLU": "__unmappable__",
+   "KMMLU-Pro": "__unmappable__",
+   "KMMLU-Redux": "__unmappable__",
+   "KMO26 (1st round)": "__unmappable__",
+   "KOR-Bench": "__unmappable__",
+   "KORBench": "__unmappable__",
+   "KSM": "__unmappable__",
+   "Kimi Claw 24/7 Bench": "__unmappable__",
+   "Kimi Code Bench 2.0": "__unmappable__",
+   "Kimi Code Bench 2.0 (Internal)": "__unmappable__",
+   "Kimi Code Bench 3.0 Long-horizon (Internal)": "__unmappable__",
+   "Kimi Code Bench v2": "__unmappable__",
+   "Kimi Hallu Bench Hard w/ tools (Internal, lower is better)": "__unmappable__",
+   "Kimi Hallu Bench w/o tools (Internal, lower is better)": "__unmappable__",
+   "Kitab No Context - Precision With Context - Precision No Context - Recall With Context - Recall": "__unmappable__",
+   "Knowledge": "__unmappable__",
+   "Knowledge cutoff": "__unmappable__",
+   "Ko Arena Hard v2 (in-house)": "__unmappable__",
+   "Ko-AIME 2024 (in-house)": "__unmappable__",
+   "Ko-AIME 2025 (in-house)": "__unmappable__",
+   "Ko-AIME’25": "__unmappable__",
+   "Ko-GDPval": "__unmappable__",
+   "Ko-IFEval": "__unmappable__",
+   "Ko-LongBench": "__unmappable__",
+   "KoBALT": "__unmappable__",
+   "KorMedMCQA": "__unmappable__",
+   "LCB": "__unmappable__",
+   "LCB v3": "__unmappable__",
+   "LCB v5": "__unmappable__",
+   "LCB v6": "livecodebench",
+   "LCB-Pro 25Q2 (Easy)": "__unmappable__",
+   "LCB-Pro 25Q2 (Medium)": "__unmappable__",
+   "LCBv5-v6": "__unmappable__",
+   "LCR Long-context reasoning": "__unmappable__",
+   "LEXam-Benchmark/LEXam (mcq_4_choices)": "__unmappable__",
+   "LEXam-Benchmark/LEXam (open_question)": "__unmappable__",
+   "LFM2.5-2.6B": "__unmappable__",
+   "LOCA-Bench 256K": "__unmappable__",
+   "LVBench": "__unmappable__",
+   "Lab Bench (ProtocolQA)": "__unmappable__",
+   "Legal Research Bench": "__unmappable__",
+   "LingoQA": "__unmappable__",
+   "LiquidAI/ifstruct-v1.0 (ifstruct_v1)": "__unmappable__",
+   "LitQA2": "__unmappable__",
+   "Live Code Bench v6": "livecodebench",
+   "Live-Code-Bench-Pro-Easy": "__unmappable__",
+   "Live-Code-Bench-Pro-Medium": "__unmappable__",
+   "Live-Code-Bench-V6": "livecodebench",
+   "LiveBench": "__unmappable__",
+   "LiveBench 20241125": "__unmappable__",
+   "LiveBench 241125": "__unmappable__",
+   "LiveClaw": "__unmappable__",
+   "LiveCodeBench": "__unmappable__",
+   "LiveCodeBench (2408-2505)": "__unmappable__",
+   "LiveCodeBench (2408-2505) (Pass@1)": "__unmappable__",
+   "LiveCodeBench (8/1/24-2/1/25) (Avg@4)": "__unmappable__",
+   "LiveCodeBench (8/1/24–2/1/25)": "__unmappable__",
+   "LiveCodeBench (Mean@4)": "livecodebench",
+   "LiveCodeBench (Pass@1)": "livecodebench",
+   "LiveCodeBench (pass@1)": "livecodebench",
+   "LiveCodeBench (v1–v6 cumul)": "livecodebench",
+   "LiveCodeBench (v5 2024-07↔2024-12)": "__unmappable__",
+   "LiveCodeBench (v6 2025-08–2025-05)": "livecodebench",
+   "LiveCodeBench (v6)": "livecodebench",
+   "LiveCodeBench *(24/8~25/5)": "__unmappable__",
+   "LiveCodeBench Pro 25Q2": "__unmappable__",
+   "LiveCodeBench v3": "__unmappable__",
+   "LiveCodeBench v5": "__unmappable__",
+   "LiveCodeBench v6": "livecodebench",
+   "LiveCodeBench v6 (02/2025-05/2025)": "livecodebench",
+   "LiveCodeBench v6 (25.02-25.05)": "livecodebench",
+   "LiveCodeBench v6 (Feb–May)": "livecodebench",
+   "LiveCodeBench v6 Competitive coding": "livecodebench",
+   "LiveCodeBench-V6": "livecodebench",
+   "LiveCodeBench-v6": "livecodebench",
+   "LiveCodeBenchV6": "livecodebench",
+   "LiveCodeBenchv6": "livecodebench",
+   "LogicVista": "__unmappable__",
+   "Long Context": "__unmappable__",
+   "Long video understanding LVBench": "__unmappable__",
+   "Long-horizon office work CoWorkBench": "__unmappable__",
+   "LongBench Pro": "__unmappable__",
+   "LongBench V2": "__unmappable__",
+   "LongBench v1": "__unmappable__",
+   "LongBench v2": "__unmappable__",
+   "LongBench-V2 (EM)": "__unmappable__",
+   "LongBench-v2": "__unmappable__",
+   "LongBench-v2 (EM)": "__unmappable__",
+   "LongBenchPro": "__unmappable__",
+   "LongVideoBench": "__unmappable__",
+   "Longbench v2": "__unmappable__",
+   "Longbench v2 (≤ 1M)": "__unmappable__",
+   "Longform Writing": "__unmappable__",
+   "MATH": "__unmappable__",
+   "MATH (EM)": "__unmappable__",
+   "MATH (flex EM)": "__unmappable__",
+   "MATH 500": "__unmappable__",
+   "MATH CoT 2-Shot": "__unmappable__",
+   "MATH Lvl 5": "__unmappable__",
+   "MATH Maj@1": "__unmappable__",
+   "MATH-500": "__unmappable__",
+   "MATH-Vision": "__unmappable__",
+   "MATH-Vision (full)": "__unmappable__",
+   "MATH500": "__unmappable__",
+   "MATH500 (ES)": "__unmappable__",
+   "MATH500 (Mean@1)": "__unmappable__",
+   "MATH500 (acc)": "__unmappable__",
+   "MATH500(acc)": "__unmappable__",
+   "MAXIFE": "__unmappable__",
+   "MBCT": "__unmappable__",
+   "MBPP": "__unmappable__",
+   "MBPP Sanitized (pass@1, n=32, T=0.2)": "__unmappable__",
+   "MBPP+": "__unmappable__",
+   "MBPP+ (Pass@1)": "__unmappable__",
+   "MBPP+ (pass@1)": "__unmappable__",
+   "MBPP+ Code generation": "__unmappable__",
+   "MBPP-plus": "__unmappable__",
+   "MBZUAI/longshot-bench (core_perception)": "__unmappable__",
+   "MBZUAI/longshot-bench (information)": "__unmappable__",
+   "MBZUAI/longshot-bench (multimodal)": "__unmappable__",
+   "MBZUAI/longshot-bench (overall)": "__unmappable__",
+   "MBZUAI/longshot-bench (reasoning)": "__unmappable__",
+   "MCP Atlas": "mcp_atlas",
+   "MCP Atlas (Public)": "__unmappable__",
+   "MCP Atlas (public / all)": "__unmappable__",
+   "MCP Atlas Public": "mcp_atlas",
+   "MCP Mark Verified": "__unmappable__",
+   "MCP-Atlas": "mcp_atlas",
+   "MCP-Atlas (Public Set)": "__unmappable__",
+   "MCP-Mark": "__unmappable__",
+   "MCPAtlas Public (Pass@1)": "__unmappable__",
+   "MCPMark": "__unmappable__",
+   "MCPMark MCP tool use": "__unmappable__",
+   "MCPMark-Verified": "__unmappable__",
+   "MGSM": "__unmappable__",
+   "MGSM (CoT EM, 11-lang avg)": "__unmappable__",
+   "MGSM (EM)": "__unmappable__",
+   "MGSM MATH": "__unmappable__",
+   "MILU": "__unmappable__",
+   "MLE-Lite": "__unmappable__",
+   "MLE-bench Lite": "__unmappable__",
+   "MLS Bench Lite": "__unmappable__",
+   "MLS-Bench-Lite": "__unmappable__",
+   "MLVU": "__unmappable__",
+   "MLVU (M-Avg)": "__unmappable__",
+   "MLVU (dev, M-Avg)": "__unmappable__",
+   "MM MTBench": "__unmappable__",
+   "MM-IFEval": "__unmappable__",
+   "MM-ToolSandbox (partial credit)": "__unmappable__",
+   "MM-Vet (v1)": "__unmappable__",
+   "MMAU": "__unmappable__",
+   "MMBench (dev EN v1.1)": "__unmappable__",
+   "MMBench EN-DEV-v1.1": "__unmappable__",
+   "MME": "__unmappable__",
+   "MME-Benchmarks/Video-MME-v2": "__unmappable__",
+   "MMLU": "__unmappable__",
+   "MMLU (EM)": "__unmappable__",
+   "MMLU (MC acc)": "mmmlu",
+   "MMLU (acc)": "__unmappable__",
+   "MMLU 5-shot": "__unmappable__",
+   "MMLU Pro": "mmlu_pro",
+   "MMLU Redux 5-shot": "__unmappable__",
+   "MMLU(acc)": "__unmappable__",
+   "MMLU-Pro": "mmlu_pro",
+   "MMLU-Pro (CoT EM)": "__unmappable__",
+   "MMLU-Pro (EM)": "__unmappable__",
+   "MMLU-Pro (acc)": "mmlu_pro",
+   "MMLU-Pro CoT (EN)": "mmlu_pro",
+   "MMLU-Pro(acc)": "mmlu_pro",
+   "MMLU-ProX": "__unmappable__",
+   "MMLU-ProX (avg en/de/fr/es/it/ja/zh/hi/pt/ko)": "__unmappable__",
+   "MMLU-ProX (avg over langs)": "__unmappable__",
+   "MMLU-ProX CoT (DE)": "__unmappable__",
+   "MMLU-ProX lite (IBM)": "__unmappable__",
+   "MMLU-Redux": "__unmappable__",
+   "MMLU-Redux (EM)": "__unmappable__",
+   "MMLU-Redux (acc)": "__unmappable__",
+   "MMLU-Redux, MuSR": "__unmappable__",
+   "MMLU-stem": "__unmappable__",
+   "MMLUPro": "mmlu_pro",
+   "MMLongBench-Doc": "__unmappable__",
+   "MMMB": "__unmappable__",
+   "MMMLU": "mmmlu",
+   "MMMLU (EM)": "mmmlu",
+   "MMMLU (ES)": "__unmappable__",
+   "MMMLU-lite (EM)": "__unmappable__",
+   "MMMU": "__unmappable__",
+   "MMMU (val)": "__unmappable__",
+   "MMMU (validation)": "__unmappable__",
+   "MMMU Pro": "mmmu_pro",
+   "MMMU Pro (Standard 10)": "mmmu_pro",
+   "MMMU Pro Standard 10": "mmmu_pro",
+   "MMMU-PRO (10 choice)": "mmmu_pro",
+   "MMMU-PRO (Vision Only)": "__unmappable__",
+   "MMMU-Pro": "mmmu_pro",
+   "MMMU-Pro (EM)": "__unmappable__",
+   "MMMU-Pro (Standard, 10 opts)": "mmmu_pro",
+   "MMMU-Pro (w/ python)": "__unmappable__",
+   "MMMU-Pro w/ python": "__unmappable__",
+   "MMMU-Pro, OCR Bench v2": "__unmappable__",
+   "MMMU/MMMU_Pro": "mmmu_pro",
+   "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)": "mmmu_pro",
+   "MMMU/MMMU_Pro (mmmu_pro_vision)": "__unmappable__",
+   "MMMU_VAL": "__unmappable__",
+   "MMStar": "__unmappable__",
+   "MMVU": "__unmappable__",
+   "MMVU (val)": "__unmappable__",
+   "MMlongBench Doc": "__unmappable__",
+   "MRCR": "__unmappable__",
+   "MRCR 1M (MMR)": "__unmappable__",
+   "MRCR v2 8 needle 128k (average)": "__unmappable__",
+   "MRCR v2 8-needle 256K–512K": "__unmappable__",
+   "MSEarthMCQ": "__unmappable__",
+   "MTBench": "__unmappable__",
+   "MTBench Avg": "__unmappable__",
+   "MTP / Speculative Decoder": "__unmappable__",
+   "MULTIPLE": "__unmappable__",
+   "MVBench": "__unmappable__",
+   "MatBench": "__unmappable__",
+   "MatTools": "__unmappable__",
+   "Math": "__unmappable__",
+   "Math & Science": "__unmappable__",
+   "Math & logical reasoning": "__unmappable__",
+   "Math Reasoning": "__unmappable__",
+   "Math500": "__unmappable__",
+   "MathArena Apex (Pass@1)": "__unmappable__",
+   "MathArena/aime_2026": "aime_2026",
+   "MathArena/hmmt_feb_2026": "hmmt_feb_2026",
+   "MathBench-CN (LLM-Judge)": "__unmappable__",
+   "MathVerse (Text Dominant)": "__unmappable__",
+   "MathVerse (Vision Dominant)": "__unmappable__",
+   "MathVerse_MINI": "__unmappable__",
+   "MathVision": "__unmappable__",
+   "MathVision (w/ python)": "__unmappable__",
+   "MathVision_MINI": "__unmappable__",
+   "MathVista": "mathvista_mini",
+   "MathVista (mini)": "mathvista_mini",
+   "MathVista mini": "mathvista_mini",
+   "MathVista_MINI": "mathvista_mini",
+   "Mathematics": "__unmappable__",
+   "Mathvista(mini)": "mathvista_mini",
+   "Mean (9 non-ASR)": "__unmappable__",
+   "MedXPertQA MM": "__unmappable__",
+   "MedXpertQA-MM": "__unmappable__",
+   "Median (9 non-ASR)": "__unmappable__",
+   "Meeseeks-zh (acc)": "__unmappable__",
+   "MiMo Code Bench": "__unmappable__",
+   "MiMo Cyber Bench": "__unmappable__",
+   "MiMo VisualCoding": "__unmappable__",
+   "MicroVQA": "__unmappable__",
+   "MindCube (tinybench)": "__unmappable__",
+   "Minerva Math": "__unmappable__",
+   "MiniF2F pass@1": "__unmappable__",
+   "MiniF2F pass@32": "__unmappable__",
+   "MiniF2F-Test (Pass@1)": "__unmappable__",
+   "MiniF2F-Test (Pass@32)": "__unmappable__",
+   "MiniF2F-Test (Pass@8)": "__unmappable__",
+   "Misinformation": "__unmappable__",
+   "MixEval": "__unmappable__",
+   "MoE Intermediate Size": "__unmappable__",
+   "Mobile use AndroidWorld": "__unmappable__",
+   "Model Size": "__unmappable__",
+   "MolBench-bind": "__unmappable__",
+   "MotionBench": "__unmappable__",
+   "MotionBench (dev)": "__unmappable__",
+   "MuSR": "__unmappable__",
+   "MuSiQue (EN)": "__unmappable__",
+   "MuirBench": "__unmappable__",
+   "Multi IF": "__unmappable__",
+   "Multi-Challenge": "__unmappable__",
+   "Multi-IF": "__unmappable__",
+   "Multi-IF (EN)": "__unmappable__",
+   "Multi-Image Reasoning": "__unmappable__",
+   "Multi-SWE-Bench": "__unmappable__",
+   "Multi-SWE-bench": "__unmappable__",
+   "MultiChallenge": "__unmappable__",
+   "MultiIF": "__unmappable__",
+   "MultiLoKo (EM)": "__unmappable__",
+   "MultiLoKo (LLM-Judge)": "__unmappable__",
+   "MultiPL-E": "__unmappable__",
+   "MultiPL-E HumanEval": "__unmappable__",
+   "MultiPL-E MBPP": "__unmappable__",
+   "Multidisciplinary reasoning HLE": "hle",
+   "Multilingual": "__unmappable__",
+   "Multilingual MMBench": "__unmappable__",
+   "Multilingual MMLU": "__unmappable__",
+   "Multilingual software engineering SWE-bench Multilingual": "swe_bench_multilingual",
+   "Multimodal software engineering SWE-MM": "swe_bench_multimodal",
+   "Multimodal tool use ClawEval-MM": "__unmappable__",
+   "NIAH-Multi": "__unmappable__",
+   "NL2Repo": "nl2repo",
+   "NL2Repo-Bench": "nl2repo",
+   "NL2Repo-Bench (Score)": "nl2repo",
+   "NLU": "__unmappable__",
+   "NOVA-63": "__unmappable__",
+   "NoLiMa": "__unmappable__",
+   "Nuscene": "__unmappable__",
+   "OBQA": "__unmappable__",
+   "OCR Bench v2": "__unmappable__",
+   "OCR Reasoning": "__unmappable__",
+   "OCRBench": "__unmappable__",
+   "OCRBench v1": "__unmappable__",
+   "OCRBench v2 (En)": "__unmappable__",
+   "OCRBenchV2 (EN)": "__unmappable__",
+   "OCW Courses": "__unmappable__",
+   "ODInW13": "__unmappable__",
+   "OJ-Bench (cpp)": "__unmappable__",
+   "OJBench": "__unmappable__",
+   "OJBench (Mean@1)": "__unmappable__",
+   "OJBench (cpp)": "__unmappable__",
+   "OJBench (python)": "__unmappable__",
+   "OMEGA": "__unmappable__",
+   "OS World Small": "__unmappable__",
+   "OSWorld": "__unmappable__",
+   "OSWorld 2.0": "osworld_2_0_vendor",
+   "OSWorld V2.1": "osworld_2_1",
+   "OSWorld-2": "osworld_2_0_vendor",
+   "OSWorld-G": "__unmappable__",
+   "OSWorld-Verified": "osworld_verified",
+   "OfficeQA Pro": "__unmappable__",
+   "OfficeQA Pro v2": "__unmappable__",
+   "OlympiadBench": "__unmappable__",
+   "OmniDoc": "__unmappable__",
+   "OmniDocBench": "__unmappable__",
+   "OmniDocBench 1.5": "__unmappable__",
+   "OmniDocBench 1.5 (average edit distance, lower is better)": "__unmappable__",
+   "OmniDocBench v1.5": "__unmappable__",
+   "OmniDocBench v1.6": "__unmappable__",
+   "OmniDocBench1.5": "__unmappable__",
+   "OmniMath": "__unmappable__",
+   "OmniScience Accuracy": "__unmappable__",
+   "OmniScience Non-Hallucination": "__unmappable__",
+   "OmniScience — Accuracy": "aa_omniscience_accuracy_1_1",
+   "OmniScience — Non-Hallucination": "aa_omniscience_hallucination_1_1",
+   "OpenAI-MRCR *(128k)": "__unmappable__",
+   "OpenAI-MRCR *(1M)": "__unmappable__",
+   "OpenBookQA (acc_norm)": "__unmappable__",
+   "OpenEQA (episodic memory, video)": "__unmappable__",
+   "Others": "__unmappable__",
+   "Overall": "__unmappable__",
+   "Overall (DE)": "__unmappable__",
+   "Overall (EN)": "__unmappable__",
+   "PIQA": "__unmappable__",
+   "PIQA (EM)": "__unmappable__",
+   "PIQA (acc_norm)": "__unmappable__",
+   "PMC-VQA": "__unmappable__",
+   "PMPP-Hard (AUC, 0–10h) pi v0.83.0": "__unmappable__",
+   "POPE": "__unmappable__",
+   "PRDBench": "__unmappable__",
+   "PaddlePaddle/Real5-OmniDocBench (illumination)": "__unmappable__",
+   "PaddlePaddle/Real5-OmniDocBench (overall)": "__unmappable__",
+   "PaddlePaddle/Real5-OmniDocBench (scanning)": "__unmappable__",
+   "PaddlePaddle/Real5-OmniDocBench (screen_photography)": "__unmappable__",
+   "PaddlePaddle/Real5-OmniDocBench (skew)": "__unmappable__",
+   "PaddlePaddle/Real5-OmniDocBench (warping)": "__unmappable__",
+   "PaperBench": "__unmappable__",
+   "Params": "__unmappable__",
+   "Params (B) (activated / total)": "__unmappable__",
+   "Params (B) activated / total": "__unmappable__",
+   "Perception": "__unmappable__",
+   "PerceptionBench": "__unmappable__",
+   "PhiBench 2.21": "__unmappable__",
+   "Physics": "__unmappable__",
+   "PinchBench": "__unmappable__",
+   "Point-Bench": "__unmappable__",
+   "PolyMATH": "__unmappable__",
+   "PopQA": "__unmappable__",
+   "PopQA (LLM-Judge)": "__unmappable__",
+   "Popular Aggregated Benchmark": "__unmappable__",
+   "PostTrain Bench v1.1": "__unmappable__",
+   "PostTrain Bench v1.2": "__unmappable__",
+   "PostTrainBench": "__unmappable__",
+   "PreciseWikiQA (LLM-Judge)": "__unmappable__",
+   "PresentBench": "__unmappable__",
+   "Privacy": "__unmappable__",
+   "ProfBench": "__unmappable__",
+   "ProfBench (Search)": "__unmappable__",
+   "Professional job tasks JobBench": "__unmappable__",
+   "Program Bench": "__unmappable__",
+   "ProgramBench": "__unmappable__",
+   "ProgramBench (Almost Solved)": "programbench_almost",
+   "ProgramBench (Almost@1)": "programbench_almost",
+   "ProteinLMBench": "__unmappable__",
+   "QA": "__unmappable__",
+   "QwenClaw": "__unmappable__",
+   "QwenClawBench": "__unmappable__",
+   "QwenWebBench": "__unmappable__",
+   "RGB Closed-Book": "__unmappable__",
+   "RGB Fact-Check (Error Correction)": "__unmappable__",
+   "RGB Negative (Abstention)": "__unmappable__",
+   "RULER": "__unmappable__",
+   "RULER (128K)": "__unmappable__",
+   "RULER (1M)": "__unmappable__",
+   "RULER 128K": "__unmappable__",
+   "RULER 64K": "__unmappable__",
+   "RULER @ 1M": "__unmappable__",
+   "RULER @ 256k": "__unmappable__",
+   "RULER @ 512k": "__unmappable__",
+   "RULER-100@1M": "__unmappable__",
+   "RULER-100@256k": "__unmappable__",
+   "RULER-100@512k": "__unmappable__",
+   "RWSearch ↗": "__unmappable__",
+   "Real-world perception RealWorldQA": "__unmappable__",
+   "Real-world tool use Toolathlon Verified (Pass@1)": "toolathlon",
+   "RealWorldQA": "__unmappable__",
+   "Reasoning": "__unmappable__",
+   "Reasoning & Knowledge": "__unmappable__",
+   "RefCOCO avg": "__unmappable__",
+   "RefCOCO(avg)": "__unmappable__",
+   "RefCOCO-M": "__unmappable__",
+   "RefCOCO-avg": "__unmappable__",
+   "RefCOCO-avg (Acc@0.5)": "__unmappable__",
+   "RefSpatial-Bench": "__unmappable__",
+   "RefSpatialBench": "__unmappable__",
+   "Reference": "__unmappable__",
+   "Release Note": "__unmappable__",
+   "Repo-level code generation NL2Repo-Bench": "nl2repo",
+   "RepoBench (EM)": "__unmappable__",
+   "RepoQA (Pass@1)": "__unmappable__",
+   "ResearchRubrics": "__unmappable__",
+   "Retail": "__unmappable__",
+   "RoPE Base Frequency": "__unmappable__",
+   "RoadmapBench": "__unmappable__",
+   "RoboSpatial-Home": "__unmappable__",
+   "SALAD-Bench": "__unmappable__",
+   "SAT (val + test)": "__unmappable__",
+   "SEAL-0": "__unmappable__",
+   "SEC Bench Pro": "sec_bench_pro",
+   "SEC-Bench Pro (Pass@1)": "sec_bench_pro",
+   "SEED-Bench (image)": "__unmappable__",
+   "SFE": "__unmappable__",
+   "SFT": "__unmappable__",
+   "SLAKE": "__unmappable__",
+   "SQuAD (M/A Grounding Score)": "__unmappable__",
+   "SQuAD (Utility Accuracy)": "__unmappable__",
+   "SUNRGBD": "__unmappable__",
+   "SWA Heads (Q/KV)": "__unmappable__",
+   "SWA Window Size": "__unmappable__",
+   "SWE Atlas - QnA": "swe_atlas_qna",
+   "SWE Atlas - RF": "swe_atlas_rf",
+   "SWE Atlas - TW": "swe_atlas_tw",
+   "SWE Bench Multilingual": "swe_bench_multilingual",
+   "SWE Bench Pro": "swe_bench_pro",
+   "SWE Bench Pro (strict) Software engineering": "__unmappable__",
+   "SWE Bench Pro V2": "swe_bench_pro_2_0",
+   "SWE Bench Verified": "swe_bench_verified",
+   "SWE Bench Verified (SWE-Agent Harness)": "swe_bench_verified",
+   "SWE Marathon v1.1": "swe_marathon_1_1",
+   "SWE Multilingual (Resolved)": "swe_bench_multilingual",
+   "SWE Pro (Resolved)": "swe_bench_pro",
+   "SWE Refactor Bench": "__unmappable__",
+   "SWE Verified": "swe_bench_verified",
+   "SWE Verified (Resolved)": "swe_bench_verified",
+   "SWE-Atlas-QnA": "swe_atlas_qna",
+   "SWE-Atlas-QnA (strict) Repo-level code Q&A": "swe_atlas_qna",
+   "SWE-Atlas-Test-writing": "swe_atlas_tw",
+   "SWE-Bench (AgentLess)": "__unmappable__",
+   "SWE-Bench (Codex)": "__unmappable__",
+   "SWE-Bench (OpenCode)": "__unmappable__",
+   "SWE-Bench (OpenHands)": "__unmappable__",
+   "SWE-Bench (Pass@1)": "__unmappable__",
+   "SWE-Bench Multiligual": "swe_bench_multilingual",
+   "SWE-Bench Multilingual": "swe_bench_multilingual",
+   "SWE-Bench Multilingual (OpenHands)": "__unmappable__",
+   "SWE-Bench Pro": "swe_bench_pro",
+   "SWE-Bench Pro V2": "swe_bench_pro_2_0",
+   "SWE-Bench Pro V2 HARD": "swe_bench_pro_hard_2_0",
+   "SWE-Bench Pro V2 Hard": "swe_bench_pro_hard_2_0",
+   "SWE-Bench Pro v2": "swe_bench_pro_2_0",
+   "SWE-Bench Verified": "swe_bench_verified",
+   "SWE-Bench Verified (AgentLess 4*10)": "__unmappable__",
+   "SWE-Bench Verified (OpenCode)": "swe_bench_verified",
+   "SWE-Bench Verified (OpenHands)": "swe_bench_verified",
+   "SWE-Bench(acc)": "__unmappable__",
+   "SWE-Bench-Verified (acc)": "swe_bench_verified",
+   "SWE-MM": "swe_bench_multimodal",
+   "SWE-Marathon": "__unmappable__",
+   "SWE-Marathon (v1.1)": "swe_marathon_1_1",
+   "SWE-Marathon v1.1": "swe_marathon_1_1",
+   "SWE-bench Multilingual": "swe_bench_multilingual",
+   "SWE-bench Multilingual (OpenCode)": "swe_bench_multilingual",
+   "SWE-bench Pro": "swe_bench_pro",
+   "SWE-bench Pro (Public Dataset)": "__unmappable__",
+   "SWE-bench Pro V2": "swe_bench_pro_2_0",
+   "SWE-bench Pro v1.0": "swe_bench_pro",
+   "SWE-bench Pro v2": "swe_bench_pro_2_0",
+   "SWE-bench Pro v2 Hard": "swe_bench_pro_hard_2_0",
+   "SWE-bench Pro v2.0 Hard": "swe_bench_pro_hard_2_0",
+   "SWE-bench Verified": "swe_bench_verified",
+   "SWE-bench Verified (OpenCode)": "swe_bench_verified",
+   "SWE-bench Verified Software engineering": "swe_bench_verified",
+   "SWE-bench/SWE-bench_Multilingual (swe_bench_multilingual_%_resolved)": "swe_bench_multilingual",
+   "SWE-bench/SWE-bench_Verified (swe_bench_%_resolved)": "swe_bench_verified",
+   "SWEBench Multilingual Inkling 2 Mini with bash only": "swe_bench_multilingual",
+   "SWEBench Pro (public)": "__unmappable__",
+   "SWEBench Pro v2 (Hard) mini-swe-agent v2.4.6": "swe_bench_pro_hard_2_0",
+   "SWEBench Verified": "swe_bench_verified",
+   "SWEBench Verified bash only": "swe_bench_verified",
+   "SaaS-Bench": "__unmappable__",
+   "Safety": "__unmappable__",
+   "Scale AI Multi Challenge": "__unmappable__",
+   "Scale AI Multi-Challenge": "__unmappable__",
+   "ScaleAI/SWE-bench_Pro": "swe_bench_pro",
+   "SciCode": "scicode",
+   "SciCode (Inspect AI)": "__unmappable__",
+   "SciCode (sub/main)": "__unmappable__",
+   "SciCode (subtask)": "__unmappable__",
+   "SciCode (wbg)": "scicode",
+   "SciCode Scientific coding": "scicode",
+   "Scicode": "scicode",
+   "Science": "__unmappable__",
+   "Scientific chart analysis CharXiv (RQ)": "charxiv_reasoning",
+   "Scientific reasoning GPQA Diamond": "gpqa_diamond",
+   "ScreenSpot Pro": "__unmappable__",
+   "ScreenSpot Pro original / with Python": "__unmappable__",
+   "ScreenSpot-Pro": "__unmappable__",
+   "ScreenSpot-v2 Desktop": "__unmappable__",
+   "ScreenSpot-v2 Mobile": "__unmappable__",
+   "ScreenSpot-v2 Web": "__unmappable__",
+   "ScreenSpot_v2": "__unmappable__",
+   "Seal-0": "__unmappable__",
+   "Seal0": "__unmappable__",
+   "SealQA (12 distractors, <24k)": "__unmappable__",
+   "SealQA (12 distractors, >24k)": "__unmappable__",
+   "SealQA (no distractors, <24k)": "__unmappable__",
+   "SealQA (no distractors, >24k)": "__unmappable__",
+   "SecCodeBench": "__unmappable__",
+   "Semiconductors": "__unmappable__",
+   "Simple-QA verified (EM)": "__unmappable__",
+   "SimpleQA": "__unmappable__",
+   "SimpleQA (Correct)": "__unmappable__",
+   "SimpleQA (LLM-Judge)": "__unmappable__",
+   "SimpleQA Verified": "__unmappable__",
+   "SimpleQA-Verified (EM)": "__unmappable__",
+   "SimpleQA-Verified (Pass@1)": "__unmappable__",
+   "SimpleVQA": "__unmappable__",
+   "SkillsBench": "__unmappable__",
+   "SkillsBench (with skills)": "__unmappable__",
+   "SkillsBench Avg5": "__unmappable__",
+   "Sliding Window Size": "__unmappable__",
+   "Sliding window": "__unmappable__",
+   "SmolInstruct": "__unmappable__",
+   "Social IQa": "__unmappable__",
+   "Software Engineering": "__unmappable__",
+   "Software engineering QwenSWEBench": "__unmappable__",
+   "Speech Instruction Following": "__unmappable__",
+   "Spreadsheet v2": "__unmappable__",
+   "SpreadsheetBench 2": "__unmappable__",
+   "Stated knowledge cutoff": "__unmappable__",
+   "StepCode-Bench-Daily": "__unmappable__",
+   "StepCode-Bench-General": "__unmappable__",
+   "StepCodeBench": "__unmappable__",
+   "StrongREJECT": "__unmappable__",
+   "StrongREJECT (none)": "__unmappable__",
+   "Struct Eval": "__unmappable__",
+   "Sudoku-Bench (Mean@1)": "__unmappable__",
+   "SuperGPQA": "__unmappable__",
+   "SuperGPQA (EM)": "__unmappable__",
+   "SuperGPQA (MC acc)": "__unmappable__",
+   "TAU-bench *(airline)": "__unmappable__",
+   "TAU-bench *(retail)": "__unmappable__",
+   "TAU1-Airline": "__unmappable__",
+   "TAU1-Retail": "__unmappable__",
+   "TAU2-Airline": "tau2_bench_airline",
+   "TAU2-Bench": "__unmappable__",
+   "TAU2-Retail": "tau2_bench_retail",
+   "TAU2-Telecom": "tau2_bench_telecom",
+   "TAU3-Bench": "__unmappable__",
+   "TIGER-Lab/MMLU-Pro": "mmlu_pro",
+   "TIR-Bench": "__unmappable__",
+   "Tau 3 Banking": "tau3_bench_banking",
+   "Tau-Bench (Airline)": "__unmappable__",
+   "Tau-Bench (Retail)": "__unmappable__",
+   "Tau2 (average over 3)": "__unmappable__",
+   "Tau2 bench Airline": "tau2_bench_airline",
+   "Tau2 bench Retail": "tau2_bench_retail",
+   "Tau2 bench Telecom": "tau2_bench_telecom",
+   "Tau2-Airline": "tau2_bench_airline",
+   "Tau2-Airline(avg@8)": "tau2_bench_airline",
+   "Tau2-Bench": "__unmappable__",
+   "Tau2-Bench (Airline)": "tau2_bench_airline",
+   "Tau2-Bench (Retail)": "tau2_bench_retail",
+   "Tau2-Bench (Telecom)": "tau2_bench_telecom",
+   "Tau2-Retail(avg@8)": "tau2_bench_retail",
+   "Tau2-Telecom": "tau2_bench_telecom",
+   "Tau2-Telecom(avg@8)": "tau2_bench_telecom",
+   "Tau3-Bench": "tau3_bench_banking",
+   "Tau3-Bench (Banking)": "tau3_bench_banking",
+   "TauBench V2 (Airline)": "__unmappable__",
+   "TauBench V2 (Average)": "__unmappable__",
+   "TauBench V2 (Retail)": "__unmappable__",
+   "TauBench V2 (Telecom)": "tau2_bench_telecom",
+   "TauBench V2 Airline": "__unmappable__",
+   "TauBench V2 Average": "__unmappable__",
+   "TauBench V2 Retail": "__unmappable__",
+   "TauBench V2 Telecom": "tau2_bench_telecom",
+   "TauBench V3 Airline": "__unmappable__",
+   "TauBench V3 Average": "__unmappable__",
+   "TauBench V3 Banking": "tau3_bench_banking",
+   "TauBench V3 Retail": "__unmappable__",
+   "TauBench V3 Telecom": "__unmappable__",
+   "Tau² Airline": "__unmappable__",
+   "Tau² Retail": "__unmappable__",
+   "Tau² Telecom": "tau2_bench_telecom",
+   "Telecom": "__unmappable__",
+   "Terminal Bench": "__unmappable__",
+   "Terminal Bench (hard subset)": "terminal_bench_hard",
+   "Terminal Bench 2": "terminal_bench_2_0",
+   "Terminal Bench 2.0": "terminal_bench_2_0",
+   "Terminal Bench 2.0 (Acc)": "terminal_bench_2_0",
+   "Terminal Bench 2.1": "terminal_bench_2_1",
+   "Terminal Bench 2.1 (Best Reported Harness)": "__unmappable__",
+   "Terminal Bench 2.1 (Terminus-2)": "terminal_bench_2_1",
+   "Terminal Bench 2.1 (best harness)": "__unmappable__",
+   "Terminal Bench 3.0": "terminal_bench_3_0",
+   "Terminal Bench 4": "terminal_bench_4_0",
+   "Terminal Bench 4.0": "terminal_bench_4_0",
+   "Terminal Bench 4.1": "terminal_bench_4_1",
+   "Terminal Bench Core 2.0": "terminal_bench_2_0",
+   "Terminal Bench Core 4.0": "terminal_bench_4_0",
+   "Terminal Bench Core 4.1": "terminal_bench_4_1",
+   "Terminal Bench Hard": "terminal_bench_hard",
+   "Terminal Bench v2.1": "terminal_bench_2_1",
+   "Terminal Bench v2.1 Inkling 2 Mini in pi v0.83.0": "terminal_bench_2_1",
+   "Terminal Bench v4.0 mini-swe-agent v2.4.6": "terminal_bench_4_0",
+   "Terminal-Bench": "__unmappable__",
+   "Terminal-Bench 2.0": "terminal_bench_2_0",
+   "Terminal-Bench 2.0 (Terminus-2)": "terminal_bench_2_0",
+   "Terminal-Bench 2.1": "terminal_bench_2_1",
+   "Terminal-Bench 2.1 (Claude Code)": "__unmappable__",
+   "Terminal-Bench 2.1 (OpenCode)": "terminal_bench_2_1",
+   "Terminal-Bench 2.1 (Pass@1)": "terminal_bench_2_1",
+   "Terminal-Bench 2.1 (Terminus 2)": "terminal_bench_2_1",
+   "Terminal-Bench 2.1 (Terminus-2)": "terminal_bench_2_1",
+   "Terminal-Bench 2.1 (self-reported)": "terminal_bench_2_1",
+   "Terminal-Bench 2.1 Agentic terminal use": "terminal_bench_2_1",
+   "Terminal-Bench 3.0 (Pass@1)": "terminal_bench_3_0",
+   "Terminal-Bench 4": "terminal_bench_4_0",
+   "Terminal-Bench 4.0": "terminal_bench_4_0",
+   "Terminal-Bench 4.0 (Claude Code)": "__unmappable__",
+   "Terminal-Bench 4.0 (Pass@1)": "terminal_bench_4_0",
+   "Terminal-Bench 4.0 (Terminus-2)": "__unmappable__",
+   "Terminal-Bench 4.1": "terminal_bench_4_1",
+   "Terminal-Bench 4.1 (Claude Code)": "__unmappable__",
+   "Terminal-Bench 4.1 (Pass@1)": "terminal_bench_4_1",
+   "Terminal-Bench 4.1 (Terminus-2)": "__unmappable__",
+   "Terminal-Bench Hard": "terminal_bench_hard",
+   "Terminal-Bench v2.1": "terminal_bench_2_1",
+   "Terminal-Bench-Science 0.1": "terminal_bench_science_0_1",
+   "Terminal-bench": "__unmappable__",
+   "TerminalBench (acc)": "__unmappable__",
+   "TerminalBench 2.1": "terminal_bench_2_1",
+   "TerminalBench 2.1 (with terminus2)": "terminal_bench_2_1",
+   "TerminalBench 4.0": "terminal_bench_4_0",
+   "TerminalBench(acc)": "terminal_bench_2_0",
+   "Text Creation": "__unmappable__",
+   "TextVQA": "__unmappable__",
+   "TextVQA (val)": "__unmappable__",
+   "Thinking avg": "__unmappable__",
+   "Tool Decathlon": "__unmappable__",
+   "Tool Use": "__unmappable__",
+   "Tool-Decathlon": "__unmappable__",
+   "ToolSandbox": "__unmappable__",
+   "Toolathlon": "__unmappable__",
+   "Toolathlon (Pass@1)": "toolathlon",
+   "Toolathlon Verified": "toolathlon",
+   "Toolathlon Verified Agentic tool use": "toolathlon",
+   "Toolathlon-Verified": "toolathlon",
+   "Toxigen Discriminative Toxic category Neutral category": "__unmappable__",
+   "Training Data": "__unmappable__",
+   "Training budget": "__unmappable__",
+   "Training method": "__unmappable__",
+   "Training precision": "__unmappable__",
+   "TriviaQA": "__unmappable__",
+   "TriviaQA (EM)": "__unmappable__",
+   "TriviaQA 5-shot": "__unmappable__",
+   "TruthfulQA": "__unmappable__",
+   "Tulu3 Safety Eval Avg": "__unmappable__",
+   "U-MATH": "__unmappable__",
+   "V": "__unmappable__",
+   "V* (w/ python)": "__unmappable__",
+   "V*Bench": "__unmappable__",
+   "VCLab-PolyU/OmniCompass (OmniCompass-AV)": "__unmappable__",
+   "VCLab-PolyU/OmniCompass (OmniCompass-VL)": "__unmappable__",
+   "VCT": "__unmappable__",
+   "VITA-Bench": "__unmappable__",
+   "VSI-Bench": "__unmappable__",
+   "Vals Finance Index": "__unmappable__",
+   "Vals Index (v2.2)": "__unmappable__",
+   "Vals.ai Financial Agent 1.1 with web search": "__unmappable__",
+   "Vals.ai Financial Agent 1.1 without web search": "__unmappable__",
+   "Vibe Code Bench v1.1 openhands (vals)": "vibe_code_bench_1_1",
+   "Video": "__unmappable__",
+   "Video + Audio Q/A": "__unmappable__",
+   "Video MME": "__unmappable__",
+   "Video Q/A": "__unmappable__",
+   "Video-MME (v1, no subtitles)": "__unmappable__",
+   "Video-MME (v1, subtitles)": "__unmappable__",
+   "Video-MME (w. sub)": "__unmappable__",
+   "Video-MMMU": "__unmappable__",
+   "VideoMME": "__unmappable__",
+   "VideoMME (w sub.)": "__unmappable__",
+   "VideoMME (w/o sub.)": "__unmappable__",
+   "VideoMMMU": "__unmappable__",
+   "Vision2Web": "__unmappable__",
+   "Visual grounding": "__unmappable__",
+   "Visual math problem solving MathVision": "__unmappable__",
+   "Visual web development Vision2Web": "__unmappable__",
+   "VitaBench": "__unmappable__",
+   "VitaBench (avg@4)": "__unmappable__",
+   "VlmsAreBlind": "__unmappable__",
+   "VoiceBench": "__unmappable__",
+   "WMDP (Bio)": "__unmappable__",
+   "WMDP (Chem)": "__unmappable__",
+   "WMT24++": "__unmappable__",
+   "WMT24++ (ES)": "__unmappable__",
+   "WMT24++ (en-\\>xx)": "__unmappable__",
+   "WMT24++ (en→xx)": "__unmappable__",
+   "We-Math": "__unmappable__",
+   "We-Math (testmini, strict)": "__unmappable__",
+   "WebArena Verified": "__unmappable__",
+   "WebArena-Verified": "__unmappable__",
+   "WebTest": "__unmappable__",
+   "Where2Place": "__unmappable__",
+   "WideSearch": "__unmappable__",
+   "WideSearch (item-f1 Agent Swarm)": "__unmappable__",
+   "WideSearch (item-f1)": "__unmappable__",
+   "WildBench": "__unmappable__",
+   "WildClaw": "__unmappable__",
+   "WildClawBench": "__unmappable__",
+   "WildClawBench In-the-wild agentic tasks": "__unmappable__",
+   "WinoGrande": "__unmappable__",
+   "WinoGrande (EM)": "__unmappable__",
+   "WinoGrande (acc)": "__unmappable__",
+   "Work-Arena L1": "__unmappable__",
+   "Workspace-Bench": "__unmappable__",
+   "Workspace-Bench-Lite": "__unmappable__",
+   "World Sense": "__unmappable__",
+   "WorldVQA": "__unmappable__",
+   "WorldVQA ForceAnswer": "__unmappable__",
+   "Writing Bench": "__unmappable__",
+   "WritingBench": "__unmappable__",
+   "XBench-DS-2510": "__unmappable__",
+   "XLRS-Bench": "__unmappable__",
+   "XSTest": "__unmappable__",
+   "ZEROBench": "zerobench",
+   "ZEROBench_sub": "__unmappable__",
+   "ZebraLogic": "__unmappable__",
+   "ZebraLogic (Mean@1)": "__unmappable__",
+   "ZebraLogic (acc)": "__unmappable__",
+   "ZeroBench": "zerobench",
+   "ZeroBench (Pass@5)": "__unmappable__",
+   "ZeroBench (main) original / with Python": "__unmappable__",
+   "ZeroBench (pass@5)": "__unmappable__",
+   "ZeroBench (w/ tools)": "__unmappable__",
+   "ZeroBench-main (w/tools)": "__unmappable__",
+   "ZeroBench-main w/ tools (Pass@5)": "__unmappable__",
+   "ZeroBench_main (avg@5 / pass@5)": "__unmappable__",
+   "ZeroBench_main w/ python (pass@5)": "__unmappable__",
+   "ZoomBench (full + crop average)": "__unmappable__",
+   "\\(\\tau^2\\)-Bench": "__unmappable__",
+   "actava/chi-bench": "__unmappable__",
+   "actava/chi-bench (care_management)": "__unmappable__",
+   "actava/chi-bench (prior_authorization)": "__unmappable__",
+   "actava/chi-bench (utilization_management)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (ale-cli-pass-rate)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (ale-cli-score)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (full-spectrum-pass-rate)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (full-spectrum-score)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (last-exam-pass-rate)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (last-exam-score)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (near-term-pass-rate)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (near-term-score)": "__unmappable__",
+   "agents-last-exam/agents-last-exam (overall-pass-rate)": "agents_last_exam_1_0",
+   "agents-last-exam/agents-last-exam (overall-score)": "__unmappable__",
+   "allenai/IFBench_test (prompt_level_loose)": "__unmappable__",
+   "benchflow/skillsbench (skillsbench_v1_1)": "__unmappable__",
+   "cais/hle": "hle",
+   "cais/hle (default)": "hle",
+   "cais/hle (no tools)": "hle",
+   "cais/hle (none)": "hle",
+   "cais/hle (with tools)": "__unmappable__",
+   "cais/hle-diamond": "hle_diamond",
+   "cais/hle-diamond (no tools)": "hle_diamond",
+   "cais/hle-diamond (with tools)": "__unmappable__",
+   "claw-eval/Claw-Eval (general)": "claw_eval",
+   "claw-eval/Claw-Eval (multi_turn)": "__unmappable__",
+   "claw-eval/Claw-Eval (multimodal)": "__unmappable__",
+   "coding": "__unmappable__",
+   "collinear-ai/cwe-bench (resolve_rate)": "__unmappable__",
+   "collinear-ai/yc-bench (medium)": "__unmappable__",
+   "crosbylegal/RedlineBench (redline_overall)": "__unmappable__",
+   "datacurve/deep-swe": "__unmappable__",
+   "extraction": "__unmappable__",
+   "facebook/mmi (error-rate)": "__unmappable__",
+   "facebook/mmi (mmi-value)": "__unmappable__",
+   "facebook/mmi (modality-presence-score)": "__unmappable__",
+   "facebook/mmi (pass-rate-lenient)": "__unmappable__",
+   "facebook/mmi (pass-rate-strict)": "__unmappable__",
+   "facebook/mmi (precision)": "__unmappable__",
+   "facebook/mmi (recall)": "__unmappable__",
+   "facebook/multiloko (average_contains)": "__unmappable__",
+   "facebook/multiloko (average_em)": "__unmappable__",
+   "facebook/multiloko (contains_arabic)": "__unmappable__",
+   "facebook/multiloko (contains_bengali)": "__unmappable__",
+   "facebook/multiloko (contains_cantonese)": "__unmappable__",
+   "facebook/multiloko (contains_czech)": "__unmappable__",
+   "facebook/multiloko (contains_dutch)": "__unmappable__",
+   "facebook/multiloko (contains_english)": "__unmappable__",
+   "facebook/multiloko (contains_farsi)": "__unmappable__",
+   "facebook/multiloko (contains_french)": "__unmappable__",
+   "facebook/multiloko (contains_german)": "__unmappable__",
+   "facebook/multiloko (contains_hebrew)": "__unmappable__",
+   "facebook/multiloko (contains_hindi)": "__unmappable__",
+   "facebook/multiloko (contains_indonesian)": "__unmappable__",
+   "facebook/multiloko (contains_italian)": "__unmappable__",
+   "facebook/multiloko (contains_japanese)": "__unmappable__",
+   "facebook/multiloko (contains_khmer)": "__unmappable__",
+   "facebook/multiloko (contains_korean)": "__unmappable__",
+   "facebook/multiloko (contains_malay)": "__unmappable__",
+   "facebook/multiloko (contains_marathi)": "__unmappable__",
+   "facebook/multiloko (contains_polish)": "__unmappable__",
+   "facebook/multiloko (contains_portuguese)": "__unmappable__",
+   "facebook/multiloko (contains_romanian)": "__unmappable__",
+   "facebook/multiloko (contains_russian)": "__unmappable__",
+   "facebook/multiloko (contains_simplified_mandarin)": "__unmappable__",
+   "facebook/multiloko (contains_spanish)": "__unmappable__",
+   "facebook/multiloko (contains_swedish)": "__unmappable__",
+   "facebook/multiloko (contains_tagalog)": "__unmappable__",
+   "facebook/multiloko (contains_thai)": "__unmappable__",
+   "facebook/multiloko (contains_traditional_mandarin)": "__unmappable__",
+   "facebook/multiloko (contains_turkish)": "__unmappable__",
+   "facebook/multiloko (contains_urdu)": "__unmappable__",
+   "facebook/multiloko (contains_vietnamese)": "__unmappable__",
+   "facebook/multiloko (em_arabic)": "__unmappable__",
+   "facebook/multiloko (em_bengali)": "__unmappable__",
+   "facebook/multiloko (em_cantonese)": "__unmappable__",
+   "facebook/multiloko (em_czech)": "__unmappable__",
+   "facebook/multiloko (em_dutch)": "__unmappable__",
+   "facebook/multiloko (em_english)": "__unmappable__",
+   "facebook/multiloko (em_farsi)": "__unmappable__",
+   "facebook/multiloko (em_french)": "__unmappable__",
+   "facebook/multiloko (em_german)": "__unmappable__",
+   "facebook/multiloko (em_hebrew)": "__unmappable__",
+   "facebook/multiloko (em_hindi)": "__unmappable__",
+   "facebook/multiloko (em_indonesian)": "__unmappable__",
+   "facebook/multiloko (em_italian)": "__unmappable__",
+   "facebook/multiloko (em_japanese)": "__unmappable__",
+   "facebook/multiloko (em_khmer)": "__unmappable__",
+   "facebook/multiloko (em_korean)": "__unmappable__",
+   "facebook/multiloko (em_malay)": "__unmappable__",
+   "facebook/multiloko (em_marathi)": "__unmappable__",
+   "facebook/multiloko (em_polish)": "__unmappable__",
+   "facebook/multiloko (em_portuguese)": "__unmappable__",
+   "facebook/multiloko (em_romanian)": "__unmappable__",
+   "facebook/multiloko (em_russian)": "__unmappable__",
+   "facebook/multiloko (em_simplified_mandarin)": "__unmappable__",
+   "facebook/multiloko (em_spanish)": "__unmappable__",
+   "facebook/multiloko (em_swedish)": "__unmappable__",
+   "facebook/multiloko (em_tagalog)": "__unmappable__",
+   "facebook/multiloko (em_thai)": "__unmappable__",
+   "facebook/multiloko (em_traditional_mandarin)": "__unmappable__",
+   "facebook/multiloko (em_turkish)": "__unmappable__",
+   "facebook/multiloko (em_urdu)": "__unmappable__",
+   "facebook/multiloko (em_vietnamese)": "__unmappable__",
+   "facebook/multiloko (gap_contains)": "__unmappable__",
+   "facebook/multiloko (gap_em)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_arabic)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_bengali)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_cantonese)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_czech)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_dutch)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_farsi)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_french)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_german)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_hebrew)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_hindi)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_indonesian)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_italian)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_japanese)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_khmer)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_korean)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_malay)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_marathi)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_polish)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_portuguese)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_romanian)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_russian)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_simplified_mandarin)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_spanish)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_swedish)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_tagalog)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_thai)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_traditional_mandarin)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_turkish)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_urdu)": "__unmappable__",
+   "facebook/multiloko (mother_tongue_effect_vietnamese)": "__unmappable__",
+   "google/physical-engineerings-last-exam (overall-score)": "__unmappable__",
+   "harborframework/terminal-bench (terminalbench_3)": "terminal_bench_3_0",
+   "harborframework/terminal-bench (terminalbench_4)": "terminal_bench_4_0",
+   "harborframework/terminal-bench (terminalbench_4_1)": "terminal_bench_4_1",
+   "harborframework/terminal-bench-2.0 (terminalbench_2)": "terminal_bench_2_0",
+   "harborframework/terminal-bench-2.1": "terminal_bench_2_1",
+   "harborframework/terminal-bench-3.0 (terminalbench_3)": "__unmappable__",
+   "harborframework/terminal-bench-4.0 (terminalbench_4)": "terminal_bench_4_0",
+   "harborframework/terminal-bench-science (terminalbenchscience_0_1)": "terminal_bench_science_0_1",
+   "hkust-nlp/Toolathlon (toolathlon_verified)": "toolathlon",
+   "humanities": "__unmappable__",
+   "internlm/WildClawBench (avg_cost)": "__unmappable__",
+   "internlm/WildClawBench (avg_time)": "__unmappable__",
+   "internlm/WildClawBench (overall)": "__unmappable__",
+   "joelniklaus/LEXam-hard": "__unmappable__",
+   "likaixin/ScreenSpot-Pro (overall)": "__unmappable__",
+   "llamaindex/ExtractBench (long)": "__unmappable__",
+   "llamaindex/ExtractBench (mean)": "__unmappable__",
+   "llamaindex/ExtractBench (medium)": "__unmappable__",
+   "llamaindex/ExtractBench (short)": "__unmappable__",
+   "llamaindex/ParseBench (chart)": "__unmappable__",
+   "llamaindex/ParseBench (layout)": "__unmappable__",
+   "llamaindex/ParseBench (mean)": "__unmappable__",
+   "llamaindex/ParseBench (table)": "__unmappable__",
+   "llamaindex/ParseBench (text_content)": "__unmappable__",
+   "llamaindex/ParseBench (text_formatting)": "__unmappable__",
+   "llamaindex/ParseBench-2 (charts)": "__unmappable__",
+   "llamaindex/ParseBench-2 (formatting)": "__unmappable__",
+   "llamaindex/ParseBench-2 (forms)": "__unmappable__",
+   "llamaindex/ParseBench-2 (layout)": "__unmappable__",
+   "llamaindex/ParseBench-2 (overall)": "__unmappable__",
+   "llamaindex/ParseBench-2 (tables)": "__unmappable__",
+   "llamaindex/ParseBench-2 (text)": "__unmappable__",
+   "math": "__unmappable__",
+   "mercor/APEX-SWE": "__unmappable__",
+   "mercor/APEX-v1-extended (apex-v1)": "__unmappable__",
+   "mercor/apex-agents": "apex_agents",
+   "mondk/IFMix": "__unmappable__",
+   "open-agent-leaderboard/results (appworld)": "__unmappable__",
+   "open-agent-leaderboard/results (browsecomp_plus)": "__unmappable__",
+   "open-agent-leaderboard/results (overall)": "__unmappable__",
+   "open-agent-leaderboard/results (swebench)": "__unmappable__",
+   "open-agent-leaderboard/results (taubench_airline)": "__unmappable__",
+   "open-agent-leaderboard/results (taubench_retail)": "__unmappable__",
+   "open-agent-leaderboard/results (taubench_telecom)": "tau2_bench_telecom",
+   "openai/gsm8k": "__unmappable__",
+   "reasoning": "__unmappable__",
+   "roleplay": "__unmappable__",
+   "sapbot/ask-my-agent-bench-2 (fallback)": "__unmappable__",
+   "stem": "__unmappable__",
+   "tau3-Banking Agentic tool use": "tau3_bench_banking",
+   "vs FP16": "__unmappable__",
+   "xBench-DeepSearch-2505": "__unmappable__",
+   "xBench-DeepSearch-2510": "__unmappable__",
+   "xbench-DeepSearch (2025.05)": "__unmappable__",
+   "xbench-DeepSearch (2025.10)": "__unmappable__",
+   "xdev-bench-hard (Internal)": "__unmappable__",
+   "zero-trust-physics/zero-trust-physics-environments (correct)": "__unmappable__",
+   "zero-trust-physics/zero-trust-physics-environments (kept_to_the_tool)": "__unmappable__",
+   "zero-trust-physics/zero-trust-physics-environments (reward)": "__unmappable__",
+   "τ 2 -Bench": "__unmappable__",
+   "τ² Bench (avg.)": "__unmappable__",
+   "τ²-Bench": "__unmappable__",
+   "τ²-Bench (airline) (avg@4)": "tau2_bench_airline",
+   "τ²-Bench (retail) (avg@4)": "tau2_bench_retail",
+   "τ²-Bench (telecom) (avg@4)": "tau2_bench_telecom",
+   "τ²-Bench Telecom": "tau2_bench_telecom",
+   "τ²-Bench* (Telecom)": "tau2_bench_telecom",
+   "τ²-Bench-Airline (Mean@4)": "tau2_bench_airline",
+   "τ²-Bench-Retail (Mean@4)": "tau2_bench_retail",
+   "τ²-Bench-Telecom (Mean@4)": "tau2_bench_telecom",
+   "τ³ (banking)": "tau3_bench_banking",
+   "τ³-Banking": "tau3_bench_banking",
+   "τ³-Bench Banking": "tau3_bench_banking",
+   "τ³-Bench* (Banking)": "tau3_bench_banking",
+   "τ³-bench": "__unmappable__",
+   "τ³-bench (4 domains), average": "__unmappable__",
+   "τ³-bench (AVG)": "__unmappable__",
+   "τ³-bench (Banking)": "tau3_bench_banking",
+   "τ³-bench banking": "tau3_bench_banking",
+   "𝛕3-Banking": "tau3_bench_banking",
+   "𝜏²-Bench Telecom": "tau2_bench_telecom"
+  },
   "update_kernelbench_mapping.py *": {
    "Claude Fable 5": "__closed_weights__",
    "Claude Fable 5.1": "claude-fable-5-1",
@@ -11291,6 +12989,47 @@
    "Kimi K3 (256k)": "kimi-k3",
    "Muse Spark 1.3": "__closed_weights__",
    "Qwen 3.8 Max": "qwen3-8-2-4t-a95b"
+  },
+  "update_llmstats_mapping.py llmstats-benchmark": {
+   "aime_2025": "aime_2025",
+   "apex_agents": "apex_agents",
+   "arc_agi_v2": "__unmappable__",
+   "browsecomp": "browsecomp",
+   "charxiv_r": "__unmappable__",
+   "cybergym": "cybergym",
+   "cybergym_e2e": "cybergym_e2e_aa",
+   "exploitbench": "exploitbench",
+   "exploitgym": "exploitgym",
+   "frontiermath": "__unmappable__",
+   "gpqa": "gpqa_diamond",
+   "hle": "__unmappable__",
+   "hle (no tools)": "hle",
+   "hmmt_feb_2026": "hmmt_feb_2026",
+   "mcp_atlas": "mcp_atlas",
+   "mmmlu": "mmmlu",
+   "mmmu": "__unmappable__",
+   "mmmu_pro": "mmmu_pro",
+   "mrcr_v2": "__unmappable__",
+   "nl2repo": "nl2repo",
+   "osworld": "__unmappable__",
+   "osworld_2_0": "osworld_2_0_vendor",
+   "osworld_2_1_partial": "osworld_2_0_vendor",
+   "scicode": "scicode",
+   "screenspot_pro": "__unmappable__",
+   "sec_bench_pro": "sec_bench_pro",
+   "simpleqa": "__unmappable__",
+   "swe_atlas_qna": "swe_atlas_qna",
+   "swe_bench_multilingual": "swe_bench_multilingual",
+   "swe_bench_multimodal": "swe_bench_multimodal",
+   "swe_bench_pro": "swe_bench_pro",
+   "swe_bench_verified": "swe_bench_verified",
+   "swe_marathon": "__unmappable__",
+   "tau2_airline": "tau2_bench_airline",
+   "tau2_retail": "tau2_bench_retail",
+   "tau_bench_retail": "__unmappable__",
+   "terminal_bench": "__unmappable__",
+   "toolathlon": "toolathlon",
+   "toolathlon_verified": "toolathlon"
   },
   "update_llmstats_mapping.py llmstats-model": {
    "aion-1.0-instruct": "aion-1-0-instruct",
@@ -13475,6 +15214,5293 @@
     "qwq-32b-preview"
    ]
   ]
+ },
+ "received": {
+  "update_huggingface_mapping.py *": {
+   "AA Index (v4.1)": [
+    [
+     "inkling-small",
+     40,
+     0
+    ]
+   ],
+   "AA LCR": [
+    [
+     "apriel-v1-6-15b-thinker",
+     50,
+     0
+    ]
+   ],
+   "AA Omniscience (index)": [
+    [
+     "inkling-small",
+     -9,
+     0
+    ]
+   ],
+   "AA-LCR": [
+    [
+     "kolibri-1",
+     68.3,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     52.8,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     84,
+     0
+    ],
+    [
+     "nemotron-labs-dory-1-0",
+     63,
+     0
+    ],
+    [
+     "ripple-65b-preview",
+     75,
+     0
+    ]
+   ],
+   "AA-Omni-Public Index": [
+    [
+     "lfm2-5-2-6b",
+     -29.5,
+     0
+    ]
+   ],
+   "AA-Omni. Accuracy": [
+    [
+     "lfm2-5-8b-a1b",
+     8.7,
+     0
+    ]
+   ],
+   "AA-Omni. Index": [
+    [
+     "lfm2-5-8b-a1b",
+     -24.7,
+     0
+    ]
+   ],
+   "AA-Omni. Non-Halluc.": [
+    [
+     "lfm2-5-8b-a1b",
+     63.5,
+     0
+    ]
+   ],
+   "AA-Omniscience": [
+    [
+     "a-x-k2",
+     39.6,
+     0
+    ],
+    [
+     "lfm-2-5-24b-a2b",
+     -24.9,
+     0
+    ],
+    [
+     "nemotron-3-5-lightning",
+     17.5,
+     0
+    ]
+   ],
+   "AA-Omniscience (accuracy)": [
+    [
+     "nemotron-labs-dory-1-0",
+     10,
+     0
+    ]
+   ],
+   "AA-Omniscience (public)": [
+    [
+     "lfm3-1-7b",
+     0.5,
+     0
+    ]
+   ],
+   "AA-Omniscience Accuracy": [
+    [
+     "lfm2-5-8b-a1b",
+     8.7,
+     0
+    ]
+   ],
+   "AA-Omniscience Accuracy (public set)": [
+    [
+     "kolibri-1",
+     14.8,
+     0
+    ]
+   ],
+   "AA-Omniscience Accuracy Factual accuracy": [
+    [
+     "k2-horizon-375b-a23b",
+     23,
+     0
+    ],
+    [
+     "k2-horizon-mova-36b-a4b",
+     18.8,
+     0
+    ]
+   ],
+   "AA-Omniscience Index": [
+    [
+     "lfm2-5-8b-a1b",
+     -24.7,
+     0
+    ]
+   ],
+   "AA-Omniscience Index (public set)": [
+    [
+     "kolibri-1",
+     -32.8,
+     0
+    ]
+   ],
+   "AA-Omniscience Non-Hallucination Rate": [
+    [
+     "lfm2-5-8b-a1b",
+     63.5,
+     0
+    ]
+   ],
+   "AA-Omniscience accuracy (public)": [
+    [
+     "lfm3-1-7b",
+     7.1,
+     0
+    ]
+   ],
+   "AA-Omniscience non-hallucination (public)": [
+    [
+     "lfm3-1-7b",
+     92.9,
+     0
+    ]
+   ],
+   "AA.LCR": [
+    [
+     "xing-4-0-29b-a4b",
+     61,
+     0
+    ]
+   ],
+   "AIME 2025": [
+    [
+     "k2-horizon-3-7b",
+     89.2,
+     0
+    ],
+    [
+     "k2-horizon-7b",
+     90.3,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     86.5,
+     0
+    ],
+    [
+     "olmo-3-1-32b-instruct",
+     57.9,
+     0
+    ],
+    [
+     "ripple-65b-preview",
+     98.3,
+     0
+    ],
+    [
+     "solar-open-100b-reasoning",
+     84.3,
+     0
+    ]
+   ],
+   "AIME 2025 (EN)": [
+    [
+     "kolibri-1",
+     96.9,
+     0
+    ]
+   ],
+   "AIME 2025 Competition mathematics": [
+    [
+     "k2-horizon-0-9b",
+     41.7,
+     0
+    ]
+   ],
+   "AIME 2026": [
+    [
+     "glm-5-2",
+     99.2,
+     0
+    ],
+    [
+     "inkling-small",
+     95.5,
+     0
+    ],
+    [
+     "k2-horizon-3-7b",
+     90.8,
+     0
+    ],
+    [
+     "k2-horizon-7b",
+     90.2,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     96.4,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     86.5,
+     0
+    ],
+    [
+     "muse-glimmer",
+     94.7,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     95.2,
+     0
+    ],
+    [
+     "ripple-65b-preview",
+     95,
+     0
+    ]
+   ],
+   "AIME 2026 (EN)": [
+    [
+     "kolibri-1",
+     96,
+     0
+    ]
+   ],
+   "AIME 2026 Competition mathematics": [
+    [
+     "k2-horizon-0-9b",
+     48.5,
+     0
+    ]
+   ],
+   "AIME 2026 no tools": [
+    [
+     "diffusiongemma-26b-a4b",
+     69.1,
+     0
+    ],
+    [
+     "gemma-4-26b-a4b",
+     88.3,
+     0
+    ],
+    [
+     "gemma-4-31b",
+     89.2,
+     0
+    ],
+    [
+     "gemma-4-e2b",
+     37.5,
+     0
+    ],
+    [
+     "gemma-4-e4b",
+     42.5,
+     0
+    ]
+   ],
+   "AIME 25": [
+    [
+     "hermes-4-3-36b",
+     69.3,
+     0
+    ]
+   ],
+   "AIME2026": [
+    [
+     "solar-open2-250b",
+     95.7,
+     0
+    ],
+    [
+     "xing-4-0-29b-a4b",
+     90,
+     0
+    ]
+   ],
+   "AIME25": [
+    [
+     "bonsai-2-27b",
+     95,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     89.2,
+     0
+    ],
+    [
+     "granite-4-2-3b",
+     78.3,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     86.7,
+     0
+    ],
+    [
+     "lfm2-5-1-2b-thinking",
+     31.7,
+     0
+    ],
+    [
+     "lfm2-5-2-6b",
+     51.9,
+     0
+    ],
+    [
+     "trinity-large-thinking",
+     96.3,
+     0
+    ]
+   ],
+   "AIME25 (Mean@32)": [
+    [
+     "longcat-flash-thinking",
+     90.6,
+     0
+    ]
+   ],
+   "AIME25 (no tools)": [
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     90.2,
+     0
+    ]
+   ],
+   "AIME25(avg@32)": [
+    [
+     "longcat-flash-lite",
+     63.2,
+     0
+    ]
+   ],
+   "AIME26": [
+    [
+     "a-x-k2",
+     97.1,
+     0
+    ],
+    [
+     "bonsai-2-27b",
+     95.8,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     94.1,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     92.7,
+     0
+    ]
+   ],
+   "APEX-Agents": [
+    [
+     "solar-open2-250b",
+     16.6,
+     0
+    ]
+   ],
+   "Agentic coding DeepSWE 1.1": [
+    [
+     "qwen3-8-27b",
+     42.2,
+     0
+    ],
+    [
+     "qwen3-8-flash-next",
+     58.7,
+     0
+    ]
+   ],
+   "Agents' Last Exam": [
+    [
+     "deepseek-v4-flash",
+     25.2,
+     0
+    ],
+    [
+     "deepseek-v4-flash-vision",
+     27.3,
+     0
+    ]
+   ],
+   "Agents' Last Exam (ALL)": [
+    [
+     "kimi-k3-1-pro",
+     43.2,
+     0
+    ]
+   ],
+   "Agents’ Last Exam": [
+    [
+     "deepseek-v4-1-flash-1017",
+     35.4,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     27.6,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     31.6,
+     0
+    ]
+   ],
+   "Apex-Agents": [
+    [
+     "step-5-preview",
+     37.8,
+     0
+    ]
+   ],
+   "BFCL (v4)": [
+    [
+     "granite-4-2-30b",
+     61.4,
+     0
+    ],
+    [
+     "granite-4-2-3b",
+     52.4,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     52.4,
+     0
+    ]
+   ],
+   "BFCL V4": [
+    [
+     "lfm3-1-7b",
+     71.4,
+     0
+    ]
+   ],
+   "BFCL v4": [
+    [
+     "atria-dawn-preview",
+     77,
+     0
+    ],
+    [
+     "k2-horizon-3-7b",
+     64.6,
+     0
+    ],
+    [
+     "k2-horizon-7b",
+     67,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     66.6,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+     53.8,
+     0
+    ]
+   ],
+   "BFCL v4 (overall)": [
+    [
+     "kolibri-1",
+     61.4,
+     0
+    ]
+   ],
+   "BFCL v4 Function calling": [
+    [
+     "k2-horizon-0-9b",
+     28,
+     0
+    ],
+    [
+     "k2-horizon-3-7b",
+     64.6,
+     0
+    ]
+   ],
+   "BFCL-V4": [
+    [
+     "nanbeige4-1-3b",
+     56.5,
+     0
+    ],
+    [
+     "qwen3-5-0-8b",
+     25.3,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     72.2,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     68.5,
+     0
+    ],
+    [
+     "qwen3-5-2b",
+     43.6,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     67.3,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     72.9,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     50.3,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     66.1,
+     0
+    ]
+   ],
+   "BFCLv4": [
+    [
+     "lfm-2-5-24b-a2b",
+     65,
+     0
+    ],
+    [
+     "lfm2-5-2-6b",
+     56.9,
+     0
+    ],
+    [
+     "lfm2-5-8b-a1b",
+     49.7,
+     0
+    ]
+   ],
+   "Browse-Comp": [
+    [
+     "nanbeige4-1-3b",
+     19.1,
+     0
+    ]
+   ],
+   "BrowseComp": [
+    [
+     "kimi-k2-5",
+     60.6,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     83.2,
+     0
+    ],
+    [
+     "kolibri-1",
+     29.4,
+     0
+    ],
+    [
+     "longcat-2-0",
+     79.9,
+     0
+    ],
+    [
+     "mimo-v2-flash",
+     45.4,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     67.6,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     86.6,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     56.4,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     69,
+     0
+    ],
+    [
+     "step-3-5-flash",
+     51.6,
+     0
+    ],
+    [
+     "step-5-preview",
+     88.7,
+     0
+    ]
+   ],
+   "CharXiv (RQ)": [
+    [
+     "kimi-k2-5",
+     77.5,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     80.4,
+     0
+    ],
+    [
+     "kimi-k3",
+     84.8,
+     0
+    ],
+    [
+     "kimi-k3-1-pro",
+     89,
+     0
+    ]
+   ],
+   "CharXiv (reasoning)": [
+    [
+     "apriel-v1-6-15b-thinker",
+     56,
+     0
+    ]
+   ],
+   "CharXiv (reasoning, val)": [
+    [
+     "lfm3-vl-2b",
+     70.2,
+     0
+    ]
+   ],
+   "CharXiv RQ": [
+    [
+     "minimax-m3-1-flash",
+     82.5,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     78.4,
+     0
+    ]
+   ],
+   "CharXiv(RQ)": [
+    [
+     "qwen3-5-0-8b",
+     41.3,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     77.2,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     79.5,
+     0
+    ],
+    [
+     "qwen3-5-2b",
+     58.8,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     77.5,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     80.8,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     70.8,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     73,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     78,
+     0
+    ]
+   ],
+   "Charxiv Reasoning": [
+    [
+     "muse-glimmer",
+     78.8,
+     0
+    ],
+    [
+     "nemotron-3-nano-omni-30b-a3b",
+     49.1,
+     0
+    ]
+   ],
+   "Competitive coding LiveCodeBench v6": [
+    [
+     "qwen3-8-flash-next",
+     91.9,
+     0
+    ]
+   ],
+   "Computer use OSWorld-Verified": [
+    [
+     "qwen3-8-27b",
+     84.3,
+     0
+    ]
+   ],
+   "CyberGym": [
+    [
+     "step-5-preview",
+     84.7,
+     0
+    ]
+   ],
+   "Cybergym": [
+    [
+     "deepseek-v4-flash-vision",
+     75.3,
+     0
+    ]
+   ],
+   "DeepSWE 1.1": [
+    [
+     "ripple-65b-preview",
+     44.3,
+     0
+    ]
+   ],
+   "DeepSWE v1.1": [
+    [
+     "deepseek-v4-1-flash-1017",
+     77,
+     0
+    ],
+    [
+     "kimi-k3-1-pro",
+     75.5,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     67.9,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     71.9,
+     0
+    ],
+    [
+     "minimax-m3-1-flash",
+     73.7,
+     0
+    ],
+    [
+     "nex-n2-5-max",
+     65.6,
+     0
+    ],
+    [
+     "nex-n2-5-mini",
+     36.1,
+     0
+    ],
+    [
+     "nex-n2-5-pro",
+     55.8,
+     0
+    ],
+    [
+     "step-5-preview",
+     67.7,
+     0
+    ]
+   ],
+   "DeepSWE v1.1 (Resolved)": [
+    [
+     "deepseek-v4-1-flash",
+     74.2,
+     0
+    ]
+   ],
+   "DeepSWE v1.1 mini-swe-agent v2.4.6": [
+    [
+     "inkling-2-mini",
+     48.2,
+     0
+    ]
+   ],
+   "Frontier agentic tasks Agents' Last Exam": [
+    [
+     "qwen3-8-flash-next",
+     24.3,
+     0
+    ]
+   ],
+   "GDPval-AA-V2 (Elo)": [
+    [
+     "nemotron-labs-dory-1-0",
+     815,
+     0
+    ]
+   ],
+   "GPQA Diamond": [
+    [
+     "hermes-4-3-36b",
+     65.5,
+     0
+    ],
+    [
+     "lfm-2-5-24b-a2b",
+     74.4,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     89.5,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     89.2,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     92.8,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     86.4,
+     0
+    ],
+    [
+     "ripple-65b-preview",
+     85.2,
+     0
+    ],
+    [
+     "step-5-preview",
+     93.5,
+     0
+    ]
+   ],
+   "GPQA Diamond (EN)": [
+    [
+     "kolibri-1",
+     84.3,
+     0
+    ]
+   ],
+   "HLE": [
+    [
+     "lfm-2-5-24b-a2b",
+     7.4,
+     0
+    ]
+   ],
+   "HLE (no tools)": [
+    [
+     "ornith-1-5-35b-a3b",
+     25.6,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     44.6,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     20.2,
+     0
+    ]
+   ],
+   "HLE-Diamond": [
+    [
+     "inkling-2-mini",
+     15.2,
+     0
+    ]
+   ],
+   "HMMT Feb 2026": [
+    [
+     "inkling-small",
+     90.2,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     63.8,
+     0
+    ],
+    [
+     "ripple-65b-preview",
+     90.5,
+     0
+    ]
+   ],
+   "HMMT Feb 2026 Competition mathematics": [
+    [
+     "k2-horizon-0-9b",
+     25.8,
+     0
+    ]
+   ],
+   "HMMT2602": [
+    [
+     "solar-open2-250b",
+     93.9,
+     0
+    ]
+   ],
+   "Humanity's Last Exam (EN)": [
+    [
+     "kolibri-1",
+     21.5,
+     0
+    ]
+   ],
+   "IFBench": [
+    [
+     "a-x-k2",
+     75.9,
+     0
+    ],
+    [
+     "inkling-small",
+     82.2,
+     0
+    ],
+    [
+     "lfm-2-5-24b-a2b",
+     74.7,
+     0
+    ],
+    [
+     "lfm2-5-2-6b",
+     59.2,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     73,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     66.3,
+     0
+    ],
+    [
+     "motif-3",
+     78.2,
+     0
+    ],
+    [
+     "muse-glimmer",
+     77,
+     0
+    ],
+    [
+     "nemotron-labs-dory-1-0",
+     74.3,
+     0
+    ],
+    [
+     "ripple-65b-preview",
+     79.2,
+     0
+    ],
+    [
+     "solar-open2-250b",
+     80,
+     0
+    ],
+    [
+     "xing-4-0-29b-a4b",
+     69.7,
+     0
+    ]
+   ],
+   "ITBench": [
+    [
+     "motif-3",
+     51.5,
+     0
+    ]
+   ],
+   "Idavidrein/gpqa (diamond)": [
+    [
+     "kolibri-1",
+     84.3,
+     0
+    ],
+    [
+     "lfm-2-5-24b-a2b",
+     74.4,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     89.5,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     89.2,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     92.8,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     86.4,
+     0
+    ]
+   ],
+   "Instruction following IFBench": [
+    [
+     "qwen3-8-27b",
+     79.5,
+     0
+    ],
+    [
+     "qwen3-8-flash-next",
+     81.3,
+     0
+    ]
+   ],
+   "LCB v6": [
+    [
+     "glm-4-7-flash",
+     64.0,
+     0
+    ]
+   ],
+   "Live Code Bench v6": [
+    [
+     "sarvam-105b",
+     71.7,
+     0
+    ],
+    [
+     "sarvam-30b",
+     70.0,
+     0
+    ]
+   ],
+   "Live-Code-Bench-V6": [
+    [
+     "nanbeige4-1-3b",
+     76.9,
+     0
+    ]
+   ],
+   "LiveCodeBench (Mean@4)": [
+    [
+     "longcat-flash-thinking",
+     79.4,
+     0
+    ]
+   ],
+   "LiveCodeBench (Pass@1)": [
+    [
+     "ernie-5-5-flash-preview",
+     40.1,
+     0
+    ]
+   ],
+   "LiveCodeBench (pass@1)": [
+    [
+     "longcat-flash-chat",
+     48,
+     0
+    ]
+   ],
+   "LiveCodeBench (v1–v6 cumul)": [
+    [
+     "solar-open-100b-reasoning",
+     74.2,
+     0
+    ]
+   ],
+   "LiveCodeBench (v6)": [
+    [
+     "solar-open2-250b",
+     92.4,
+     0
+    ]
+   ],
+   "LiveCodeBench v6": [
+    [
+     "diffusiongemma-26b-a4b",
+     69.1,
+     0
+    ],
+    [
+     "gemma-4-26b-a4b",
+     77.1,
+     0
+    ],
+    [
+     "gemma-4-31b",
+     80,
+     0
+    ],
+    [
+     "gemma-4-e2b",
+     44,
+     0
+    ],
+    [
+     "gemma-4-e4b",
+     52,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     75.8,
+     0
+    ],
+    [
+     "granite-4-2-3b",
+     69.7,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     73.2,
+     0
+    ],
+    [
+     "k2-horizon-3-7b",
+     64.5,
+     0
+    ],
+    [
+     "k2-horizon-7b",
+     72.7,
+     0
+    ],
+    [
+     "kolibri-1",
+     85.9,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     73.5,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     69.1,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     78.9,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     80.7,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     74.6,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     83.6,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     55.8,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     65.6,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     83.9,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     80.4,
+     0
+    ]
+   ],
+   "LiveCodeBench v6 (Feb–May)": [
+    [
+     "a-x-k2",
+     84,
+     0
+    ]
+   ],
+   "LiveCodeBench v6 Competitive coding": [
+    [
+     "k2-horizon-0-9b",
+     37.4,
+     0
+    ]
+   ],
+   "LiveCodeBench-V6": [
+    [
+     "step-3-5-flash",
+     86.4,
+     0
+    ]
+   ],
+   "LiveCodeBenchv6": [
+    [
+     "lfm2-5-2-6b",
+     59.4,
+     0
+    ]
+   ],
+   "MCP Atlas": [
+    [
+     "ripple-65b-preview",
+     71.7,
+     0
+    ]
+   ],
+   "MCP-Atlas": [
+    [
+     "ornith-1-5-35b-a3b",
+     70.2,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     80,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     54.2,
+     0
+    ],
+    [
+     "solar-open2-250b",
+     58.2,
+     0
+    ],
+    [
+     "step-5-preview",
+     85.6,
+     0
+    ]
+   ],
+   "MMLU (MC acc)": [
+    [
+     "ripple-65b-preview",
+     83.7,
+     0
+    ]
+   ],
+   "MMLU Pro": [
+    [
+     "apriel-v1-6-15b-thinker",
+     79,
+     0
+    ],
+    [
+     "diffusiongemma-26b-a4b",
+     77.6,
+     0
+    ],
+    [
+     "gemma-4-26b-a4b",
+     82.6,
+     0
+    ],
+    [
+     "gemma-4-31b",
+     85.2,
+     0
+    ],
+    [
+     "gemma-4-e2b",
+     60,
+     0
+    ],
+    [
+     "gemma-4-e4b",
+     69.4,
+     0
+    ],
+    [
+     "nemotron-3-5-lightning",
+     81.9,
+     0
+    ],
+    [
+     "sarvam-105b",
+     81.7,
+     0
+    ],
+    [
+     "sarvam-30b",
+     80,
+     0
+    ]
+   ],
+   "MMLU-Pro": [
+    [
+     "exaone-4-0-1-2b",
+     59.3,
+     0
+    ],
+    [
+     "exaone-4-0-32b",
+     81.8,
+     0
+    ],
+    [
+     "granite-4-1-30b",
+     64.1,
+     0
+    ],
+    [
+     "granite-4-1-3b",
+     49.8,
+     0
+    ],
+    [
+     "granite-4-1-8b",
+     56,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     77.6,
+     0
+    ],
+    [
+     "granite-4-2-3b",
+     67.8,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     74,
+     0
+    ],
+    [
+     "hermes-4-3-36b",
+     80.7,
+     0
+    ],
+    [
+     "hy4",
+     73.9,
+     0
+    ],
+    [
+     "lfm2-5-1-2b-thinking",
+     49.7,
+     0
+    ],
+    [
+     "mimo-v2-flash",
+     84.9,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     70.8,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     83.7,
+     0
+    ],
+    [
+     "qwen3-5-0-8b",
+     29.7,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     86.7,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     86.1,
+     0
+    ],
+    [
+     "qwen3-5-2b",
+     55.3,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     85.3,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     87.8,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     79.1,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     82.5,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     86.2,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     85.2,
+     0
+    ],
+    [
+     "ripple-65b-preview",
+     84.2,
+     0
+    ],
+    [
+     "solar-open-100b-reasoning",
+     80.4,
+     0
+    ],
+    [
+     "solar-open2-250b",
+     86.2,
+     0
+    ],
+    [
+     "trinity-large-thinking",
+     83.4,
+     0
+    ]
+   ],
+   "MMLU-Pro (acc)": [
+    [
+     "longcat-flash-chat",
+     82.7,
+     0
+    ],
+    [
+     "longcat-flash-thinking",
+     82.6,
+     0
+    ]
+   ],
+   "MMLU-Pro CoT (EN)": [
+    [
+     "kolibri-1",
+     80,
+     0
+    ]
+   ],
+   "MMLU-Pro(acc)": [
+    [
+     "longcat-flash-lite",
+     78.3,
+     0
+    ]
+   ],
+   "MMMLU": [
+    [
+     "granite-4-1-30b",
+     73.7,
+     0
+    ],
+    [
+     "granite-4-1-3b",
+     57.6,
+     0
+    ],
+    [
+     "granite-4-1-8b",
+     64.8,
+     0
+    ],
+    [
+     "seed-oss-36b-instruct",
+     78.4,
+     0
+    ]
+   ],
+   "MMMLU (EM)": [
+    [
+     "deepseek-v4-pro",
+     90.3,
+     0
+    ]
+   ],
+   "MMMU-PRO (10 choice)": [
+    [
+     "apriel-v1-6-15b-thinker",
+     60.3,
+     0
+    ]
+   ],
+   "MMMU-Pro": [
+    [
+     "bonsai-2-27b",
+     75.5,
+     0
+    ]
+   ],
+   "MMMU-Pro (Standard, 10 opts)": [
+    [
+     "hy4",
+     59.6,
+     0
+    ]
+   ],
+   "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)": [
+    [
+     "dots3-note-prev",
+     79.1,
+     0
+    ]
+   ],
+   "MathArena/aime_2026": [
+    [
+     "a-x-k2",
+     97.1,
+     0
+    ],
+    [
+     "deepseek-v4-1-flash",
+     100,
+     0
+    ],
+    [
+     "diffusiongemma-26b-a4b",
+     69.1,
+     0
+    ],
+    [
+     "gemma-4-12b",
+     77.5,
+     0
+    ],
+    [
+     "gemma-4-e2b",
+     37.5,
+     0
+    ],
+    [
+     "gemma-4-e4b",
+     42.5,
+     0
+    ],
+    [
+     "glm-5-2",
+     99.2,
+     0
+    ],
+    [
+     "inkling",
+     97.1,
+     0
+    ],
+    [
+     "inkling-small",
+     95.5,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     96.4,
+     0
+    ],
+    [
+     "kolibri-1",
+     96,
+     0
+    ],
+    [
+     "ling-3-0-flash",
+     93.2,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     86.5,
+     0
+    ],
+    [
+     "minimax-m2-7",
+     94.2,
+     0
+    ],
+    [
+     "muse-glimmer",
+     94.7,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     95.2,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     90,
+     0
+    ],
+    [
+     "qwen3-30b-a3b-2507-reasoning",
+     87.5,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     90.8,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     93.3,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     93.3,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     92.5,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     94.1,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     92.7,
+     0
+    ],
+    [
+     "reflection-beam",
+     97.7,
+     0
+    ],
+    [
+     "solar-open2-250b",
+     95.7,
+     0
+    ],
+    [
+     "step-3-5-flash",
+     96.7,
+     0
+    ]
+   ],
+   "MathArena/hmmt_feb_2026": [
+    [
+     "inkling-small",
+     90.2,
+     0
+    ],
+    [
+     "kimi-k2-5",
+     87.1,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     63.8,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     84.9,
+     0
+    ],
+    [
+     "qwen3-30b-a3b-2507-reasoning",
+     78.8,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     81.1,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     81.8,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     87.9,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     71.2,
+     0
+    ],
+    [
+     "step-3-5-flash",
+     86.4,
+     0
+    ]
+   ],
+   "MathVista": [
+    [
+     "apriel-v1-6-15b-thinker",
+     79.9,
+     0
+    ]
+   ],
+   "MathVista (mini)": [
+    [
+     "kimi-k2-5",
+     90.1,
+     0
+    ],
+    [
+     "lfm3-vl-2b",
+     84.2,
+     0
+    ]
+   ],
+   "MathVista mini": [
+    [
+     "qwen3-6-27b",
+     87.4,
+     0
+    ]
+   ],
+   "MathVista_MINI": [
+    [
+     "nemotron-3-nano-omni-30b-a3b",
+     71.9,
+     0
+    ]
+   ],
+   "Mathvista(mini)": [
+    [
+     "qwen3-5-0-8b",
+     62.2,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     87.4,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     87.8,
+     0
+    ],
+    [
+     "qwen3-5-2b",
+     76.7,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     86.2,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     90.3,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     85.1,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     85.7,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     86.4,
+     0
+    ]
+   ],
+   "Multilingual software engineering SWE-bench Multilingual": [
+    [
+     "qwen3-8-flash-next",
+     81,
+     0
+    ]
+   ],
+   "Multimodal software engineering SWE-MM": [
+    [
+     "qwen3-8-27b",
+     38.6,
+     0
+    ]
+   ],
+   "NL2Repo": [
+    [
+     "deepseek-v4-flash-vision",
+     57.7,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     53,
+     0
+    ],
+    [
+     "ornith-1-0-35b",
+     34.6,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     48.2,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     27.2,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     46.2,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     59.5,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     32.4,
+     0
+    ]
+   ],
+   "NL2Repo-Bench": [
+    [
+     "deepseek-v4-1-flash-1017",
+     68.2,
+     0
+    ]
+   ],
+   "OSWorld 2.0": [
+    [
+     "kimi-k3",
+     58.3,
+     0
+    ]
+   ],
+   "OSWorld V2.1": [
+    [
+     "kimi-k3-1-pro",
+     79.6,
+     0
+    ]
+   ],
+   "OSWorld-2": [
+    [
+     "nex-n2-5-mini",
+     30.5,
+     0
+    ],
+    [
+     "nex-n2-5-pro",
+     56.4,
+     0
+    ]
+   ],
+   "OSWorld-Verified": [
+    [
+     "kimi-k3",
+     84.8,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     80.8,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     82,
+     0
+    ],
+    [
+     "muse-glimmer",
+     65.9,
+     0
+    ],
+    [
+     "nex-n2-5-mini",
+     71.2,
+     0
+    ],
+    [
+     "nex-n2-5-pro",
+     82.2,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     58.0,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     56.2,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     54.5,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     62.2,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     35.6,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     41.8,
+     0
+    ]
+   ],
+   "OmniScience — Accuracy": [
+    [
+     "motif-3",
+     30.1,
+     0
+    ]
+   ],
+   "OmniScience — Non-Hallucination": [
+    [
+     "motif-3",
+     71.6,
+     0
+    ]
+   ],
+   "SWE Atlas - QnA": [
+    [
+     "ornith-1-0-35b",
+     37.1,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     41.2,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     17.9,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     39.8,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     55.6,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     20.6,
+     0
+    ]
+   ],
+   "SWE Atlas - RF": [
+    [
+     "ornith-1-0-35b",
+     29.7,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     42.6,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     16.6,
+     0
+    ]
+   ],
+   "SWE Atlas - TW": [
+    [
+     "ornith-1-0-35b",
+     27.8,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     39.1,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     15.3,
+     0
+    ]
+   ],
+   "SWE Bench Multilingual": [
+    [
+     "devstral-2",
+     61.3,
+     0
+    ],
+    [
+     "devstral-small-2",
+     55.7,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     41.9,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     30.8,
+     0
+    ]
+   ],
+   "SWE Bench Pro": [
+    [
+     "granite-4-2-30b",
+     33.3,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     19.1,
+     0
+    ]
+   ],
+   "SWE Bench Verified": [
+    [
+     "apriel-v1-6-15b-thinker",
+     23,
+     0
+    ],
+    [
+     "devstral-small-2",
+     68.0,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     57,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     47.7,
+     0
+    ]
+   ],
+   "SWE Marathon v1.1": [
+    [
+     "kimi-k3-1-pro",
+     51.7,
+     0
+    ]
+   ],
+   "SWE Multilingual (Resolved)": [
+    [
+     "deepseek-v4-pro",
+     76.2,
+     0
+    ]
+   ],
+   "SWE-Atlas-QnA": [
+    [
+     "nanbeige4-3-33b",
+     50.8,
+     0
+    ]
+   ],
+   "SWE-Atlas-QnA (strict) Repo-level code Q&A": [
+    [
+     "k2-horizon-375b-a23b",
+     48.4,
+     0
+    ]
+   ],
+   "SWE-Atlas-Test-writing": [
+    [
+     "step-5-preview",
+     50.8,
+     0
+    ]
+   ],
+   "SWE-Bench Multiligual": [
+    [
+     "longcat-flash-lite",
+     38.1,
+     0
+    ]
+   ],
+   "SWE-Bench Multilingual": [
+    [
+     "kimi-k2-6",
+     76.7,
+     0
+    ],
+    [
+     "mimo-v2-flash",
+     71.7,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-ultra-550b-a55b",
+     67.7,
+     0
+    ]
+   ],
+   "SWE-Bench Pro": [
+    [
+     "muse-glimmer",
+     51.2,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     60.3,
+     0
+    ],
+    [
+     "nex-n2-5-max",
+     65.7,
+     0
+    ],
+    [
+     "nex-n2-5-mini",
+     43.8,
+     0
+    ],
+    [
+     "nex-n2-5-pro",
+     61.2,
+     0
+    ]
+   ],
+   "SWE-Bench Verified": [
+    [
+     "kolibri-1",
+     66.4,
+     0
+    ],
+    [
+     "motif-3",
+     76.2,
+     0
+    ],
+    [
+     "muse-glimmer",
+     76,
+     0
+    ],
+    [
+     "solar-open2-250b",
+     70.4,
+     0
+    ]
+   ],
+   "SWE-Bench Verified (OpenCode)": [
+    [
+     "lfm-2-5-24b-a2b",
+     51,
+     0
+    ]
+   ],
+   "SWE-Bench Verified (OpenHands)": [
+    [
+     "seed-oss-36b-instruct",
+     56.0,
+     0
+    ]
+   ],
+   "SWE-MM": [
+    [
+     "nex-n2-5-mini",
+     25.5,
+     0
+    ],
+    [
+     "nex-n2-5-pro",
+     38.2,
+     0
+    ]
+   ],
+   "SWE-bench Multilingual": [
+    [
+     "glm-4-7",
+     66.7,
+     0
+    ],
+    [
+     "kimi-k2-thinking",
+     61.1,
+     0
+    ],
+    [
+     "longcat-2-0",
+     77.3,
+     0
+    ],
+    [
+     "nemotron-3-5-lightning",
+     39.3,
+     0
+    ],
+    [
+     "ornith-1-0-35b",
+     69.3,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     78.9,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     52,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     71.4,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     79.6,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     54.4,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     69.3,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     71.3,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     67.2,
+     0
+    ],
+    [
+     "xing-4-0-29b-a4b",
+     66,
+     0
+    ]
+   ],
+   "SWE-bench Pro": [
+    [
+     "longcat-2-0",
+     59.5,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     14.4,
+     0
+    ],
+    [
+     "ornith-1-0-35b",
+     50.4,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     62.2,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     42.9,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     59.6,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     65.1,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     47.5,
+     0
+    ]
+   ],
+   "SWE-bench Pro v1.0": [
+    [
+     "ripple-65b-preview",
+     61.4,
+     0
+    ]
+   ],
+   "SWE-bench Pro v2.0 Hard": [
+    [
+     "ripple-65b-preview",
+     79.1,
+     0
+    ]
+   ],
+   "SWE-bench Verified": [
+    [
+     "k2-horizon-3-7b",
+     65.6,
+     0
+    ],
+    [
+     "k2-horizon-7b",
+     72.4,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     46.4,
+     0
+    ],
+    [
+     "ornith-1-0-35b",
+     75.6,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     82.4,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     69.4,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     79,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     86,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     70.6,
+     0
+    ],
+    [
+     "ripple-65b-preview",
+     76.5,
+     0
+    ],
+    [
+     "trinity-large-thinking",
+     63.2,
+     0
+    ],
+    [
+     "xing-4-0-29b-a4b",
+     75,
+     0
+    ]
+   ],
+   "SWE-bench Verified Software engineering": [
+    [
+     "k2-horizon-3-7b",
+     65.6,
+     0
+    ],
+    [
+     "k2-horizon-7b",
+     72.4,
+     0
+    ]
+   ],
+   "SWE-bench/SWE-bench_Multilingual (swe_bench_multilingual_%_resolved)": [
+    [
+     "deepseek-v4-pro",
+     76.2,
+     0
+    ],
+    [
+     "dots3-note-prev",
+     75.7,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     41.9,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     30.8,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     76.7,
+     0
+    ],
+    [
+     "ling-3-0-flash",
+     72.4,
+     0
+    ],
+    [
+     "ling-3-1-flash",
+     88.5,
+     0
+    ],
+    [
+     "longcat-2-0",
+     77.3,
+     0
+    ],
+    [
+     "mimo-v2-flash",
+     71.7,
+     0
+    ],
+    [
+     "minimax-m2-7",
+     76.5,
+     0
+    ],
+    [
+     "nemotron-3-5-lightning",
+     39.3,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     45.8,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-ultra-550b-a55b",
+     67.7,
+     0
+    ],
+    [
+     "ornith-1-0-35b",
+     69.3,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     78.9,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     52,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     71.4,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     79.6,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     54.4,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     69.3,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     71.3,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     67.2,
+     0
+    ],
+    [
+     "qwen3-8-flash-next",
+     81,
+     0
+    ],
+    [
+     "qwen3-coder-next",
+     64.3,
+     0
+    ]
+   ],
+   "SWE-bench/SWE-bench_Verified (swe_bench_%_resolved)": [
+    [
+     "dots3-note-prev",
+     78.4,
+     0
+    ],
+    [
+     "flint-v1-0",
+     74.2,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     57,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     47.7,
+     0
+    ],
+    [
+     "hy3",
+     78,
+     0
+    ],
+    [
+     "inkling",
+     77.6,
+     0
+    ],
+    [
+     "kolibri-1",
+     66.4,
+     0
+    ],
+    [
+     "lfm-2-5-24b-a2b",
+     51,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     46.4,
+     0
+    ],
+    [
+     "motif-3",
+     76.2,
+     0
+    ],
+    [
+     "muse-glimmer",
+     76,
+     0
+    ],
+    [
+     "ornith-1-0-35b",
+     75.6,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     82.4,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     69.4,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     79,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     86,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     70.6,
+     0
+    ],
+    [
+     "qwen3-coder-next",
+     70.6,
+     0
+    ],
+    [
+     "reflection-beam",
+     81.6,
+     0
+    ],
+    [
+     "solar-open2-250b",
+     70.4,
+     0
+    ],
+    [
+     "trinity-large-thinking",
+     63.2,
+     0
+    ]
+   ],
+   "SWEBench Pro v2 (Hard) mini-swe-agent v2.4.6": [
+    [
+     "inkling-2-mini",
+     77.9,
+     0
+    ]
+   ],
+   "ScaleAI/SWE-bench_Pro": [
+    [
+     "dots3-note-prev",
+     61,
+     0
+    ],
+    [
+     "glm-4-6",
+     9.7,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     33.3,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     19.1,
+     0
+    ],
+    [
+     "inkling",
+     54.3,
+     0
+    ],
+    [
+     "inkling-small",
+     55.9,
+     0
+    ],
+    [
+     "ling-3-0-flash",
+     56.6,
+     0
+    ],
+    [
+     "ling-3-1-flash",
+     68.7,
+     0
+    ],
+    [
+     "longcat-2-0",
+     59.5,
+     0
+    ],
+    [
+     "muse-glimmer",
+     51.2,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     60.3,
+     0
+    ],
+    [
+     "nex-n2-5-pro",
+     61.2,
+     0
+    ],
+    [
+     "ornith-1-0-35b",
+     50.4,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     62.2,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     42.9,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     59.6,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     65.1,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     47.5,
+     0
+    ],
+    [
+     "qwen3-coder-480b-a35b-instruct",
+     38.7,
+     0
+    ],
+    [
+     "qwen3-coder-next",
+     44.3,
+     0
+    ],
+    [
+     "reflection-beam",
+     66.1,
+     0
+    ],
+    [
+     "step-3-7-flash",
+     56.3,
+     0
+    ]
+   ],
+   "SciCode": [
+    [
+     "apriel-v1-6-15b-thinker",
+     37,
+     0
+    ],
+    [
+     "lfm-2-5-24b-a2b",
+     32.7,
+     0
+    ],
+    [
+     "minimax-m2-5",
+     44.4,
+     0
+    ]
+   ],
+   "Scicode": [
+    [
+     "nanbeige4-3-33b",
+     52.6,
+     0
+    ]
+   ],
+   "Scientific chart analysis CharXiv (RQ)": [
+    [
+     "qwen3-8-27b",
+     83.7,
+     0
+    ],
+    [
+     "qwen3-8-flash-next",
+     84.6,
+     0
+    ]
+   ],
+   "TAU2-Airline": [
+    [
+     "qwen3-30b-a3b-2507-reasoning",
+     58,
+     0
+    ]
+   ],
+   "TAU2-Retail": [
+    [
+     "qwen3-30b-a3b-2507-reasoning",
+     58.8,
+     0
+    ]
+   ],
+   "TIGER-Lab/MMLU-Pro": [
+    [
+     "diffusiongemma-26b-a4b",
+     77.6,
+     0
+    ],
+    [
+     "gemma-4-12b",
+     77.2,
+     0
+    ],
+    [
+     "gemma-4-26b-a4b",
+     82.6,
+     0
+    ],
+    [
+     "gemma-4-31b",
+     85.2,
+     0
+    ],
+    [
+     "gemma-4-e2b",
+     60,
+     0
+    ],
+    [
+     "gemma-4-e4b",
+     69.4,
+     0
+    ],
+    [
+     "granite-4-1-30b",
+     64.1,
+     0
+    ],
+    [
+     "granite-4-1-3b",
+     49.8,
+     0
+    ],
+    [
+     "granite-4-1-8b",
+     56,
+     0
+    ],
+    [
+     "granite-4-2-30b",
+     77.6,
+     0
+    ],
+    [
+     "granite-4-2-3b",
+     67.8,
+     0
+    ],
+    [
+     "granite-4-2-8b",
+     74,
+     0
+    ],
+    [
+     "kolibri-1",
+     80,
+     0
+    ],
+    [
+     "lfm2-5-1-2b-thinking",
+     49.7,
+     0
+    ],
+    [
+     "longcat-flash-chat",
+     82.7,
+     0
+    ],
+    [
+     "longcat-flash-lite",
+     78.3,
+     0
+    ],
+    [
+     "mimo-v2-flash",
+     84.9,
+     0
+    ],
+    [
+     "minicpm5-2b",
+     70.8,
+     0
+    ],
+    [
+     "minimax-m2-5",
+     80.1,
+     0
+    ],
+    [
+     "nemotron-3-5-lightning",
+     81.9,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     83.7,
+     0
+    ],
+    [
+     "qwen3-5-0-8b",
+     29.7,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     86.7,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     86.1,
+     0
+    ],
+    [
+     "qwen3-5-2b",
+     55.3,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     85.3,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     87.8,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     79.1,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     82.5,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     86.2,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     85.2,
+     0
+    ],
+    [
+     "qwen3-coder-next",
+     80.5,
+     0
+    ],
+    [
+     "solar-open2-250b",
+     86.2,
+     0
+    ],
+    [
+     "step-3-5-flash",
+     84.4,
+     0
+    ],
+    [
+     "trinity-large-thinking",
+     83.4,
+     0
+    ]
+   ],
+   "Tau2 bench Airline": [
+    [
+     "apriel-v1-6-15b-thinker",
+     58,
+     0
+    ]
+   ],
+   "Tau2 bench Retail": [
+    [
+     "apriel-v1-6-15b-thinker",
+     66.7,
+     0
+    ]
+   ],
+   "Tau2-Airline": [
+    [
+     "trinity-large-thinking",
+     88,
+     0
+    ]
+   ],
+   "Tau2-Bench (Airline)": [
+    [
+     "kolibri-1",
+     76.7,
+     0
+    ]
+   ],
+   "Tau2-Bench (Retail)": [
+    [
+     "kolibri-1",
+     69.9,
+     0
+    ]
+   ],
+   "Tau2-Bench (Telecom)": [
+    [
+     "kolibri-1",
+     94.7,
+     0
+    ]
+   ],
+   "Tau3-Bench": [
+    [
+     "nanbeige4-3-33b",
+     48.8,
+     0
+    ],
+    [
+     "xing-4-0-29b-a4b",
+     64.6,
+     0
+    ]
+   ],
+   "Tau3-Bench (Banking)": [
+    [
+     "kolibri-1",
+     38.1,
+     0
+    ]
+   ],
+   "Terminal Bench 2": [
+    [
+     "devstral-2",
+     32.6,
+     0
+    ],
+    [
+     "devstral-small-2",
+     22.5,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     49.4,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     41.6,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     40.5,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     52.5,
+     0
+    ]
+   ],
+   "Terminal Bench 2.0 (Acc)": [
+    [
+     "deepseek-v4-pro",
+     67.9,
+     0
+    ]
+   ],
+   "Terminal Bench Core 2.0": [
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     31,
+     0
+    ]
+   ],
+   "Terminal Bench Hard": [
+    [
+     "solar-open2-250b",
+     28.3,
+     0
+    ]
+   ],
+   "Terminal Bench v2.1 Inkling 2 Mini in pi v0.83.0": [
+    [
+     "inkling-2-mini",
+     71.6,
+     0
+    ]
+   ],
+   "Terminal-Bench 2.0": [
+    [
+     "mimo-v2-flash",
+     38.5,
+     0
+    ],
+    [
+     "step-3-5-flash",
+     51.0,
+     0
+    ]
+   ],
+   "Terminal-Bench 2.1": [
+    [
+     "atria-dawn-preview",
+     78.3,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     80.9,
+     0
+    ],
+    [
+     "nemotron-labs-dory-1-0",
+     12.5,
+     0
+    ],
+    [
+     "step-5-preview",
+     85,
+     0
+    ],
+    [
+     "xing-4-0-29b-a4b",
+     57.5,
+     0
+    ]
+   ],
+   "Terminal-Bench 2.1 (OpenCode)": [
+    [
+     "lfm3-1-7b",
+     12.9,
+     0
+    ]
+   ],
+   "Terminal-Bench 2.1 (Terminus 2)": [
+    [
+     "ripple-65b-preview",
+     80.5,
+     0
+    ]
+   ],
+   "Terminal-Bench 2.1 (Terminus-2)": [
+    [
+     "ornith-1-0-35b",
+     64.2,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     77.5,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     43.1,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     67.8,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     86.1,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     46.2,
+     0
+    ]
+   ],
+   "Terminal-Bench 2.1 (self-reported)": [
+    [
+     "ripple-65b-preview",
+     80.5,
+     0
+    ]
+   ],
+   "Terminal-Bench 3.0 (Pass@1)": [
+    [
+     "deepseek-v4-1-flash",
+     30,
+     0
+    ]
+   ],
+   "TerminalBench 2.1": [
+    [
+     "kolibri-1",
+     27.7,
+     0
+    ]
+   ],
+   "TerminalBench(acc)": [
+    [
+     "longcat-flash-lite",
+     33.8,
+     0
+    ]
+   ],
+   "Toolathlon Verified": [
+    [
+     "nex-n2-5-max",
+     74.7,
+     0
+    ],
+    [
+     "nex-n2-5-mini",
+     54.6,
+     0
+    ],
+    [
+     "nex-n2-5-pro",
+     68.5,
+     0
+    ]
+   ],
+   "Toolathlon Verified Agentic tool use": [
+    [
+     "k2-horizon-375b-a23b",
+     65.3,
+     0
+    ]
+   ],
+   "Toolathlon-Verified": [
+    [
+     "deepseek-v4-flash-vision",
+     75.9,
+     0
+    ],
+    [
+     "kimi-k3",
+     76.5,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     73.6,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     76.9,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     70.4,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     48.7,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     71.2,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     41.2,
+     0
+    ],
+    [
+     "step-5-preview",
+     74.1,
+     0
+    ]
+   ],
+   "Vibe Code Bench v1.1 openhands (vals)": [
+    [
+     "inkling-2-mini",
+     77.9,
+     0
+    ]
+   ],
+   "ZEROBench": [
+    [
+     "qwen3-5-0-8b",
+     0,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     9,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     10,
+     0
+    ],
+    [
+     "qwen3-5-2b",
+     1,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     8,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     12,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     3,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     3,
+     0
+    ]
+   ],
+   "ZeroBench": [
+    [
+     "kimi-k2-5",
+     9,
+     0
+    ]
+   ],
+   "agents-last-exam/agents-last-exam (overall-pass-rate)": [
+    [
+     "deepseek-v4-1-flash-1017",
+     35.4,
+     0
+    ],
+    [
+     "kimi-k3-1-pro",
+     43.2,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     27.6,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     31.6,
+     0
+    ],
+    [
+     "qwen3-8-flash-next",
+     24.3,
+     0
+    ]
+   ],
+   "cais/hle": [
+    [
+     "kolibri-1",
+     21.5,
+     0
+    ],
+    [
+     "lfm-2-5-24b-a2b",
+     7.4,
+     0
+    ]
+   ],
+   "cais/hle (no tools)": [
+    [
+     "ornith-1-5-35b-a3b",
+     25.6,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     44.6,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     20.2,
+     0
+    ]
+   ],
+   "claw-eval/Claw-Eval (general)": [
+    [
+     "deepseek-v4-pro",
+     58.4,
+     0
+    ],
+    [
+     "dots3-note-prev",
+     73.4,
+     0
+    ],
+    [
+     "kimi-k2-5",
+     52.8,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     61.5,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     51.4,
+     0
+    ],
+    [
+     "mimo-v2-5-0424",
+     62.1,
+     0
+    ],
+    [
+     "mimo-v2-5-pro",
+     64,
+     0
+    ],
+    [
+     "minimax-m2-7",
+     49.7,
+     0
+    ],
+    [
+     "minimax-m3",
+     74.5,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     78.3,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     6.8,
+     0
+    ],
+    [
+     "ornith-1-0-35b",
+     69.8,
+     0
+    ],
+    [
+     "ornith-1-0-397b",
+     77.1,
+     0
+    ],
+    [
+     "ornith-1-0-9b",
+     63.1,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     72.5,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     81.4,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     66.5,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     57.8,
+     0
+    ]
+   ],
+   "harborframework/terminal-bench (terminalbench_3)": [
+    [
+     "deepseek-v4-1-flash",
+     30,
+     0
+    ]
+   ],
+   "harborframework/terminal-bench-2.0 (terminalbench_2)": [
+    [
+     "deepseek-v4-pro",
+     67.9,
+     0
+    ],
+    [
+     "mimo-v2-5-0424",
+     65.8,
+     0
+    ],
+    [
+     "mimo-v2-5-pro",
+     68.4,
+     0
+    ],
+    [
+     "mimo-v2-flash",
+     38.5,
+     0
+    ],
+    [
+     "north-mini-code",
+     36,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     31,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     49.4,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     41.6,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     40.5,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     52.5,
+     0
+    ],
+    [
+     "qwen3-coder-next",
+     36.2,
+     0
+    ],
+    [
+     "step-3-5-flash",
+     51.0,
+     0
+    ]
+   ],
+   "harborframework/terminal-bench-2.1": [
+    [
+     "atria-dawn-preview",
+     78.3,
+     0
+    ],
+    [
+     "dots3-note-prev",
+     75.1,
+     0
+    ],
+    [
+     "flint-v1-0",
+     54.9,
+     0
+    ],
+    [
+     "kolibri-1",
+     27.7,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     12.9,
+     0
+    ],
+    [
+     "ling-3-1-flash",
+     81.2,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     80.9,
+     0
+    ],
+    [
+     "nemotron-3-5-super-vl",
+     60.7,
+     0
+    ],
+    [
+     "reflection-beam",
+     80.1,
+     0
+    ]
+   ],
+   "hkust-nlp/Toolathlon (toolathlon_verified)": [
+    [
+     "deepseek-v4-flash-vision",
+     75.9,
+     0
+    ],
+    [
+     "dots3-note-prev",
+     55.6,
+     0
+    ],
+    [
+     "kimi-k3",
+     76.5,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     73.6,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     76.9,
+     0
+    ],
+    [
+     "nanbeige4-3-33b",
+     70.4,
+     0
+    ],
+    [
+     "nex-n2-5-pro",
+     68.5,
+     0
+    ],
+    [
+     "ornith-1-5-35b-a3b",
+     48.7,
+     0
+    ],
+    [
+     "ornith-1-5-397b",
+     71.2,
+     0
+    ],
+    [
+     "ornith-1-5-9b",
+     41.2,
+     0
+    ]
+   ],
+   "mercor/apex-agents": [
+    [
+     "dots3-note-prev",
+     30.8,
+     0
+    ],
+    [
+     "glm-4-6",
+     4,
+     0
+    ],
+    [
+     "glm-4-7",
+     3.1,
+     0
+    ],
+    [
+     "kimi-k2-5",
+     14.4,
+     0
+    ],
+    [
+     "minimax-m2-5",
+     6.2,
+     0
+    ],
+    [
+     "solar-open2-250b",
+     16.6,
+     0
+    ]
+   ],
+   "τ²-Bench (telecom) (avg@4)": [
+    [
+     "longcat-flash-chat",
+     73.7,
+     0
+    ]
+   ],
+   "τ²-Bench Telecom": [
+    [
+     "minicpm5-2b",
+     97.1,
+     0
+    ],
+    [
+     "motif-3",
+     94.7,
+     0
+    ]
+   ],
+   "τ²-Bench* (Telecom)": [
+    [
+     "a-x-k2",
+     98,
+     0
+    ]
+   ],
+   "τ²-Bench-Telecom (Mean@4)": [
+    [
+     "longcat-flash-thinking",
+     83.1,
+     0
+    ]
+   ],
+   "τ³-Banking": [
+    [
+     "step-5-preview",
+     42.5,
+     0
+    ]
+   ],
+   "τ³-Bench Banking": [
+    [
+     "atria-dawn-preview",
+     41.2,
+     0
+    ],
+    [
+     "lfm-2-5-24b-a2b",
+     8,
+     0
+    ]
+   ],
+   "τ³-bench (Banking)": [
+    [
+     "nemotron-labs-dory-1-0",
+     11.6,
+     0
+    ]
+   ],
+   "τ³-bench banking": [
+    [
+     "ripple-65b-preview",
+     31.3,
+     0
+    ]
+   ]
+  },
+  "update_llmstats_mapping.py llmstats-benchmark": {
+   "aime_2025": [
+    [
+     "command-a-plus",
+     90,
+     0
+    ],
+    [
+     "glm-4-7-flash",
+     91.6,
+     0
+    ],
+    [
+     "longcat-flash-chat",
+     61.3,
+     0
+    ],
+    [
+     "mistral-medium-3-5",
+     86.3,
+     0
+    ],
+    [
+     "mistral-small-4",
+     83.8,
+     0
+    ],
+    [
+     "step-3-5-flash",
+     97.3,
+     0
+    ]
+   ],
+   "apex_agents": [
+    [
+     "ernie-5-5-flash-preview",
+     64.2,
+     0
+    ],
+    [
+     "hy3",
+     25.6,
+     0
+    ],
+    [
+     "hy4",
+     37.1,
+     0
+    ],
+    [
+     "hy4-flash",
+     63.1,
+     0
+    ],
+    [
+     "k2-horizon-375b-a23b",
+     24.8,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     27.9,
+     0
+    ],
+    [
+     "kimi-k3",
+     37.6,
+     0
+    ],
+    [
+     "kimi-k3-1-pro",
+     67.2,
+     0
+    ],
+    [
+     "ling-3-0-flash-fin",
+     29.2,
+     0
+    ],
+    [
+     "minimax-m3",
+     27.7,
+     0
+    ],
+    [
+     "qwen4-max",
+     72.1,
+     0
+    ]
+   ],
+   "browsecomp": [
+    [
+     "deepseek-r1",
+     8.9,
+     0
+    ],
+    [
+     "deepseek-v3-2-0925",
+     40.1,
+     0
+    ],
+    [
+     "deepseek-v4-pro",
+     83.4,
+     0
+    ],
+    [
+     "ernie-5-5-flash-preview",
+     87.4,
+     0
+    ],
+    [
+     "glm-4-5-air",
+     21.3,
+     0
+    ],
+    [
+     "glm-4-6",
+     45.1,
+     0
+    ],
+    [
+     "glm-4-7",
+     52,
+     0
+    ],
+    [
+     "glm-4-7-flash",
+     42.8,
+     0
+    ],
+    [
+     "glm-4.5",
+     26.4,
+     0
+    ],
+    [
+     "gpt-5-6-luna",
+     83.3,
+     0
+    ],
+    [
+     "gpt-5-6-sol",
+     90.4,
+     0
+    ],
+    [
+     "gpt-5-6-terra",
+     87.5,
+     0
+    ],
+    [
+     "gpt-6-astra",
+     91.5,
+     0
+    ],
+    [
+     "gpt-oss-120b",
+     28.7,
+     0
+    ],
+    [
+     "gpt-oss-20b",
+     28.3,
+     0
+    ],
+    [
+     "hy3",
+     84.2,
+     0
+    ],
+    [
+     "inkling-2-mini",
+     79,
+     0
+    ],
+    [
+     "k2-horizon-375b-a23b",
+     72.8,
+     0
+    ],
+    [
+     "k2-horizon-7b",
+     59,
+     0
+    ],
+    [
+     "kimi-k2-thinking",
+     60.2,
+     0
+    ],
+    [
+     "kimi-k3",
+     91.2,
+     0
+    ],
+    [
+     "kimi-k3-1-pro",
+     92.1,
+     0
+    ],
+    [
+     "ling-3-0-flash",
+     72.2,
+     0
+    ],
+    [
+     "longcat-2-5",
+     91.9,
+     0
+    ],
+    [
+     "longcat-flash-thinking",
+     56.6,
+     0
+    ],
+    [
+     "minimax-m3",
+     83.5,
+     0
+    ],
+    [
+     "mistral-large-4",
+     84.5,
+     0
+    ],
+    [
+     "nemotron-3-5-bolt",
+     66.8,
+     0
+    ],
+    [
+     "nemotron-3-5-lightning",
+     37,
+     0
+    ],
+    [
+     "nemotron-3-5-super-vl",
+     78,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     31.3,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-ultra-550b-a55b",
+     44.4,
+     0
+    ],
+    [
+     "qwen3-30b-a3b-2507-reasoning",
+     22.9,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     63.8,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     61.0,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     61.0,
+     0
+    ],
+    [
+     "sarvam-105b",
+     49.5,
+     0
+    ],
+    [
+     "sarvam-30b",
+     35.5,
+     0
+    ],
+    [
+     "step-3-7-flash",
+     75.8,
+     0
+    ]
+   ],
+   "cybergym": [
+    [
+     "atria-dawn-preview",
+     86.5,
+     0
+    ],
+    [
+     "deepseek-v4-1-flash",
+     88.1,
+     0
+    ],
+    [
+     "grok-4-7",
+     80.3,
+     0
+    ],
+    [
+     "hy4",
+     78.4,
+     0
+    ],
+    [
+     "ling-3-1-flash",
+     87.9,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     95.1,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     94,
+     0
+    ],
+    [
+     "minimax-m3-1-flash",
+     82.2,
+     0
+    ]
+   ],
+   "exploitbench": [
+    [
+     "glm-5-3",
+     54.4,
+     0
+    ],
+    [
+     "gpt-5-6-luna",
+     33.2,
+     0
+    ],
+    [
+     "gpt-5-6-sol",
+     73.5,
+     0
+    ],
+    [
+     "gpt-5-6-terra",
+     52.9,
+     0
+    ],
+    [
+     "gpt-6-2-astra",
+     100,
+     0
+    ],
+    [
+     "gpt-6-2-sol",
+     100,
+     0
+    ],
+    [
+     "kimi-k3-1-pro",
+     74.7,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     25.3,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     47.9,
+     0
+    ]
+   ],
+   "exploitgym": [
+    [
+     "deepseek-v4-1-flash",
+     15.3,
+     0
+    ],
+    [
+     "gemini-4-carbon",
+     53.5,
+     0
+    ],
+    [
+     "gpt-5-6-luna",
+     12.4,
+     0
+    ],
+    [
+     "gpt-5-6-terra",
+     23.2,
+     0
+    ],
+    [
+     "kimi-k3-1-pro",
+     20.7,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     6,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     17.8,
+     0
+    ]
+   ],
+   "gpqa": [
+    [
+     "aion-1-0-instruct",
+     28.2,
+     0
+    ],
+    [
+     "deepseek-v4-1-flash",
+     90.9,
+     0
+    ],
+    [
+     "gpt-6-2-astra",
+     97,
+     0
+    ],
+    [
+     "gpt-6-2-sol",
+     96,
+     0
+    ],
+    [
+     "hy4",
+     92.3,
+     0
+    ],
+    [
+     "inkling-2-small",
+     93,
+     0
+    ],
+    [
+     "kimi-k3-1-pro",
+     94.2,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     63.4,
+     0
+    ],
+    [
+     "longcat-flash-chat",
+     73.2,
+     0
+    ],
+    [
+     "longcat-flash-thinking",
+     81.5,
+     0
+    ],
+    [
+     "nemotron-3-5-bolt",
+     86.4,
+     0
+    ],
+    [
+     "nemotron-3-5-super-vl",
+     89.5,
+     0
+    ],
+    [
+     "nemotron-labs-dory-1-0",
+     72.4,
+     0
+    ],
+    [
+     "reflection-beam",
+     90.6,
+     0
+    ]
+   ],
+   "hle (no tools)": [
+    [
+     "ernie-5-5-flash-preview",
+     46.4,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     7.2,
+     0
+    ],
+    [
+     "longcat-flash-thinking",
+     25.2,
+     0
+    ],
+    [
+     "nemotron-labs-dory-1-0",
+     10.9,
+     0
+    ]
+   ],
+   "hmmt_feb_2026": [
+    [
+     "deepseek-v4-pro",
+     95.2,
+     0
+    ],
+    [
+     "glm-5-2",
+     92.5,
+     0
+    ],
+    [
+     "k2-horizon-3-7b",
+     75.2,
+     0
+    ],
+    [
+     "k2-horizon-7b",
+     73.3,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     92.7,
+     0
+    ],
+    [
+     "ling-3-0-flash",
+     87,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     84.3,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     83.6,
+     0
+    ]
+   ],
+   "mcp_atlas": [
+    [
+     "deepseek-v4-pro",
+     73.6,
+     0
+    ],
+    [
+     "ernie-5-5-flash-preview",
+     84.6,
+     0
+    ],
+    [
+     "hy3",
+     79.1,
+     0
+    ],
+    [
+     "hy4",
+     83.7,
+     0
+    ],
+    [
+     "inkling-2-mini",
+     82.7,
+     0
+    ],
+    [
+     "kimi-k2-7-code",
+     76,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     32.6,
+     0
+    ],
+    [
+     "ling-3-0-flash",
+     65.5,
+     0
+    ],
+    [
+     "longcat-2-5",
+     83.1,
+     0
+    ],
+    [
+     "minimax-m3",
+     74.2,
+     0
+    ],
+    [
+     "muse-glimmer",
+     75.5,
+     0
+    ],
+    [
+     "muse-spark-open",
+     89.2,
+     0
+    ],
+    [
+     "nemotron-3-5-bolt",
+     52.2,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     62.8,
+     0
+    ],
+    [
+     "reflection-beam",
+     80.8,
+     0
+    ]
+   ],
+   "mmmlu": [
+    [
+     "aion-1-0-instruct",
+     45.5,
+     0
+    ],
+    [
+     "diffusiongemma-26b-a4b",
+     81.5,
+     0
+    ],
+    [
+     "gemma-4-12b",
+     83.4,
+     0
+    ],
+    [
+     "gemma-4-26b-a4b",
+     86.3,
+     0
+    ],
+    [
+     "gemma-4-31b",
+     88.4,
+     0
+    ],
+    [
+     "gemma-4-e2b",
+     67.4,
+     0
+    ],
+    [
+     "gemma-4-e4b",
+     76.6,
+     0
+    ],
+    [
+     "gpt-oss-120b",
+     83.8,
+     0
+    ],
+    [
+     "mistral-large-3",
+     85.5,
+     0
+    ],
+    [
+     "qwen3-5-0-8b",
+     44.3,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     86.7,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     85.9,
+     0
+    ],
+    [
+     "qwen3-5-2b",
+     63.1,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     85.2,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     88.5,
+     0
+    ],
+    [
+     "qwen3-5-4b",
+     76.1,
+     0
+    ],
+    [
+     "qwen3-5-9b",
+     81.2,
+     0
+    ]
+   ],
+   "mmmu_pro": [
+    [
+     "hy4-flash",
+     75.8,
+     0
+    ],
+    [
+     "inkling-2-mini",
+     74.9,
+     0
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     82.3,
+     0
+    ]
+   ],
+   "nl2repo": [
+    [
+     "deepseek-v4-1-flash",
+     64,
+     0
+    ],
+    [
+     "deepseek-v4-flash",
+     54.2,
+     0
+    ],
+    [
+     "deepseek-v4-pro",
+     61.5,
+     0
+    ],
+    [
+     "ernie-5-5-flash-preview",
+     64.8,
+     0
+    ],
+    [
+     "glm-5-2",
+     48.9,
+     0
+    ],
+    [
+     "glm-5-3",
+     58,
+     0
+    ],
+    [
+     "glm-5-3-flash",
+     56.3,
+     0
+    ],
+    [
+     "hy3",
+     45.6,
+     0
+    ],
+    [
+     "hy4",
+     58.9,
+     0
+    ],
+    [
+     "longcat-2-5",
+     60.5,
+     0
+    ],
+    [
+     "minimax-m2-7",
+     39.8,
+     0
+    ],
+    [
+     "minimax-m3",
+     42.1,
+     0
+    ],
+    [
+     "minimax-m3-1-flash",
+     61.2,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     36.2,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     29.4,
+     0
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     55.9,
+     0
+    ],
+    [
+     "qwen3-8-27b",
+     42.3,
+     0
+    ],
+    [
+     "qwen3-8-flash-next",
+     48.1,
+     0
+    ]
+   ],
+   "scicode": [
+    [
+     "glm-4-5-air",
+     37.3,
+     0
+    ],
+    [
+     "glm-4.5",
+     41.7,
+     0
+    ],
+    [
+     "kimi-k2-5",
+     48.7,
+     0
+    ],
+    [
+     "kimi-k2-thinking",
+     44.8,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     28.5,
+     0
+    ],
+    [
+     "nemotron-labs-dory-1-0",
+     34.9,
+     0
+    ]
+   ],
+   "sec_bench_pro": [
+    [
+     "deepseek-v4-1-flash",
+     62.8,
+     0
+    ],
+    [
+     "gemini-4-carbon",
+     88.2,
+     0
+    ],
+    [
+     "gemini-4-neon",
+     90.5,
+     0
+    ],
+    [
+     "gpt-5-6-luna",
+     48.9,
+     0
+    ],
+    [
+     "gpt-5-6-sol",
+     71.2,
+     0
+    ],
+    [
+     "gpt-5-6-terra",
+     57.7,
+     0
+    ],
+    [
+     "gpt-6-2-astra",
+     86.8,
+     0
+    ],
+    [
+     "gpt-6-2-sol",
+     88.3,
+     0
+    ],
+    [
+     "mimo-v2-6-flash",
+     47.5,
+     0
+    ],
+    [
+     "mimo-v2-6-pro",
+     66.3,
+     0
+    ]
+   ],
+   "swe_atlas_qna": [
+    [
+     "ling-3-1-flash",
+     55.9,
+     0
+    ],
+    [
+     "longcat-2-5",
+     58.3,
+     0
+    ],
+    [
+     "minimax-m3",
+     37.9,
+     0
+    ],
+    [
+     "muse-spark-open",
+     58,
+     0
+    ]
+   ],
+   "swe_bench_multilingual": [
+    [
+     "claude-fable-5-2",
+     96.6,
+     0
+    ],
+    [
+     "claude-haiku-5-5",
+     83.7,
+     0
+    ],
+    [
+     "claude-opus-5-5",
+     93.9,
+     0
+    ],
+    [
+     "claude-sonnet-5-5",
+     90.3,
+     0
+    ],
+    [
+     "deepseek-r1",
+     30.5,
+     0
+    ],
+    [
+     "hy3",
+     75.8,
+     0
+    ],
+    [
+     "inkling-2-mini",
+     73.7,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     23,
+     0
+    ],
+    [
+     "nemotron-3-5-super-vl",
+     67.7,
+     0
+    ],
+    [
+     "qwen3-coder-480b-a35b-instruct",
+     54.7,
+     0
+    ]
+   ],
+   "swe_bench_multimodal": [
+    [
+     "claude-fable-5-2",
+     74.1,
+     0
+    ],
+    [
+     "claude-haiku-5-5",
+     30.7,
+     0
+    ],
+    [
+     "claude-opus-5-5",
+     61.4,
+     0
+    ],
+    [
+     "claude-sonnet-5-5",
+     54.3,
+     0
+    ]
+   ],
+   "swe_bench_pro": [
+    [
+     "atria-dawn-preview",
+     59.6,
+     0
+    ],
+    [
+     "claude-fable-5-2",
+     93,
+     0
+    ],
+    [
+     "claude-haiku-5-5",
+     64.8,
+     0
+    ],
+    [
+     "claude-opus-5-5",
+     89.9,
+     0
+    ],
+    [
+     "claude-sonnet-5-5",
+     81.3,
+     0
+    ],
+    [
+     "deepseek-v4-pro",
+     55.4,
+     0
+    ],
+    [
+     "gemma-4-31b",
+     35.7,
+     0
+    ],
+    [
+     "glm-4-7-flash",
+     40.6,
+     0
+    ],
+    [
+     "glm-5-2",
+     62.1,
+     0
+    ],
+    [
+     "gpt-5-6-luna",
+     62.7,
+     0
+    ],
+    [
+     "gpt-5-6-sol",
+     64.6,
+     0
+    ],
+    [
+     "gpt-5-6-terra",
+     63.4,
+     0
+    ],
+    [
+     "gpt-oss-120b",
+     16.2,
+     0
+    ],
+    [
+     "hy3",
+     57.9,
+     0
+    ],
+    [
+     "kimi-k2-5",
+     50.7,
+     0
+    ],
+    [
+     "kimi-k2-6",
+     58.6,
+     0
+    ],
+    [
+     "mimo-v2-5-0424",
+     56.1,
+     0
+    ],
+    [
+     "mimo-v2-5-pro",
+     57.2,
+     0
+    ],
+    [
+     "minimax-m2-5",
+     55.4,
+     0
+    ],
+    [
+     "minimax-m2-7",
+     56.2,
+     0
+    ],
+    [
+     "minimax-m3",
+     59,
+     0
+    ],
+    [
+     "nemotron-3-5-super-vl",
+     51.8,
+     0
+    ],
+    [
+     "north-mini-code",
+     40.2,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     51.2,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     80.3,
+     0
+    ],
+    [
+     "qwen3-6-27b",
+     53.5,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     49.5,
+     0
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     67.7,
+     0
+    ],
+    [
+     "qwen3-8-27b",
+     61.7,
+     0
+    ],
+    [
+     "qwen3-8-flash-next",
+     62.5,
+     0
+    ]
+   ],
+   "swe_bench_verified": [
+    [
+     "deepseek-r1",
+     44.6,
+     0
+    ],
+    [
+     "deepseek-v3-2-0925",
+     67.8,
+     0
+    ],
+    [
+     "gemma-4-31b",
+     80.9,
+     0
+    ],
+    [
+     "glm-4-5-air",
+     57.6,
+     0
+    ],
+    [
+     "glm-4-6",
+     68,
+     0
+    ],
+    [
+     "glm-4-7-flash",
+     59.2,
+     0
+    ],
+    [
+     "glm-4.5",
+     64.2,
+     0
+    ],
+    [
+     "gpt-oss-20b",
+     34.0,
+     0
+    ],
+    [
+     "inkling-2-mini",
+     79.2,
+     0
+    ],
+    [
+     "inkling-2-small",
+     82.2,
+     0
+    ],
+    [
+     "lfm3-1-7b",
+     43.4,
+     0
+    ],
+    [
+     "longcat-flash-chat",
+     60.4,
+     0
+    ],
+    [
+     "longcat-flash-lite",
+     54.4,
+     0
+    ],
+    [
+     "longcat-flash-thinking",
+     70,
+     0
+    ],
+    [
+     "mimo-v2-flash",
+     73.4,
+     0
+    ],
+    [
+     "minimax-m1-80k",
+     56,
+     0
+    ],
+    [
+     "nemotron-3-5-super-vl",
+     71.1,
+     0
+    ],
+    [
+     "nemotron-labs-dory-1-0",
+     59.5,
+     0
+    ],
+    [
+     "north-mini-code",
+     67.6,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+     38.8,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     53.7,
+     0
+    ],
+    [
+     "qwen3-30b-a3b-2507-reasoning",
+     22.0,
+     0
+    ],
+    [
+     "qwen3-5-122b-a10b",
+     72.0,
+     0
+    ],
+    [
+     "qwen3-5-27b",
+     72.4,
+     0
+    ],
+    [
+     "qwen3-5-35b-a3b",
+     69.2,
+     0
+    ],
+    [
+     "qwen3-5-397b-a17b",
+     76.4,
+     0
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     73.4,
+     0
+    ],
+    [
+     "qwen3-coder-480b-a35b-instruct",
+     69.6,
+     0
+    ],
+    [
+     "qwen3-next-80b-a3b-reasoning",
+     74.5,
+     0
+    ],
+    [
+     "sarvam-105b",
+     45.0,
+     0
+    ],
+    [
+     "sarvam-30b",
+     34.0,
+     0
+    ],
+    [
+     "step-3-5-flash",
+     74.4,
+     0
+    ],
+    [
+     "step-3-7-flash",
+     76.5,
+     0
+    ]
+   ],
+   "tau2_airline": [
+    [
+     "longcat-flash-chat",
+     58,
+     0
+    ],
+    [
+     "longcat-flash-lite",
+     58,
+     0
+    ],
+    [
+     "longcat-flash-thinking",
+     76.5,
+     0
+    ],
+    [
+     "muse-glimmer",
+     78,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+     48,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     56.3,
+     0
+    ],
+    [
+     "qwen3-235b-a22b-instruct-2507",
+     44,
+     0
+    ],
+    [
+     "qwen3-235b-a22b-instruct-2507-reasoning",
+     58,
+     0
+    ],
+    [
+     "qwen3-next-80b-a3b-reasoning",
+     60.5,
+     0
+    ]
+   ],
+   "tau2_retail": [
+    [
+     "longcat-flash-chat",
+     71.3,
+     0
+    ],
+    [
+     "longcat-flash-lite",
+     73.1,
+     0
+    ],
+    [
+     "longcat-flash-thinking",
+     88.6,
+     0
+    ],
+    [
+     "muse-glimmer",
+     87.1,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+     56.9,
+     0
+    ],
+    [
+     "nvidia-nemotron-3-super-120b-a12b",
+     62.8,
+     0
+    ],
+    [
+     "qwen3-235b-a22b-instruct-2507",
+     71.3,
+     0
+    ],
+    [
+     "qwen3-235b-a22b-instruct-2507-reasoning",
+     71.9,
+     0
+    ],
+    [
+     "qwen3-next-80b-a3b-reasoning",
+     67.8,
+     0
+    ]
+   ]
+  }
  },
  "rejections": {
   "update_artificialanalysis_mapping.py *": {
@@ -20365,6 +27391,20 @@
    "route": "update_artificialanalysis_mapping.py",
    "route_kind": "*",
    "universe": "aa-slugs"
+  },
+  {
+   "file": "huggingface-benchmark-name-mapping.json",
+   "id": "update_huggingface_mapping.py *",
+   "route": "update_huggingface_mapping.py",
+   "route_kind": "*",
+   "universe": "benchmarks"
+  },
+  {
+   "file": "llmstats-benchmark-name-mapping.json",
+   "id": "update_llmstats_mapping.py llmstats-benchmark",
+   "route": "update_llmstats_mapping.py",
+   "route_kind": "llmstats-benchmark",
+   "universe": "benchmarks"
   }
  ]
 }

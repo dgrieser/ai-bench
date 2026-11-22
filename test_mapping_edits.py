@@ -151,8 +151,29 @@ class TestMappingEdit(EditTestCase):
         # Parking it is fine: a sentinel is a decision about the row, not a match.
         self.accepted(self.edit(subject="GLM 5.3", answer="__unmappable__", if_previous=None))
 
-    def test_only_model_routes_are_editable(self) -> None:
-        self.refused(self.edit(route=HF, answer="hle", if_previous=None), "only model mappings")
+    def test_a_benchmark_label_can_be_edited(self) -> None:
+        """The Benchmarks tab's edits: a card label onto a column."""
+        self.assertEqual(self.accepted(self.edit(route=HF, subject="Humanity's Last Exam",
+                                                 answer="hle", if_previous=None)).value, "hle")
+        self.refused(self.edit(route=HF, subject="Humanity's Last Exam", answer="hy4", if_previous=None),
+                     "not one of the known benchmarks")
+
+    def test_an_exact_label_cannot_go_to_another_column(self) -> None:
+        self.refused(self.edit(route=HF, subject="HLE", answer="swe_bench_verified", if_previous=None),
+                     "normalizes to exactly 'hle'")
+
+    def test_a_column_the_batch_creates_is_an_answer(self) -> None:
+        _answers_out, failures = self.validate([
+            self.edit(route=HF, subject="New Bench (pass@1)", answer="new_bench", if_previous=None),
+            {"kind": "benchmark-create", "key": "new_bench", "fields": {
+                "name": "New Bench", "short_name": "NB", "category": "Knowledge",
+                "description": "A new benchmark.", "settings": ["pass@1"],
+                "urls": ["https://example.com"]}},
+        ])
+        self.assertEqual([str(f) for f in failures], [])
+
+    def test_rejections_stay_with_model_routes(self) -> None:
+        self.refused(self.rejection(route=HF, add=["hle"]), "only models and aa-slugs")
 
     def test_the_route_is_a_table_key(self) -> None:
         self.refused(self.edit(route="../etc/passwd"), "unknown route")
@@ -281,6 +302,54 @@ class TestApply(unittest.TestCase):
         self.assertEqual(json.loads(path.read_text(encoding="utf-8")), {})
 
 
+class TestReceived(unittest.TestCase):
+    """The pills on the Benchmarks tab: which model and score a label delivers."""
+
+    HF_PAGE = "https://huggingface.co/org/m"
+
+    def doc(self, source, value=50.0):
+        return {
+            "benchmarks": {"hle": {}},
+            "models": [{"name": "m", "scores": {"hle": value}, "scores_source": {"hle": source}}],
+        }
+
+    def files(self, *labels):
+        return {_mapping_index.HF_LABEL_ROUTE: {label: "hle" for label in labels} | {"Params": "__unmappable__"}}
+
+    def got(self, doc, files, **kwargs):
+        return _mapping_index.received(doc, files, **kwargs).get(_mapping_index.HF_LABEL_ROUTE, {})
+
+    def test_a_lone_label_gets_the_score(self) -> None:
+        self.assertEqual(self.got(self.doc(self.HF_PAGE), self.files("HLE")), {"HLE": [["m", 50.0, 0]]})
+
+    def test_a_score_another_source_overrode_is_not_the_labels(self) -> None:
+        self.assertEqual(self.got(self.doc("https://artificialanalysis.ai/models/m"), self.files("HLE")), {})
+        self.assertEqual(self.got(self.doc("https://huggingface.co/datasets/x/y"), self.files("HLE")), {})
+
+    def test_the_crawl_says_which_label_printed_it(self) -> None:
+        got = self.got(self.doc(self.HF_PAGE), self.files("HLE", "HLE (text)"),
+                       crawl={"m": {"HLE": 50.0, "HLE (text)": 41.0}})
+        self.assertEqual(got, {"HLE": [["m", 50.0, 0]]})
+
+    def test_one_number_under_two_headings_is_both_labels(self) -> None:
+        got = self.got(self.doc(self.HF_PAGE), self.files("HLE", "HLE (text)"),
+                       crawl={"m": {"HLE": 50.0, "HLE (text)": 50.0}})
+        self.assertEqual(got, {"HLE": [["m", 50.0, 0]], "HLE (text)": [["m", 50.0, 0]]})
+
+    def test_without_a_crawl_the_last_index_decides(self) -> None:
+        prior = {_mapping_index.HF_LABEL_ROUTE: {"HLE (text)": [["m", 50.0, 0]]}}
+        got = self.got(self.doc(self.HF_PAGE), self.files("HLE", "HLE (text)"), prior=prior)
+        self.assertEqual(got, {"HLE (text)": [["m", 50.0, 0]]})
+
+    def test_a_number_the_card_no_longer_prints_is_no_labels(self) -> None:
+        got = self.got(self.doc(self.HF_PAGE), self.files("HLE", "HLE (text)"), crawl={"m": {"MMLU": 80.0}})
+        self.assertEqual(got, {})
+
+    def test_with_nothing_to_go_on_the_score_is_shared(self) -> None:
+        got = self.got(self.doc(self.HF_PAGE), self.files("HLE", "HLE (text)"))
+        self.assertEqual(got, {"HLE": [["m", 50.0, 2]], "HLE (text)": [["m", 50.0, 2]]})
+
+
 class TestMappingIndex(unittest.TestCase):
     def test_every_model_route_says_which_pages_it_writes(self) -> None:
         """A route missing here would show on the page as supplying nothing."""
@@ -336,8 +405,10 @@ class TestMappingIndex(unittest.TestCase):
 
     def test_the_published_document_has_every_part_the_page_reads(self) -> None:
         doc = _mapping_index.build()
-        self.assertEqual(set(doc), {"generated", "routes", "files", "rejections", "parked", "contributions"})
+        self.assertEqual(set(doc), {"generated", "routes", "files", "rejections", "parked",
+                                    "contributions", "received"})
         self.assertEqual(set(doc["files"]), {r["id"] for r in doc["routes"]})
+        self.assertIn(_mapping_index.HF_LABEL_ROUTE, doc["files"])
         self.assertTrue(any(doc["files"].values()), "every mapping file read empty")
 
 
