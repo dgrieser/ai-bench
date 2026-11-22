@@ -9379,10 +9379,13 @@
           // Only whether it is fresh reaches the cell: the red the class paints
           // is flat, the same one a new model's name gets.
           const className = `num${isTop ? " top-score" : ""}${fresh ? " fresh-score" : ""}`;
+          // Inside the top score's mark, not after it: the mark is a block,
+          // and a superscript left behind it opened a line of its own under
+          // it, so a top score resting on one benchmark made its row taller.
           const thin = hasValue ? indexThinMark(model, key) : "";
           const ring = hasValue ? indexCompletenessRing(model, key) : "";
           const content = isTop
-            ? `<span class="top-score-mark">${ring}${formatScore(value, key)}</span>${thin}`
+            ? `<span class="top-score-mark">${ring}${formatScore(value, key)}${thin}</span>`
             : `${ring}${formatScore(value, key)}${thin}`;
           return `<td class="${className}"${style}${tipAttr}>${content}</td>`;
         }).join("");
