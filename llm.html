@@ -3580,6 +3580,45 @@
       font-weight: 600;
     }
 
+    /* The ring in front of an index value: the share of the index's scores
+       the model was measured on (for the overall index, of all the
+       sub-indexes' scores together). Hung into the row's padding like the
+       NEW badge, so it never opens the row; drawn in its own colours, not
+       the grey ramp the cell's number takes. */
+    .index-ring {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      margin: -4px 6px -4px 0;
+      line-height: 0;
+      vertical-align: middle;
+    }
+
+    .index-ring svg {
+      display: block;
+    }
+
+    .index-ring-track {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 3;
+    }
+
+    .index-ring-fill {
+      fill: none;
+      stroke: var(--accent-sub);
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .index-ring text {
+      fill: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
     .bench-flag.bench-flag-thin {
       border-style: dashed;
     }
@@ -9341,9 +9380,10 @@
           // is flat, the same one a new model's name gets.
           const className = `num${isTop ? " top-score" : ""}${fresh ? " fresh-score" : ""}`;
           const thin = hasValue ? indexThinMark(model, key) : "";
+          const ring = hasValue ? indexCompletenessRing(model, key) : "";
           const content = isTop
-            ? `<span class="top-score-mark">${formatScore(value, key)}</span>${thin}`
-            : `${formatScore(value, key)}${thin}`;
+            ? `<span class="top-score-mark">${ring}${formatScore(value, key)}</span>${thin}`
+            : `${ring}${formatScore(value, key)}${thin}`;
           return `<td class="${className}"${style}${tipAttr}>${content}</td>`;
         }).join("");
 
@@ -12071,6 +12111,76 @@
           : "";
       }
 
+      // How many benchmarks each sub-index aggregates (its record's "of"),
+      // read off whichever model carries a record for it. Cached per data
+      // object, since every visible index cell asks.
+      let indexSizesFor = null;
+      let indexSizesCache = {};
+      function indexSizes() {
+        if (indexSizesFor === state.data) return indexSizesCache;
+        const sizes = {};
+        (state.data?.models || []).forEach((model) => {
+          Object.entries(model?.index_coverage || {}).forEach(([key, record]) => {
+            if (Number.isFinite(record?.of)) sizes[key] = Math.max(sizes[key] || 0, record.of);
+          });
+        });
+        indexSizesFor = state.data;
+        indexSizesCache = sizes;
+        return sizes;
+      }
+
+      // Which share of an index's scores a model has: measured of the
+      // index's benchmarks for a sub-index; for the overall index, the
+      // measured counts of every sub-index summed, over the sum of their
+      // sizes. null when the column is not an index or nothing can be said.
+      function indexCompleteness(model, key) {
+        if (!isDerivedBenchmark(key)) return null;
+        const record = indexCoverage(model, key);
+        if (record) {
+          return record.of > 0 ? { measured: record.measured.length, of: record.of } : null;
+        }
+        if (key !== "openbench_index") return null;
+        const sizes = indexSizes();
+        let measured = 0;
+        let of = 0;
+        Object.entries(sizes).forEach(([sub, size]) => {
+          if (sub === key) return;
+          of += size;
+          measured += indexCoverage(model, sub)?.measured.length || 0;
+        });
+        return of > 0 ? { measured, of } : null;
+      }
+
+      // The ring an index value wears in front of it: the share of the
+      // index's scores the model was measured on, filled and printed inside.
+      function indexCompletenessRing(model, key) {
+        const done = indexCompleteness(model, key);
+        if (!done) return "";
+        const share = Math.max(0, Math.min(1, done.measured / done.of));
+        const pct = Math.round(share * 100);
+        const r = 10.5;
+        const circ = 2 * Math.PI * r;
+        const label = `${done.measured} of ${done.of} scores available (${pct}%)`;
+        return `<span class="index-ring" role="img" aria-label="${escapeAttr(label)}">` +
+          `<svg viewBox="0 0 26 26" width="22" height="22" aria-hidden="true">` +
+          `<circle class="index-ring-track" cx="13" cy="13" r="${r}"/>` +
+          (share > 0
+            ? `<circle class="index-ring-fill" cx="13" cy="13" r="${r}" stroke-dasharray="${(circ * share).toFixed(2)} ${circ.toFixed(2)}" transform="rotate(-90 13 13)"/>`
+            : "") +
+          `<text x="13" y="13" dy="0.35em" text-anchor="middle">${pct}</text>` +
+          `</svg></span>`;
+      }
+
+      // The slip line for the overall index, which has no coverage record of
+      // its own: how many of the sub-indexes' scores it was built from.
+      function overallCompletenessLine(model, key) {
+        if (key !== "openbench_index" || indexCoverage(model, key)) return "";
+        const done = indexCompleteness(model, key);
+        return done
+          ? `Rests on ${done.measured} of ${done.of} scores across the sub-indexes (${Math.round(done.measured / done.of * 100)}%)`
+          : "";
+      }
+
       // Column headers use short_name to stay narrow; lists with room (the
       // benchmark picker, the sort dropdown) use the full name.
       function getBenchmarkFullName(key) {
@@ -12815,6 +12925,7 @@
             body: scoreTipBody(key),
             meta: [
               ...indexCoverageLines(model, key),
+              overallCompletenessLine(model, key),
               refusalSummary(model, key),
               updated ? `Updated ${updated}${newness}` : "",
               aaRunLabel(source, model),
