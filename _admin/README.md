@@ -430,6 +430,51 @@ tells you why.
   *Keep it* takes it back. A reference model has no Delete; *Stop carrying it*
   on the Reference tab removes the slug and the entry together, and
   `answer.py` refuses a `model-delete` for one.
+  **Mappings**, folded under the delete block, is every name a source publishes
+  that feeds this model -- from every fetcher's mapping file, grouped by source
+  -- with the columns each source supplies to it now (read off the page each
+  score is credited to; a model card's scores and hand-cited pages are listed
+  last, under *no mapping*). It is read from `_pending/mappings.json`, which
+  `./mapping_index.py --publish` writes on every run and again right after a
+  batch of answers (see `_mapping_index.py`). Each line can be **kept**,
+  **moved** onto another model, **parked** (`__unmappable__`) or **removed**,
+  which takes the line out so the queue asks about the name again. For the
+  Artificial Analysis file, keyed by the model, the choice is the slug. Names
+  parked on a sentinel that look like the model -- the ones a preview cleanup
+  parks -- are listed too, with *Map onto …*: that is the way back from a
+  cleanup, which **Bring it back** on the Cleanup tab is not (it only lists
+  the case again). **Add a mapping** maps any name onto the model: one already
+  in the file moves here from wherever it pointed, one that is not becomes a
+  new line, and a name the Queue is asking about is answered there instead.
+
+  Each change is a `mapping-edit` record. It answers no queued question, so it
+  is held to everything else a queue answer is: the route from
+  `propose.ROUTES` (model routes and the AA route only), the answer from the
+  route's own list, `if_previous` against the file, and the matcher's exact
+  tier -- a name normalizing to exactly one model's name cannot go to another,
+  since `test_propose.py` would fail on it. The page checks that last rule as
+  you type and refuses the move rather than sinking the batch.
+
+  The **"not this model"** hints -- the candidates a *None of these* ruled out
+  for a name (`rejected-candidates.json`, and the AA route's ignore file) --
+  are listed where they rule this model out, with *Offer again*, and **Rule
+  this model out for a name** adds one. Both are a `rejection-edit` record:
+  one per name, carrying what each card added and took off. A benchmark's own
+  "Not this" list (`excludes`), shown on the Queue's benchmark questions, is
+  edited on the Benchmarks tab; the **edit** link beside it on a Queue card
+  opens that column there. From a terminal:
+
+  ```sh
+  ./mapping_index.py --model hy4             # what feeds one model
+  echo '[{"kind": "mapping-edit", "route": "update_vals_mapping.py", "route_kind": "*",
+          "subject": "tencent/hy4-preview", "answer": "hy4",
+          "if_previous": ["__unmappable__"]}]' | ./answer.py --stdin -w
+  echo '[{"kind": "rejection-edit", "route": "update_openrouter_mapping.py", "route_kind": "*",
+          "subject": "apodex/apodex-1.1-mini", "remove": ["gpt-6-1-sol"]}]' | ./answer.py --stdin -w
+  ```
+
+  Re-pointing a name does not move scores already stored: the next full run
+  re-reads the source and writes them where the mapping now says.
 - **Benchmarks** — the columns themselves: `llm.json`'s `benchmarks` object.
   Every column unfolds into a form for what a reader is shown about it — `name`,
   `short name`, `category` (the ones in use are offered), `description`,
@@ -449,6 +494,29 @@ tells you why.
   knows it. Scores for it can go in the same batch from the Models tab — the
   column is offered there as soon as the form is complete — and so can a
   mapping onto it from the Queue; `answer.py` applies the columns first.
+
+  **Label mappings**, folded under each non-derived column, lists every label a
+  source prints that is filed under it -- a Hugging Face card's heading
+  (`huggingface-benchmark-name-mapping.json`) or an llm-stats benchmark id
+  (`llmstats-benchmark-name-mapping.json`) -- each with pills for the model
+  and score it delivers right now. A pill is shown only while that score is
+  still the stored one: its page is the label route's (the model's card, or
+  an llm-stats page), so a number Artificial Analysis or another board has
+  replaced is not the label's any more and gets none. When several labels of
+  one source feed the column, the card crawl the refresh cached says which
+  label printed the stored number (a card printing it under two headings
+  credits both, and one it no longer prints credits none); without a crawl
+  the last published index decides, and failing that the pill is drawn under
+  each candidate label, dashed and marked ≈. llm-stats' two-ids-one-column
+  cases (OSWorld 2.0, Toolathlon) are always the last kind: its per-model
+  scores are not cached. All of it is `received` in `_pending/mappings.json`.
+
+  Each label is **kept**, **moved** to another column, **parked** or
+  **removed** (the Queue asks about it again), and **File a label under this
+  column** adds or moves one -- the same `mapping-edit` record the Models tab
+  sends, held to the same rules: the column must exist (or be created in the
+  batch) and not be derived, and a label normalizing to exactly one column's
+  key cannot be filed under another.
 
   **Column order** lists every column in `llm.json`'s order, which is the order
   the site lists them in (grouped by category, in the order each category first

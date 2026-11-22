@@ -867,6 +867,33 @@ select {
   .decision-row .seg { justify-content: flex-start; }
 }
 .preview-score .score-past a { color: var(--muted); }
+/* The Models tab's mappings: one group per source, its supplied columns as
+   chips, then a decision row per name. Folded by default -- a model fed by a
+   dozen boards is a long block. */
+.mappings > summary { cursor: pointer; font-size: .8125rem; color: var(--faint); }
+.mappings > summary .map-sum { margin-left: .5rem; color: var(--muted); }
+.map-group { margin-top: .75rem; padding-top: .6rem; border-top: 1px solid var(--line); }
+.map-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; font-size: .875rem; }
+.map-head .map-kind, .map-head .map-file { font-size: .7rem; color: var(--faint); overflow-wrap: anywhere; }
+.map-supplies { display: flex; flex-wrap: wrap; gap: .25rem; align-items: center; margin-top: .35rem; }
+.map-supplies .map-label { font-size: .75rem; color: var(--muted); margin-right: .25rem; }
+.map-line > label { font-family: var(--font-ui); }
+.map-line > label .mono { font-family: var(--font-mono); }
+.map-line > label .arrow { color: var(--faint); }
+.map-line > label .sentinel { color: var(--faint); }
+.map-line.changed > label { color: var(--good); }
+.map-line > .note-text, .map-line > .map-move { grid-column: 1 / -1; margin: 0; }
+.map-form { margin-top: .9rem; padding-top: .6rem; border-top: 1px dashed var(--line-strong); }
+.map-form-row { display: flex; flex-wrap: wrap; gap: .4rem; align-items: flex-start; }
+.map-form-row select { flex: 0 1 12rem; margin: 0; min-width: 0; }
+.map-form-row .grow { flex: 1 1 12rem; min-width: 0; }
+.map-form-row input { margin: 0; }
+.map-form .note-text { margin-top: .35rem; font-size: .8125rem; }
+.bench-tag.pill { display: inline-flex; gap: .2rem; align-items: baseline; }
+.bench-tag.pill .pill-model { font-weight: 400; }
+.bench-tag.pill.shared { border-style: dashed; opacity: .8; }
+.map-line > .map-supplies { grid-column: 1 / -1; margin-top: 0; }
+.bench-note .edit-link { margin-left: .4rem; font-size: .75rem; color: var(--accent); cursor: pointer; text-decoration: underline; }
 .era-preview { color: var(--warn); }
 /* A release rule's condition: not, the operator, the value, remove. */
 .watch-cond { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: .4rem; align-items: center; margin: .35rem 0; }
@@ -1402,6 +1429,16 @@ const state = {
      `offered` is what api.php says it can serve; the list itself is fetched
      once, and only when the Models tab is opened. */
   aa: { slugs: null, models: null, error: "", asked: false },
+  /* _pending/mappings.json (see _mapping_index.py): every model-name mapping
+     file, the "not these" lists, the parked names that look like each model
+     and which columns each source supplies to it. Read once, when the Models
+     tab is opened, and again by the header's reload. */
+  mapIndex: { doc: null, error: "", asked: false },
+  mapAdd: { route: "", name: "" },     // the Models tab's "add a mapping" boxes
+  mapRule: { route: "", name: "" },    // and its "rule this model out" boxes
+  mapOpen: new Set(),                  // model cards whose mappings are unfolded
+  mapMoving: new Set(),                // mapping lines whose "Move" box is open
+  labelAdd: { route: "", name: "" },   // the Benchmarks tab's "file a label" boxes
   modelSearch: "",      // kept here so a re-render does not empty the tab
   modelSort: "least",   // see MODEL_SORTS
   modelOpen: new Set(), // the unfolded model cards, by name
@@ -2125,7 +2162,7 @@ function readDraft() {
 /* The records that answer a question of the queue, as opposed to the ones that
    name a model -- the same split inferQueued draws for a sent batch. */
 const isQueueKey = (key) =>
-  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)) /.test(key);
+  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit) /.test(key);
 
 function pruneDraft() {
   const asked = new Set(state.questions.map(KEY));
@@ -2287,7 +2324,7 @@ const queueKeys = (keys) => {
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
 const inferQueued = (keys) =>
-  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)) /.test(key));
+  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit) /.test(key));
 
 function readSent() {
   try {
@@ -2905,7 +2942,19 @@ function benchNote(key) {
   const excludes = Array.isArray(bench.excludes)
     ? bench.excludes.filter((item) => typeof item === "string" && item.trim())
     : [];
-  if (!settings.length && !excludes.length) return null;
+  /* The way to change those words from where they are read: the column's
+     card on the Benchmarks tab, unfolded. A span, not a link -- this note sits
+     inside an option button, and a link inside a button is not one. */
+  const edit = el("span", {
+    className: "edit-link link", role: "link", tabIndex: 0,
+    title: "Edit this column's tags and its \"Not this\" list on the Benchmarks tab",
+    onclick: (event) => { event.preventDefault(); event.stopPropagation(); openBenchmark(key); },
+    onkeydown: (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault(); event.stopPropagation(); openBenchmark(key);
+      }
+    },
+  }, settings.length || excludes.length ? "edit" : "add hints");
   return el("div", { className: "bench-note" }, [
     bench.name ? el("span", { className: "bench-note-name" }, bench.name) : null,
     settings.length
@@ -2913,7 +2962,14 @@ function benchNote(key) {
           settings.map((tag) => el("span", { className: "bench-tag" }, tag.trim())))
       : null,
     excludes.length ? el("span", { className: "excludes" }, `Not this: ${excludes.join(" · ")}`) : null,
+    edit,
   ]);
+}
+
+function openBenchmark(key) {
+  state.benchSearch = key;
+  state.benchOpen.add(key);
+  showTab("benchmarks");
 }
 
 /* Which list an answer must come from, as the queue states it.
@@ -5154,6 +5210,7 @@ function sortedModels(models, sort) {
 
 function renderModels() {
   ensureAaSlugs();
+  ensureMapIndex();
   const box = el("div", { className: "stack" });
   const search = noAuto(el("input", {
     type: "search",
@@ -5234,6 +5291,7 @@ function renderModelCard(model) {
   });
   const columns = benchmarks();
   const count = scoredCount(model);
+  const mapDrafts = state.mapIndex.doc ? mappingDraftCount(model.name) : 0;
   card.append(el("summary", {}, [
     aaMark(model),
     el("span", { className: "subject" }, model.name),
@@ -5243,6 +5301,7 @@ function renderModelCard(model) {
       chip("scored", `${count} / ${columns.length}`,
         { className: count < columns.length / 4 ? "now" : "" }),
       deleting ? chip("", "deleted on the next run", { prose: true, className: "now" }) : null,
+      mapDrafts ? chip("mappings", `${mapDrafts} change${mapDrafts === 1 ? "" : "s"}`, { className: "now" }) : null,
     ]),
   ]));
 
@@ -5268,10 +5327,11 @@ function renderModelCard(model) {
     card.append(
       renameBlock(model, renameKey, rename),
       deleteBlock(model, { key, renameKey, deleteKey }),
+      mappingsBlock(model),
     );
     fillModelCard(card, model, { key, renameKey, rename, existing, columns });
   };
-  card.open = state.modelOpen.has(model.name) || Boolean(existing || rename || deleting);
+  card.open = state.modelOpen.has(model.name) || Boolean(existing || rename || deleting || mapDrafts);
   card.ontoggle = () => {
     if (card.open) { state.modelOpen.add(model.name); build(); }
     else state.modelOpen.delete(model.name);
@@ -5572,6 +5632,738 @@ function setRename(model, renameKey, slug) {
   state.answers.delete(`model-edit  ${model.name}`);
   state.answers.set(renameKey, { kind: "model-rename", name: model.name, new_name: slug });
   render();
+}
+
+/* ── A model's mappings ──
+   Every source name that feeds this model, from every fetcher's mapping file,
+   with the columns each source supplies to it -- and the way to change any of
+   them. The queue asks about a name once; a decision made there, or by a
+   cleanup that parked a preview's names, used to be final from here. Now a
+   line can be re-pointed, parked, removed (the queue asks about the name
+   again) or added, as a `mapping-edit` record, and a name's "not these" list
+   -- the candidates a "None of these" ruled out -- edited as a
+   `rejection-edit`. _mapping_index.py publishes what this reads;
+   _answers.py holds both records to the rules a queue answer is held to. */
+
+const MAP_EDIT_KEY = (rid, subject) => `mapping-edit  ${rid} ${subject}`;
+const RULE_EDIT_KEY = (rid, subject) => `rejection-edit  ${rid} ${subject}`;
+const MAP_SENTINEL = /^__.*__$/;
+const AA_ROUTE_ID = "update_artificialanalysis_mapping.py *";
+
+async function ensureMapIndex(force = false) {
+  if (!state.raw || (state.mapIndex.asked && !force)) return;
+  state.mapIndex.asked = true;
+  try {
+    const response = await fetch(bust(`${dataBase()}/_pending/mappings.json`), { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const doc = await response.json();
+    if (!Array.isArray(doc.routes) || !doc.files) throw new Error("the file has no routes");
+    state.mapIndex = { doc, error: "", asked: true };
+  } catch (error) {
+    state.mapIndex = { doc: null, error: String(error.message), asked: true };
+  }
+  if (state.tab === "models" || state.tab === "benchmarks") render();
+}
+
+const mapRoutes = () => state.mapIndex.doc?.routes || [];
+/* The Models tab's routes (model names and AA slugs) and the Benchmarks
+   tab's (card and llm-stats labels onto a column). */
+const isLabelRoute = (route) => route?.universe === "benchmarks";
+const modelRoutes = () => mapRoutes().filter((r) => !isLabelRoute(r));
+const labelRoutes = () => mapRoutes().filter(isLabelRoute);
+const mapRoute = (rid) => mapRoutes().find((r) => r.id === rid) || null;
+const mapSource = (rid) => {
+  const route = mapRoute(rid);
+  return route ? sourceOf(route) : rid;
+};
+const asValues = (value) => (value === undefined || value === null ? null
+  : Array.isArray(value) ? value : [value]);
+const mapFileValue = (rid, subject) => asValues(state.mapIndex.doc?.files?.[rid]?.[subject]);
+const mapRejected = (rid, subject) => state.mapIndex.doc?.rejections?.[rid]?.[subject] || [];
+const benchShort = (key) => (key === "vram" ? "VRAM"
+  : state.llm?.benchmarks?.[key]?.short_name || state.llm?.benchmarks?.[key]?.name || key);
+
+/* The matcher's exact tier is normalized equality (normSlug above), and
+   answer.py refuses a mapping that contradicts it (test_propose.py would fail
+   on it). Checked here as well, so a refused record does not take the rest of
+   the batch down with it; the runner's check is the real one. */
+function exactClash(rid, subject, value) {
+  const universe = mapRoute(rid)?.universe;
+  if (!["models", "benchmarks"].includes(universe) || MAP_SENTINEL.test(value)) return "";
+  const tail = normSlug(subject.includes("/") ? subject.slice(subject.lastIndexOf("/") + 1) : subject);
+  /* For a label, every column key -- the derived ones too, as test_propose.py
+     replays them. */
+  const options = universe === "models"
+    ? (state.llm?.models || []).map((m) => m.name)
+    : Object.keys(state.llm?.benchmarks || {});
+  const hits = options.filter((name) => normSlug(name) === tail);
+  return hits.length === 1 && hits[0] !== value ? hits[0] : "";
+}
+
+/* What this card's model is fed by, read off the index: the lines naming it
+   (for the AA file, the line keyed by it), grouped per route. */
+function modelMappings(name) {
+  const doc = state.mapIndex.doc;
+  const groups = new Map();
+  const group = (rid) => {
+    if (!groups.has(rid)) groups.set(rid, { rid, lines: [], parked: [], ruled: [], supplies: [] });
+    return groups.get(rid);
+  };
+  for (const route of modelRoutes()) {
+    const file = doc.files[route.id] || {};
+    if (route.id === AA_ROUTE_ID) {
+      if (name in file) group(route.id).lines.push({ subject: name, value: asValues(file[name]) });
+    } else {
+      for (const [subject, value] of Object.entries(file)) {
+        if (asValues(value).includes(name)) group(route.id).lines.push({ subject, value: asValues(value) });
+      }
+    }
+    for (const [subject, options] of Object.entries(doc.rejections?.[route.id] || {})) {
+      if (route.id === AA_ROUTE_ID ? subject === name : options.includes(name)) {
+        group(route.id).ruled.push({ subject, options });
+      }
+    }
+  }
+  for (const [rid, subject] of doc.parked?.[name] || []) {
+    if (mapRoute(rid)) group(rid).parked.push({ subject, value: mapFileValue(rid, subject) });
+  }
+  const supplies = doc.contributions?.[name] || {};
+  for (const [rid, keys] of Object.entries(supplies)) {
+    if (mapRoute(rid)) group(rid).supplies = keys;
+  }
+  /* Lines this batch adds or moves onto the model, which the index cannot
+     know about yet: they are listed with the rest, so Undo is where it was. */
+  for (const [key, record] of state.answers) {
+    if (record.kind !== "mapping-edit" || record.answer !== name) continue;
+    const rid = `${record.route} ${record.route_kind}`;
+    if (!mapRoute(rid) || rid === AA_ROUTE_ID || isLabelRoute(mapRoute(rid))) continue;
+    const g = group(rid);
+    if (!g.lines.some((l) => l.subject === record.subject) && !g.parked.some((l) => l.subject === record.subject)) {
+      g.lines.push({ subject: record.subject, value: mapFileValue(rid, record.subject), added: true });
+    }
+  }
+  const order = new Map(mapRoutes().map((r, i) => [r.id, i]));
+  return {
+    groups: [...groups.values()].sort((a, b) => (order.get(a.rid) ?? 999) - (order.get(b.rid) ?? 999)),
+    card: supplies.card || [],
+    other: supplies.other || [],
+  };
+}
+
+/* The mapping drafts in the batch that concern this model, for its summary. */
+function mappingDraftCount(name) {
+  let n = 0;
+  for (const record of state.answers.values()) {
+    if (record.kind === "mapping-edit" && isLabelRoute(mapRoute(`${record.route} ${record.route_kind}`))) continue;
+    if (record.kind === "mapping-edit") {
+      const before = mapFileValue(`${record.route} ${record.route_kind}`, record.subject) || [];
+      if (record.answer === name || before.includes(name)
+        || (record.route === "update_artificialanalysis_mapping.py" && record.subject === name)) n += 1;
+    } else if (record.kind === "rejection-edit") {
+      if ([...record.add, ...record.remove].includes(name)
+        || (record.route === "update_artificialanalysis_mapping.py" && record.subject === name)) n += 1;
+    }
+  }
+  return n;
+}
+
+function setMapEdit(rid, subject, answer) {
+  const route = mapRoute(rid);
+  const key = MAP_EDIT_KEY(rid, subject);
+  const before = mapFileValue(rid, subject);
+  /* Back to what the file holds is no edit at all. */
+  const same = answer === undefined
+    || (answer === null ? before === null : before && before.length === 1 && before[0] === answer);
+  if (same) state.answers.delete(key);
+  else {
+    state.answers.set(key, {
+      kind: "mapping-edit", route: route.route, route_kind: route.route_kind,
+      subject, answer, if_previous: before,
+    });
+  }
+}
+
+/* One record per name, however many cards edit its list: each card adds or
+   takes off its own model, and the record is the sum. */
+function setRuleEdit(rid, subject, option, op) {
+  const route = mapRoute(rid);
+  const key = RULE_EDIT_KEY(rid, subject);
+  const record = state.answers.get(key) || {
+    kind: "rejection-edit", route: route.route, route_kind: route.route_kind, subject, add: [], remove: [],
+  };
+  record.add = record.add.filter((o) => o !== option);
+  record.remove = record.remove.filter((o) => o !== option);
+  if (op === "add") record.add.push(option);
+  if (op === "remove") record.remove.push(option);
+  if (record.add.length || record.remove.length) state.answers.set(key, record);
+  else state.answers.delete(key);
+}
+const ruleOp = (rid, subject, option) => {
+  const record = state.answers.get(RULE_EDIT_KEY(rid, subject));
+  return record?.add.includes(option) ? "add" : record?.remove.includes(option) ? "remove" : null;
+};
+
+/* A segmented choice, as the Cleanup tab draws its Keep / Park. */
+function segChoice(choices, current, onpick, disabled = false) {
+  const box = el("div", { className: "seg" });
+  for (const [value, label] of choices) {
+    const button = el("button", { type: "button", className: "btn ghost tiny", disabled,
+      onclick: () => onpick(value) }, label);
+    button.setAttribute("aria-pressed", String(current === value));
+    box.append(button);
+  }
+  return box;
+}
+
+function mappingsBlock(model) {
+  const name = model.name;
+  const box = el("details", { className: "provenance mappings" });
+  const { doc, error } = state.mapIndex;
+  if (!doc) {
+    box.open = true;
+    box.append(el("summary", {}, "mappings"), el("p", { className: "note-text" }, error
+      ? (error.includes("404")
+        ? "No mapping index yet. It appears after the next run publishes _pending/mappings.json "
+          + "(./mapping_index.py --publish from a terminal)."
+        : `Could not read the mapping index (${error}).`)
+      : "Reading the mapping index..."));
+    return box;
+  }
+  const { groups, card, other } = modelMappings(name);
+  const lines = groups.reduce((n, g) => n + g.lines.length, 0);
+  const parked = groups.reduce((n, g) => n + g.parked.length, 0);
+  const drafts = mappingDraftCount(name);
+  box.open = state.mapOpen.has(name) || drafts > 0;
+  box.ontoggle = () => (box.open ? state.mapOpen.add(name) : state.mapOpen.delete(name));
+  box.append(el("summary", {}, [
+    "mappings",
+    el("span", { className: "map-sum" }, [
+      `${lines} name${lines === 1 ? "" : "s"} from ${groups.filter((g) => g.lines.length).length} source${groups.filter((g) => g.lines.length).length === 1 ? "" : "s"}`,
+      parked ? ` · ${parked} parked look${parked === 1 ? "s" : ""} like it` : "",
+      drafts ? ` · ${drafts} change${drafts === 1 ? "" : "s"} in this batch` : "",
+    ].join("")),
+  ]));
+  box.append(el("p", { className: "note-text" },
+    "Every name a source publishes that is mapped onto this model, and the columns that source "
+    + "supplies to it now (read off the page each score is credited to). Park writes __unmappable__; "
+    + "Remove takes the line out, so the queue asks about the name again; Move puts it onto another "
+    + "model. Re-pointing a name does not move the scores already stored -- the next full run "
+    + "re-reads the source."));
+
+  const redraw = () => { render(); };
+  const models = () => (state.llm?.models || []).map((m) => m.name);
+
+  for (const g of groups) {
+    const route = mapRoute(g.rid);
+    const isAa = g.rid === AA_ROUTE_ID;
+    const section = el("div", { className: "map-group" });
+    section.append(el("div", { className: "map-head" }, [
+      el("b", {}, mapSource(g.rid)),
+      route.route_kind !== "*" ? el("span", { className: "map-kind" }, route.route_kind) : null,
+      el("span", { className: "map-file mono" }, route.file),
+    ]));
+    if (g.supplies.length) {
+      section.append(el("div", { className: "map-supplies" }, [
+        el("span", { className: "map-label" }, "supplies"),
+        ...g.supplies.map((key) => el("span", { className: "bench-tag", title: key }, benchShort(key))),
+      ]));
+    } else if (g.lines.length) {
+      section.append(el("div", { className: "map-supplies" },
+        el("span", { className: "map-label" }, "supplies no score right now")));
+    }
+
+    for (const line of g.lines) section.append(mapLineRow(g.rid, line, name, { isAa, models, redraw }));
+    for (const line of g.parked) section.append(parkedRow(g.rid, line, name, redraw));
+    for (const entry of g.ruled) section.append(ruledRow(g.rid, entry, name, isAa, redraw));
+    box.append(section);
+  }
+  if (card.length || other.length) {
+    const section = el("div", { className: "map-group" });
+    section.append(el("div", { className: "map-head" }, el("b", {}, "no mapping")));
+    if (card.length) {
+      section.append(el("div", { className: "map-supplies" }, [
+        el("span", { className: "map-label" }, "model card (the url field)"),
+        ...card.map((key) => el("span", { className: "bench-tag", title: key }, benchShort(key))),
+      ]));
+    }
+    if (other.length) {
+      section.append(el("div", { className: "map-supplies" }, [
+        el("span", { className: "map-label" }, "pages cited by hand"),
+        ...other.map((key) => el("span", { className: "bench-tag", title: key }, benchShort(key))),
+      ]));
+    }
+    box.append(section);
+  }
+  if (!groups.length && !card.length && !other.length) {
+    box.append(el("p", { className: "note-text" }, "No source maps a name onto this model yet."));
+  }
+
+  box.append(addMappingForm(name, redraw), ruleOutForm(name, redraw));
+  return box;
+}
+
+/* One line of a mapping file that names the model: Keep / Park / Remove /
+   Move, or for the AA file (keyed by the model) the slug it reads. */
+function mapLineRow(rid, line, name, { isAa, models, redraw }) {
+  const key = MAP_EDIT_KEY(rid, line.subject);
+  const record = state.answers.get(key);
+  const sent = isSent(key);
+  const row = el("div", { className: "score-row decision-row map-line" });
+  const now = line.value ? line.value.join(", ") : "not in the file yet";
+  const current = !record ? (state.mapMoving.has(key) ? "move" : "keep")
+    : record.answer === null ? "remove"
+      : record.answer === "__unmappable__" ? "park"
+        : record.answer === name && !isAa ? "keep"
+          : "move";
+  const label = el("label", {}, [
+    el("span", { className: "mono" }, line.subject),
+    el("span", { className: "arrow" }, " → "),
+    el("span", { className: "mono" + (line.added ? " good-text" : "") },
+      line.added ? `${name} (added in this batch; now ${now})` : now),
+  ]);
+  const problem = el("p", { className: "note-text bad-text map-problem" });
+  const choices = isAa
+    ? [["keep", "Keep"], ["move", "Other slug"], ["park", "Park"], ["remove", "Remove"]]
+    : [["keep", line.added ? "Undo" : "Keep"], ["move", "Move"], ["park", "Park"], ["remove", "Remove"]];
+  const seg = segChoice(line.added ? [choices[0]] : choices, line.added ? "" : current, (value) => {
+    if (value === "keep") setMapEdit(rid, line.subject, line.added ? undefined : (isAa ? undefined : name));
+    else if (value === "park") setMapEdit(rid, line.subject, "__unmappable__");
+    else if (value === "remove") setMapEdit(rid, line.subject, null);
+    else if (value === "move") {
+      /* Opens the box; nothing is drafted until a name is picked. */
+      state.answers.delete(key);
+      state.mapMoving.add(key);
+    }
+    if (value !== "move") state.mapMoving.delete(key);
+    redraw();
+  }, sent);
+  row.append(label, seg);
+  if (sent) row.append(el("p", { className: "note-text" }, "sent -- waiting for the run"));
+
+  if (current === "move" || state.mapMoving.has(key)) {
+    const pool = isAa ? () => state.aa.slugs || [] : () => models().filter((m) => m !== name);
+    const input = slugInput({
+      placeholder: isAa ? "AA slug..." : "the model it really is...",
+      value: record && current === "move" ? record.answer : "",
+      disabled: sent,
+    });
+    input.oninput = () => {
+      const value = input.value.trim();
+      const known = pool().includes(value);
+      const clash = known ? exactClash(rid, line.subject, value) : "";
+      input.classList.toggle("unknown", Boolean(value) && (!known || Boolean(clash)));
+      problem.textContent = clash
+        ? `${line.subject} normalizes to exactly ${clash}; the runner would refuse this move.`
+        : "";
+      if (known && !clash) setMapEdit(rid, line.subject, value);
+      else state.answers.delete(key);
+      row.classList.toggle("changed", state.answers.has(key));
+      refreshFooter();
+    };
+    row.append(el("div", { className: "field picker map-move" },
+      comboBox(input, pool, { min: 2, detail: isAa ? aaSlugDetail : () => "" })), problem);
+  }
+  row.classList.toggle("changed", Boolean(record));
+  return row;
+}
+
+/* A name parked on a sentinel that looks like this model -- usually one a
+   preview cleanup parked. Mapping it back is an edit of that line. */
+function parkedRow(rid, line, name, redraw) {
+  const key = MAP_EDIT_KEY(rid, line.subject);
+  const record = state.answers.get(key);
+  const clash = exactClash(rid, line.subject, name);
+  const row = el("div", { className: "score-row decision-row map-line parked" });
+  row.append(
+    el("label", {}, [
+      el("span", { className: "mono" }, line.subject),
+      el("span", { className: "arrow" }, " → "),
+      el("span", { className: "mono sentinel" }, (line.value || []).join(", ")),
+    ]),
+    segChoice([["leave", "Leave parked"], ["map", `Map onto ${name}`], ["remove", "Remove"]],
+      !record ? "leave" : record.answer === null ? "remove" : "map",
+      (value) => {
+        setMapEdit(rid, line.subject, value === "map" ? name : value === "remove" ? null : undefined);
+        redraw();
+      }, isSent(key) || Boolean(clash)),
+  );
+  row.append(el("p", { className: "note-text" }, clash
+    ? `normalizes to exactly ${clash}, so it can only map onto that model`
+    : "parked, and looks like this model -- a cleanup parks a preview's names; map it back here"));
+  row.classList.toggle("changed", Boolean(record));
+  return row;
+}
+
+/* A name whose "not these" list rules this model out (for the AA file: the
+   slugs ruled out for this model). Taking it off lets the queue offer it
+   again. */
+function ruledRow(rid, entry, name, isAa, redraw) {
+  const row = el("div", { className: "score-row decision-row map-line ruled" });
+  const sent = isSent(RULE_EDIT_KEY(rid, entry.subject));
+  if (isAa) {
+    row.append(el("label", {}, `AA slugs ruled out for ${name}`));
+    const chips = el("div", { className: "seg" });
+    for (const slug of entry.options) {
+      const op = ruleOp(rid, name, slug);
+      const button = el("button", { type: "button", className: "btn ghost tiny", disabled: sent,
+        onclick: () => { setRuleEdit(rid, name, slug, op === "remove" ? null : "remove"); redraw(); },
+      }, op === "remove" ? `${slug} (offered again)` : `not ${slug} ✕`);
+      button.setAttribute("aria-pressed", String(op === "remove"));
+      chips.append(button);
+    }
+    row.append(chips);
+    return row;
+  }
+  const op = ruleOp(rid, entry.subject, name);
+  row.append(
+    el("label", {}, [el("span", { className: "mono" }, entry.subject), " is not this model"]),
+    segChoice([["keep", "Keep"], ["remove", "Offer again"]], op === "remove" ? "remove" : "keep",
+      (value) => { setRuleEdit(rid, entry.subject, name, value === "remove" ? "remove" : null); redraw(); }, sent),
+  );
+  if (entry.options.length > 1) {
+    row.append(el("p", { className: "note-text" },
+      `also ruled out for it: ${entry.options.filter((o) => o !== name).join(", ")}`));
+  }
+  row.classList.toggle("changed", Boolean(op));
+  return row;
+}
+
+/* Route picker shared by the two forms below: every route the index covers,
+   by source name. */
+function routeSelect(value, onchange, { includeAa = true, routes = modelRoutes } = {}) {
+  const select = el("select", { onchange: () => onchange(select.value) }, [
+    el("option", { value: "" }, "source..."),
+    ...routes().filter((r) => includeAa || r.id !== AA_ROUTE_ID).map((r) =>
+      el("option", { value: r.id, selected: r.id === value },
+        `${sourceOf(r)}${r.route_kind !== "*" ? ` (${r.route_kind})` : ""}`)),
+  ]);
+  return select;
+}
+
+/* The names a route knows: every line of its file, and whatever the queue is
+   asking it about. */
+function routeNames(rid) {
+  const route = mapRoute(rid);
+  if (!route) return [];
+  const names = new Set(Object.keys(state.mapIndex.doc.files[rid] || {}));
+  for (const q of state.questions) {
+    /* llm-stats asks two kinds under one script: only this route's. */
+    if (q.route === route.route && (route.route_kind === "*" || q.route_kind === route.route_kind)) names.add(q.subject);
+  }
+  return [...names].sort((a, b) => a.localeCompare(b));
+}
+
+/* Map a name onto this model: one already in the file (it moves here, from
+   wherever it pointed, or out of its parking) or a new one. */
+function addMappingForm(name, redraw) {
+  const draft = state.mapAdd;
+  const form = el("div", { className: "map-form" });
+  const problem = el("p", { className: "note-text" });
+  const input = slugInput({ placeholder: "the name as the source publishes it...", value: draft.name });
+  const button = el("button", { type: "button", className: "btn ghost tiny" }, `Map onto ${name}`);
+  const check = () => {
+    const rid = draft.route;
+    const subject = input.value.trim();
+    draft.name = input.value;
+    let why = "";
+    let ok = Boolean(rid && subject);
+    if (rid && subject) {
+      const before = mapFileValue(rid, subject);
+      const clash = exactClash(rid, subject, name);
+      const queued = state.questions.some((q) => q.route === mapRoute(rid).route
+        && (mapRoute(rid).route_kind === "*" || q.route_kind === mapRoute(rid).route_kind) && q.subject === subject);
+      if (clash) { ok = false; why = `normalizes to exactly ${clash}; only that model can take it`; }
+      else if (before && before.length === 1 && before[0] === name) { ok = false; why = "already maps onto this model"; }
+      else if (queued) { ok = false; why = "the Queue is asking about this name: answer it there"; }
+      else if (before) why = `now maps to ${before.join(", ")}; this moves it here`;
+      else why = "not in the file: written as a new line (it only matters if the source lists this exact name)";
+    }
+    button.disabled = !ok;
+    problem.textContent = why;
+    problem.classList.toggle("bad-text", Boolean(rid && subject) && !ok);
+  };
+  input.oninput = check;
+  button.onclick = () => {
+    setMapEdit(draft.route, input.value.trim(), name);
+    state.mapAdd = { route: draft.route, name: "" };
+    redraw();
+  };
+  const select = routeSelect(draft.route, (value) => { draft.route = value; check(); }, { includeAa: false });
+  form.append(
+    el("div", { className: "field" }, el("label", {}, "add a mapping")),
+    el("div", { className: "map-form-row" }, [select,
+      el("div", { className: "grow" }, comboBox(input, () => routeNames(draft.route), {
+        min: 2,
+        detail: (subject) => {
+          const value = mapFileValue(draft.route, subject);
+          return value ? `→ ${value.join(", ")}` : "on the Queue";
+        },
+      })), button]),
+    problem,
+  );
+  check();
+  return form;
+}
+
+/* Rule this model out for one name: the queue stops offering it there. */
+function ruleOutForm(name, redraw) {
+  const draft = state.mapRule;
+  const form = el("div", { className: "map-form" });
+  const problem = el("p", { className: "note-text" });
+  const input = slugInput({ placeholder: "the name it must not be offered for...", value: draft.name });
+  const button = el("button", { type: "button", className: "btn ghost tiny" }, "Not this model");
+  const check = () => {
+    const rid = draft.route;
+    const subject = input.value.trim();
+    draft.name = input.value;
+    let why = "";
+    let ok = Boolean(rid && subject);
+    if (ok && mapRejected(rid, subject).includes(name)) { ok = false; why = "already ruled out for that name"; }
+    else if (ok && ruleOp(rid, subject, name) === "add") { ok = false; why = "already in this batch"; }
+    else if (ok) why = "the queue stops offering this model for that name; the name itself stays unanswered";
+    button.disabled = !ok;
+    problem.textContent = why;
+    problem.classList.toggle("bad-text", Boolean(rid && subject) && !ok);
+  };
+  input.oninput = check;
+  button.onclick = () => {
+    setRuleEdit(draft.route, input.value.trim(), name, "add");
+    state.mapRule = { route: draft.route, name: "" };
+    redraw();
+  };
+  const select = routeSelect(draft.route, (value) => { draft.route = value; check(); }, { includeAa: false });
+  /* What is drafted already, so it can be taken back from here. */
+  const pending = [...state.answers.values()].filter((r) => r.kind === "rejection-edit" && r.add.includes(name));
+  form.append(
+    el("div", { className: "field" }, el("label", {}, "rule this model out for a name")),
+    el("div", { className: "map-form-row" }, [select,
+      el("div", { className: "grow" }, comboBox(input, () => routeNames(draft.route), { min: 2 })), button]),
+    problem,
+    ...pending.map((r) => {
+      const rid = `${r.route} ${r.route_kind}`;
+      return el("div", { className: "score-row decision-row map-line changed" }, [
+        el("label", {}, [mapSource(rid), ": ", el("span", { className: "mono" }, r.subject), " is not this model"]),
+        el("button", { type: "button", className: "btn ghost tiny", disabled: isSent(RULE_EDIT_KEY(rid, r.subject)),
+          onclick: () => { setRuleEdit(rid, r.subject, name, null); redraw(); } }, "Undo"),
+      ]);
+    }),
+  );
+  check();
+  return form;
+}
+
+/* ── A column's label mappings ──
+   The Benchmarks tab's side of the same index: every label a source prints
+   over a column -- a Hugging Face card's heading, an llm-stats benchmark id --
+   that is mapped onto this one, and, as pills, the model and score each label
+   delivers right now. A score some other fetcher or AA has since replaced is
+   not the label's any more and gets no pill (_mapping_index.received). A
+   label's line is edited like a model mapping, as a `mapping-edit`. */
+
+const PILL_LIMIT = 12;
+
+function labelDraftCount(key) {
+  let n = 0;
+  for (const record of state.answers.values()) {
+    if (record.kind !== "mapping-edit") continue;
+    const rid = `${record.route} ${record.route_kind}`;
+    if (!isLabelRoute(mapRoute(rid))) continue;
+    if (record.answer === key || (mapFileValue(rid, record.subject) || []).includes(key)) n += 1;
+  }
+  return n;
+}
+
+const mapReceived = (rid, label) => state.mapIndex.doc?.received?.[rid]?.[label] || [];
+
+function receivedPills(rid, label) {
+  const entries = mapReceived(rid, label);
+  if (!entries.length) {
+    return el("div", { className: "map-supplies" },
+      el("span", { className: "map-label" }, "delivers no score right now"));
+  }
+  const pill = ([model, value, shared]) => el("span", {
+    className: `bench-tag pill${shared ? " shared" : ""}`,
+    title: shared
+      ? `${model}: ${value} -- the source fills this column from ${shared} labels and which one this score came from is not known`
+      : `${model}: ${value}`,
+  }, [el("span", { className: "pill-model" }, model), " ", el("b", {}, String(value)), shared ? " ≈" : ""]);
+  const box = el("div", { className: "map-supplies" }, [
+    el("span", { className: "map-label" }, `delivers ${entries.length}`),
+    ...entries.slice(0, PILL_LIMIT).map(pill),
+  ]);
+  if (entries.length > PILL_LIMIT) {
+    const more = el("button", { type: "button", className: "btn ghost tiny" }, `+${entries.length - PILL_LIMIT} more`);
+    more.onclick = () => { more.replaceWith(...entries.slice(PILL_LIMIT).map(pill)); };
+    box.append(more);
+  }
+  return box;
+}
+
+function labelMappingsBlock(key) {
+  const box = el("details", { className: "provenance mappings" });
+  const { doc, error } = state.mapIndex;
+  if (!doc) {
+    box.append(el("summary", {}, "label mappings"), el("p", { className: "note-text" }, error
+      ? (error.includes("404")
+        ? "No mapping index yet. It appears after the next run publishes _pending/mappings.json."
+        : `Could not read the mapping index (${error}).`)
+      : "Reading the mapping index..."));
+    return box;
+  }
+  const groups = labelRoutes().map((route) => {
+    const file = doc.files[route.id] || {};
+    const labels = Object.entries(file).filter(([, value]) => value === key)
+      .map(([label]) => ({ label, value: [key] }));
+    /* Labels this batch moves onto the column, listed so Undo is where they are. */
+    for (const record of state.answers.values()) {
+      if (record.kind === "mapping-edit" && record.answer === key
+        && `${record.route} ${record.route_kind}` === route.id
+        && !labels.some((l) => l.label === record.subject)) {
+        labels.push({ label: record.subject, value: mapFileValue(route.id, record.subject), added: true });
+      }
+    }
+    return { route, labels };
+  });
+  const count = groups.reduce((n, g) => n + g.labels.length, 0);
+  const models = new Set(groups.flatMap((g) => g.labels.flatMap((l) => mapReceived(g.route.id, l.label).map((e) => e[0]))));
+  const drafts = labelDraftCount(key);
+  const openKey = `labels ${key}`;
+  box.open = state.mapOpen.has(openKey) || drafts > 0;
+  box.ontoggle = () => (box.open ? state.mapOpen.add(openKey) : state.mapOpen.delete(openKey));
+  box.append(el("summary", {}, [
+    "label mappings",
+    el("span", { className: "map-sum" }, [
+      `${count} label${count === 1 ? "" : "s"}`,
+      ` · ${models.size} model${models.size === 1 ? "" : "s"} fed`,
+      drafts ? ` · ${drafts} change${drafts === 1 ? "" : "s"} in this batch` : "",
+    ].join("")),
+  ]));
+  box.append(el("p", { className: "note-text" },
+    "The headings a source prints that are filed under this column, and the model and score each "
+    + "delivers now -- only where that score is still the one stored: a number Artificial Analysis "
+    + "or another board has replaced gets no pill. ≈ marks a score the source could have read from "
+    + "several of these labels, where which one is not known. Move files a label under "
+    + "another column, Park stops it being read, Remove has the Queue ask about it again."));
+  const redraw = () => render();
+  for (const g of groups) {
+    if (!g.labels.length) continue;
+    const section = el("div", { className: "map-group" });
+    section.append(el("div", { className: "map-head" }, [
+      el("b", {}, sourceOf(g.route)),
+      g.route.route_kind !== "*" ? el("span", { className: "map-kind" }, g.route.route_kind) : null,
+      el("span", { className: "map-file mono" }, g.route.file),
+    ]));
+    for (const line of g.labels) section.append(labelRow(g.route.id, line, key, redraw));
+    box.append(section);
+  }
+  if (!count) box.append(el("p", { className: "note-text" }, "No source label is filed under this column."));
+  box.append(addLabelForm(key, redraw));
+  return box;
+}
+
+function labelRow(rid, line, key, redraw) {
+  const editKey = MAP_EDIT_KEY(rid, line.label);
+  const record = state.answers.get(editKey);
+  const sent = isSent(editKey);
+  const row = el("div", { className: "score-row decision-row map-line" });
+  const current = !record ? (state.mapMoving.has(editKey) ? "move" : "keep")
+    : record.answer === null ? "remove"
+      : record.answer === "__unmappable__" ? "park"
+        : record.answer === key ? "keep" : "move";
+  const now = line.value ? line.value.join(", ") : "not in the file yet";
+  row.append(el("label", {}, [
+    el("span", { className: "mono" }, line.label),
+    line.added ? el("span", { className: "good-text" }, ` (added in this batch; now ${now})`) : null,
+  ]));
+  const choices = line.added ? [["keep", "Undo"]]
+    : [["keep", "Keep"], ["move", "Move"], ["park", "Park"], ["remove", "Remove"]];
+  row.append(segChoice(choices, line.added ? "" : current, (value) => {
+    if (value === "keep") setMapEdit(rid, line.label, line.added ? undefined : key);
+    else if (value === "park") setMapEdit(rid, line.label, "__unmappable__");
+    else if (value === "remove") setMapEdit(rid, line.label, null);
+    else { state.answers.delete(editKey); state.mapMoving.add(editKey); }
+    if (value !== "move") state.mapMoving.delete(editKey);
+    redraw();
+  }, sent));
+  if (sent) row.append(el("p", { className: "note-text" }, "sent -- waiting for the run"));
+  if (!line.added) row.append(receivedPills(rid, line.label));
+  if (current === "move") {
+    const problem = el("p", { className: "note-text bad-text map-problem" });
+    const pool = () => benchmarks().filter((k) => k !== key);
+    const input = slugInput({ placeholder: "the column it really is...", value: record?.answer || "", disabled: sent });
+    input.oninput = () => {
+      const value = input.value.trim();
+      const known = pool().includes(value);
+      const clash = known ? exactClash(rid, line.label, value) : "";
+      input.classList.toggle("unknown", Boolean(value) && (!known || Boolean(clash)));
+      problem.textContent = clash ? `${line.label} normalizes to exactly ${clash}; the runner would refuse this move.` : "";
+      if (known && !clash) setMapEdit(rid, line.label, value);
+      else state.answers.delete(editKey);
+      row.classList.toggle("changed", state.answers.has(editKey));
+      refreshFooter();
+    };
+    row.append(el("div", { className: "field picker map-move" }, comboBox(input, pool, {
+      min: 2,
+      detail: (k) => {
+        const name = state.llm?.benchmarks?.[k]?.name;
+        return name && name !== k ? ` (${name})` : "";
+      },
+    })), problem);
+  }
+  row.classList.toggle("changed", Boolean(record));
+  return row;
+}
+
+/* File a label under this column: one already in the file moves here from
+   the column it was under, or out of its parking; a new one is a new line. */
+function addLabelForm(key, redraw) {
+  const draft = state.labelAdd;
+  const form = el("div", { className: "map-form" });
+  const problem = el("p", { className: "note-text" });
+  const input = slugInput({ placeholder: "the label as the source prints it...", value: draft.name });
+  const button = el("button", { type: "button", className: "btn ghost tiny" }, `File under ${key}`);
+  const check = () => {
+    const rid = draft.route;
+    const label = input.value.trim();
+    draft.name = input.value;
+    let why = "";
+    let ok = Boolean(rid && label);
+    if (ok) {
+      const before = mapFileValue(rid, label);
+      const clash = exactClash(rid, label, key);
+      const queued = state.questions.some((q) => q.route === mapRoute(rid).route
+        && (q.route_kind === mapRoute(rid).route_kind || mapRoute(rid).route_kind === "*") && q.subject === label);
+      if (clash) { ok = false; why = `normalizes to exactly ${clash}; only that column can take it`; }
+      else if (before && before.length === 1 && before[0] === key) { ok = false; why = "already filed under this column"; }
+      else if (queued) { ok = false; why = "the Queue is asking about this label: answer it there"; }
+      else if (before) why = `now ${before.join(", ")}; this moves it here`;
+      else why = "not in the file: written as a new line (it only matters if the source prints this exact label)";
+    }
+    button.disabled = !ok;
+    problem.textContent = why;
+    problem.classList.toggle("bad-text", Boolean(rid && label) && !ok);
+  };
+  input.oninput = check;
+  button.onclick = () => {
+    setMapEdit(draft.route, input.value.trim(), key);
+    state.labelAdd = { route: draft.route, name: "" };
+    redraw();
+  };
+  const select = routeSelect(draft.route, (value) => { draft.route = value; check(); }, { routes: labelRoutes });
+  form.append(
+    el("div", { className: "field" }, el("label", {}, "file a label under this column")),
+    el("div", { className: "map-form-row" }, [select,
+      el("div", { className: "grow" }, comboBox(input, () => routeNames(draft.route), {
+        min: 2,
+        detail: (label) => {
+          const value = mapFileValue(draft.route, label);
+          return value ? `→ ${value.join(", ")}` : "on the Queue";
+        },
+      })), button]),
+    problem,
+  );
+  check();
+  return form;
 }
 
 /* ── Benchmarks ──
@@ -5896,6 +6688,7 @@ function openToField(card, kids) {
 }
 
 function renderBenchmarks() {
+  ensureMapIndex();
   const box = el("div", { className: "stack" });
   box.append(el("p", { className: "note-text" },
     "What each column of the index is called, which run of its benchmark it "
@@ -5935,7 +6728,8 @@ function renderBenchmarkCard(key, bench) {
   const existing = state.answers.get(recordKey);
   const derived = bench?.derived === true;
   const card = el("details", { className: `card bench-card${existing ? " answered" : ""}` });
-  card.open = state.benchOpen.has(key) || Boolean(existing);
+  const labelDrafts = derived ? 0 : labelDraftCount(key);
+  card.open = state.benchOpen.has(key) || Boolean(existing) || labelDrafts > 0;
   card.ontoggle = () => {
     if (card.open) state.benchOpen.add(key);
     else state.benchOpen.delete(key);
@@ -5946,6 +6740,7 @@ function renderBenchmarkCard(key, bench) {
       chip("", key),
       chip("", bench?.category || "no category", { prose: true }),
       derived ? chip("", "derived index", { prose: true }) : null,
+      labelDrafts ? chip("label mappings", `${labelDrafts} change${labelDrafts === 1 ? "" : "s"}`, { className: "now" }) : null,
     ]),
   ]));
 
@@ -5975,6 +6770,8 @@ function renderBenchmarkCard(key, bench) {
   if (derived) {
     card.append(el("p", { className: "note-text" },
       "A derived index: its scale is derive_indexes.py's, so only the words are editable here."));
+  } else {
+    card.append(labelMappingsBlock(key));
   }
   const reset = el("button", { type: "button", className: "btn ghost tiny" }, "Undo changes");
   reset.onclick = () => { state.answers.delete(recordKey); render(); };
@@ -6878,6 +7675,7 @@ async function reloadData() {
     if (await loadRuns()) {
       await loadData();
       if (state.mapLog.asked) await ensureMapLog(true);
+      if (state.mapIndex.asked) await ensureMapIndex(true);
     } else {
       render();
     }

@@ -304,6 +304,10 @@ jobs:
           # with a release rule (a rule the batch may just have set).
           ./preview_cleanup.py --publish --hub \
             || echo "::warning title=Preview report::could not republish _pending/previews.json"
+          # The Models tab's mapping index, for the same reason: an edit made
+          # there shows on the page as soon as this push lands. Reads only.
+          ./mapping_index.py --publish \
+            || echo "::warning title=Mapping index::could not republish _pending/mappings.json"
           # Which mapping changes the batch asked for and which followed from it
           # -- read off answer.py's validated result, never off the input.
           ./mapping_log.py record --by auto --batch "$RUNNER_TEMP/answers.json" --run "$RUN_URL" -w \
@@ -447,6 +451,15 @@ jobs:
       - name: Publish the preview cleanup report
         continue-on-error: true
         run: ./preview_cleanup.py --publish --hub
+
+      # The Models tab's mappings: every model-name mapping file, the "not
+      # these" lists, and which columns each source supplies to each model
+      # (see _mapping_index.py). Read off the files this run just wrote; no
+      # requests. Not gated on the refresh, like the report above: it
+      # describes the files as they are.
+      - name: Publish the mapping index
+        continue-on-error: true
+        run: ./mapping_index.py --publish
 
       - name: Commit and push
         if: ${{ !inputs.dry_run }}

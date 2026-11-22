@@ -101,6 +101,42 @@ def add(route: str, subject: str, options: Iterable[str], path: Path | None = No
     return path or REJECTIONS
 
 
+def edit(
+    route: str,
+    subject: str,
+    *,
+    add: Iterable[str] = (),
+    remove: Iterable[str] = (),
+    path: Path | None = None,
+) -> Path:
+    """Rule `add` out for `subject` and take `remove` off its list; returns the file.
+
+    The admin page's Models tab edits a name's list after the fact -- a
+    candidate ruled out by mistake is offered again once it is removed. A name
+    whose list empties drops out of the file.
+    """
+    add = [o for o in add if o]
+    remove = {o for o in remove if o}
+    if route == AA_ROUTE:
+        module = _aa()
+        ignored = module.load_ignored_aa_suggestions()
+        options = (set(ignored.get(subject, set())) | set(add)) - remove
+        if options:
+            ignored[subject] = options
+        else:
+            ignored.pop(subject, None)
+        module.write_ignored_aa_suggestions(ignored)
+        return module.AA_MODEL_IGNORES
+    rejections = load(path)
+    options = (rejections.get(route, {}).get(subject, set()) | set(add)) - remove
+    if options:
+        rejections.setdefault(route, {})[subject] = options
+    else:
+        rejections.get(route, {}).pop(subject, None)
+    write(rejections, path)
+    return path or REJECTIONS
+
+
 def path_for(route: str) -> Path:
     """The file a rejection on `route` is written to."""
     return _aa().AA_MODEL_IGNORES if route == AA_ROUTE else REJECTIONS

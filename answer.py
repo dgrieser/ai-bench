@@ -147,7 +147,9 @@ def result_record(answer: _answers.Answer) -> dict:
         "kind": answer.kind,
         "route": answer.route,
         "subject": answer.subject,
-        "value": answer.value if answer.kind in (_answers.MAPPING, _answers.MODEL_RENAME) else None,
+        "value": answer.value
+        if answer.kind in (_answers.MAPPING, _answers.MAPPING_EDIT, _answers.MODEL_RENAME)
+        else None,
     }
 
 
