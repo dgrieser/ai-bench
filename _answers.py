@@ -147,6 +147,14 @@ MAX_SUBJECT = 200
 # A rejection-edit names a handful of candidates, not a list of every model:
 # a "none of the current ones" is the queue's answer, not this one's.
 MAX_REJECTION_ITEMS = 40
+# A model's "not this" hints: what a source name that looks like it must not be
+# mapped onto it ("Muse Spark (API)", "the -fp8 quant"). The model-side twin of
+# a column's `excludes`, stored the same way -- llm.json's `excludes` on the
+# entry -- and shown the same way, under the model wherever the Queue offers it
+# as a candidate. {"kind": "model-hints", "name", "excludes": [...],
+# "if_previous": [...] | null}; an empty list removes them.
+MODEL_HINTS = "model-hints"
+MAX_HINT = 160
 KINDS = frozenset(
     {
         MAPPING,
@@ -167,6 +175,7 @@ KINDS = frozenset(
         PREVIEW_WATCH,
         MAPPING_EDIT,
         REJECTION_EDIT,
+        MODEL_HINTS,
     }
 )
 
@@ -283,6 +292,10 @@ class Answer:
             if self.value is None:
                 return f"{self.route}: remove {self.subject!r} (asked again)"
             return f"{self.route}: {self.subject!r} -> {self.value!r} (edited)"
+        if self.kind == MODEL_HINTS:
+            if not self.value:
+                return f"model {self.subject!r}: no \"not this\" hints"
+            return f"model {self.subject!r}: not this -- {'; '.join(self.value)}"
         if self.kind == REJECTION_EDIT:
             parts = []
             if self.value["add"]:
@@ -703,6 +716,8 @@ def _validate_one(
         return _validate_candidates_skip(index, record, universes, queue, require_queue)
     if kind == MAPPING_EDIT:
         return _validate_mapping_edit(index, record, universes, created, doc)
+    if kind == MODEL_HINTS:
+        return _validate_model_hints(index, record, model_names, doc or {})
     if kind == REJECTION_EDIT:
         return _validate_rejection_edit(index, record, universes)
     if kind == AA_IGNORE:
@@ -1016,6 +1031,42 @@ def _validate_rejection_edit(
     )
 
 
+def _validate_model_hints(
+    index: int, record: dict[str, Any], model_names: set[str], doc: dict[str, Any]
+) -> Answer:
+    """A model's "not this" hints, held to what a column's `excludes` is: a few
+    short phrases, one line each, an empty list meaning none."""
+    name = _subject_of(record, "name")
+    if name not in model_names:
+        raise AnswerError(f"{name!r} is not a model in llm.json")
+    items = record.get("excludes")
+    if not isinstance(items, list) or not all(isinstance(i, str) for i in items):
+        raise AnswerError("'excludes' must be a list of phrases (empty to remove them)")
+    hints: list[str] = []
+    for item in items:
+        text = item.strip()
+        if not text:
+            continue
+        if len(text) > MAX_HINT or any(ord(ch) < 32 for ch in text):
+            raise AnswerError(f"a hint is one line of at most {MAX_HINT} characters: {text[:40]!r}")
+        if text not in hints:
+            hints.append(text)
+    if len(hints) > MAX_LIST_ITEMS:
+        raise AnswerError(f"{len(hints)} hints; at most {MAX_LIST_ITEMS}")
+    if "if_previous" not in record:
+        raise AnswerError("'if_previous' is required: the hints the page showed (null for none)")
+    expected = as_list(record.get("if_previous")) or []
+    model = next((m for m in doc.get("models") or []
+                  if isinstance(m, dict) and m.get("name") == name), {})
+    current = [h for h in model.get("excludes") or [] if isinstance(h, str)]
+    if current != expected:
+        raise AnswerError(f"stale: {name!r}'s hints are now {current!r}, not {expected!r}; re-read the page")
+    if hints == current:
+        raise AnswerError(f"{name!r} already has exactly these hints")
+    return Answer(index=index, kind=MODEL_HINTS, subject=name, value=hints,
+                  fields={"if_previous": as_list(record.get("if_previous")) or []})
+
+
 def _mapping_edit_failures(answers: Sequence[Answer], reported: set[int]) -> list[Failure]:
     """Refuse a mapping-edit that collides with another record of the batch.
 
@@ -1047,6 +1098,14 @@ def _mapping_edit_failures(answers: Sequence[Answer], reported: set[int]) -> lis
         elif answer.kind == PREVIEW_CLEANUP and answer.value.action == "apply" and answer.value.rename:
             going[answer.subject] = PREVIEW_CLEANUP
     for answer in answers:
+        if answer.kind == MODEL_HINTS and answer.subject in going and answer.index not in reported:
+            failures.append(Failure(
+                answer.index,
+                f"{answer.subject!r} is also changed by a {going[answer.subject]} record in this "
+                "batch; edit its hints after this run",
+            ))
+            reported.add(answer.index)
+            continue
         if answer.kind != MAPPING_EDIT or answer.index in reported:
             continue
         # The AA file is keyed by the model, every other file names it as the value.
@@ -1977,6 +2036,9 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
         writer_for(route)(answer.subject, answer.value)
         return [f"{path.name}: {answer.subject!r} -> {answer.value} (edited)"]
 
+    if answer.kind == MODEL_HINTS:
+        return _set_model_hints(answer, llm_path)
+
     if answer.kind == REJECTION_EDIT:
         written = _rejections.edit(
             answer.route, answer.subject,
@@ -2182,6 +2244,28 @@ def _edit_benchmark(answer: Answer, llm_path: Path) -> list[str]:
     doc["benchmarks"][answer.subject] = bench
     _write_llm(doc, llm_path)
     return [f"{llm_path.name}: edited benchmark {answer.subject!r} ({', '.join(sorted(answer.fields))})"]
+
+
+def _set_model_hints(answer: Answer, llm_path: Path) -> list[str]:
+    doc = json.loads(llm_path.read_text(encoding="utf-8"))
+    model = next((m for m in doc.get("models") or []
+                  if isinstance(m, dict) and m.get("name") == answer.subject), None)
+    if model is None:
+        raise AnswerError(f"{answer.subject!r} is not a model in llm.json")
+    # Checked here rather than in validation, against the file as the batch
+    # has left it so far: the page's view may be a run old.
+    current = [h for h in model.get("excludes") or [] if isinstance(h, str)]
+    if current != answer.fields["if_previous"]:
+        raise AnswerError(
+            f"stale: {answer.subject!r}'s hints are now {current!r}, not "
+            f"{answer.fields['if_previous']!r}; re-read the page"
+        )
+    if answer.value:
+        model["excludes"] = list(answer.value)
+    else:
+        model.pop("excludes", None)
+    _write_llm(doc, llm_path)
+    return [f"{llm_path.name}: {answer.describe()}"]
 
 
 def _add_reference(answer: Answer, llm_path: Path) -> list[str]:

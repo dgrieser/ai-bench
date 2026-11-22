@@ -561,6 +561,13 @@ main { padding-block: 1rem; }
 }
 .opt[aria-pressed="true"] .why { color: color-mix(in srgb, var(--on-accent) 80%, transparent); }
 .opt[aria-pressed="true"] .tag { background: color-mix(in srgb, var(--on-accent) 22%, transparent); color: var(--on-accent); }
+/* Everything an option carries under its label -- a column's terms and "Not
+   this" list, a model's hints, their chips -- turns with it: grey on the solid
+   accent was barely readable, in the dark theme least of all. */
+.opt[aria-pressed="true"] .bench-note,
+.opt[aria-pressed="true"] .bench-note * { color: var(--on-accent); }
+.opt[aria-pressed="true"] .bench-note .excludes { opacity: 1; }
+.opt[aria-pressed="true"] .bench-tag { border-color: color-mix(in srgb, var(--on-accent) 45%, transparent); }
 .opt[aria-pressed="true"] .tick {
   background: var(--on-accent);
   border-color: var(--on-accent);
@@ -765,7 +772,7 @@ details.card > details { margin-top: .6rem; }
   font: 400 .875rem/1.35 var(--font-mono);
   overflow-wrap: anywhere;
 }
-.combo-list li .detail { color: var(--muted); font-family: var(--font-ui); }
+.combo-list li .detail { margin-left: .6em; color: var(--muted); font-family: var(--font-ui); }
 .combo-list li mark { background: var(--accent-soft); color: inherit; border-radius: 2px; }
 .combo-list li[aria-selected="true"], .combo-list li:hover { background: var(--surface-2); }
 .combo-list li.more { cursor: default; color: var(--faint); font-family: var(--font-ui); }
@@ -893,6 +900,11 @@ select {
 .bench-tag.pill .pill-model { font-weight: 400; }
 .bench-tag.pill.shared { border-style: dashed; opacity: .8; }
 .map-line > .map-supplies { grid-column: 1 / -1; margin-top: 0; }
+.score-fold { margin-top: 1rem; }
+.score-fold > summary { cursor: pointer; font: 500 .8125rem var(--font-mono); color: var(--faint); }
+.provenance.hints textarea { margin-top: .35rem; }
+.provenance.hints.changed > .field > label { color: var(--good); }
+.model-note { grid-column: 1; }
 .bench-note .edit-link { margin-left: .4rem; font-size: .75rem; color: var(--accent); cursor: pointer; text-decoration: underline; }
 .era-preview { color: var(--warn); }
 /* A release rule's condition: not, the operator, the value, remove. */
@@ -1442,6 +1454,7 @@ const state = {
   modelSearch: "",      // kept here so a re-render does not empty the tab
   modelSort: "least",   // see MODEL_SORTS
   modelOpen: new Set(), // the unfolded model cards, by name
+  scoresOpen: new Set(), // the model cards whose score list is unfolded
   /* The hand-added models being typed, one card each: [{ id, name, fields,
      key, question }], where `key` is the record the card last put in the batch,
      so a card can take back its own record without touching its neighbours'.
@@ -1729,7 +1742,10 @@ function comboBox(input, values, {
     rows = hits.map((value) => {
       const row = el("li", {}, [
         ...withMark(value, needle),
-        detail(value) ? el("span", { className: "detail" }, detail(value)) : null,
+        /* Trimmed and spaced by the stylesheet: some callers lead with a
+           space and some do not, and "hy4Tencent" read as one word. */
+        String(detail(value) || "").trim()
+          ? el("span", { className: "detail" }, String(detail(value)).trim()) : null,
       ].filter(Boolean));
       row.setAttribute("role", "option");
       row.dataset.value = value;
@@ -2162,7 +2178,7 @@ function readDraft() {
 /* The records that answer a question of the queue, as opposed to the ones that
    name a model -- the same split inferQueued draws for a sent batch. */
 const isQueueKey = (key) =>
-  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit) /.test(key);
+  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit|model-hints) /.test(key);
 
 function pruneDraft() {
   const asked = new Set(state.questions.map(KEY));
@@ -2324,7 +2340,7 @@ const queueKeys = (keys) => {
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
 const inferQueued = (keys) =>
-  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit) /.test(key));
+  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit|model-hints) /.test(key));
 
 function readSent() {
   try {
@@ -2966,6 +2982,36 @@ function benchNote(key) {
   ]);
 }
 
+/* A model's "not this" hints (llm.json `excludes` on the entry), under the
+   model wherever the Queue offers it -- the model-side twin of a column's
+   note above. Edited on the model's card, which the link opens. Nothing is
+   drawn for a model without hints but the link to add some. */
+function modelNote(name) {
+  const model = (state.llm?.models || []).find((m) => m.name === name);
+  if (!model) return null;
+  const hints = (model.excludes || []).filter((h) => typeof h === "string" && h.trim());
+  const edit = el("span", {
+    className: "edit-link link", role: "link", tabIndex: 0,
+    title: "Edit this model's \"Not this\" hints on the Models tab",
+    onclick: (event) => { event.preventDefault(); event.stopPropagation(); openModel(name); },
+    onkeydown: (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault(); event.stopPropagation(); openModel(name);
+      }
+    },
+  }, hints.length ? "edit" : "add hints");
+  return el("div", { className: "bench-note model-note" }, [
+    hints.length ? el("span", { className: "excludes" }, `Not this: ${hints.join(" · ")}`) : null,
+    el("span", {}, edit),
+  ]);
+}
+
+function openModel(name) {
+  state.modelSearch = name;
+  state.modelOpen.add(name);
+  showTab("models");
+}
+
 function openBenchmark(key) {
   state.benchSearch = key;
   state.benchOpen.add(key);
@@ -3517,7 +3563,8 @@ function renderQuestion(question) {
       pressed,
       className: exact ? "exact" : "",
       tag: exact ? "best match" : "",
-      note: question.universe === "benchmarks" ? benchNote(candidate.option) : null,
+      note: question.universe === "benchmarks" ? benchNote(candidate.option)
+        : question.universe === "models" ? modelNote(candidate.option) : null,
       onclick: () => choose(pressed ? null : mappingRecord(question, candidate.option)),
     }));
   }
@@ -3641,7 +3688,9 @@ function renderQuestion(question) {
       // that names nothing is worth flagging.
       input.classList.toggle("unknown", Boolean(value) && !known);
       picked.replaceChildren();
-      const note = known && question.universe === "benchmarks" ? benchNote(value) : null;
+      const note = !known ? null
+        : question.universe === "benchmarks" ? benchNote(value)
+          : question.universe === "models" ? modelNote(value) : null;
       if (note) picked.append(note);
     };
     input.oninput = () => {
@@ -5292,6 +5341,7 @@ function renderModelCard(model) {
   const columns = benchmarks();
   const count = scoredCount(model);
   const mapDrafts = state.mapIndex.doc ? mappingDraftCount(model.name) : 0;
+  const hinting = state.answers.has(HINTS_KEY(model.name));
   card.append(el("summary", {}, [
     aaMark(model),
     el("span", { className: "subject" }, model.name),
@@ -5302,6 +5352,7 @@ function renderModelCard(model) {
         { className: count < columns.length / 4 ? "now" : "" }),
       deleting ? chip("", "deleted on the next run", { prose: true, className: "now" }) : null,
       mapDrafts ? chip("mappings", `${mapDrafts} change${mapDrafts === 1 ? "" : "s"}`, { className: "now" }) : null,
+      hinting ? chip("", "\"not this\" hints change", { prose: true, className: "now" }) : null,
     ]),
   ]));
 
@@ -5325,13 +5376,14 @@ function renderModelCard(model) {
     /* The two whole-model actions first: they are what a card is usually opened
        for, and below the score list they sat a long scroll down on a phone. */
     card.append(
+      hintsBlock(model),
       renameBlock(model, renameKey, rename),
       deleteBlock(model, { key, renameKey, deleteKey }),
       mappingsBlock(model),
     );
     fillModelCard(card, model, { key, renameKey, rename, existing, columns });
   };
-  card.open = state.modelOpen.has(model.name) || Boolean(existing || rename || deleting || mapDrafts);
+  card.open = state.modelOpen.has(model.name) || Boolean(existing || rename || deleting || mapDrafts || hinting);
   card.ontoggle = () => {
     if (card.open) { state.modelOpen.add(model.name); build(); }
     else state.modelOpen.delete(model.name);
@@ -5340,6 +5392,53 @@ function renderModelCard(model) {
      to be there by then. */
   if (card.open || locked) build();
   return guard(card, lockKey);
+}
+
+/* What a source name that looks like this model must not be mapped onto it
+   as: the model's "not this" hints, llm.json `excludes` on the entry, one per
+   line. The Queue shows them under the model wherever it is offered as a
+   candidate, the way it shows a column's "Not this" list -- so whoever
+   answers sees "not Muse Spark (API)" before picking muse-spark-open. Sent
+   as a `model-hints` record, on its own: it may share a batch with an edit of
+   the same model, not with its rename or delete. */
+const HINTS_KEY = (name) => `model-hints  ${name}`;
+
+function hintsBlock(model) {
+  const key = HINTS_KEY(model.name);
+  const stored = (model.excludes || []).filter((h) => typeof h === "string");
+  const record = state.answers.get(key);
+  const block = el("div", { className: `provenance hints${record ? " changed" : ""}` });
+  const area = el("textarea", {
+    rows: Math.max(2, Math.min(6, (record?.excludes || stored).length + 1)),
+    placeholder: "Muse Spark (the closed API model)\nthe -fp8 quant",
+    value: (record?.excludes || stored).join("\n"),
+    disabled: isSent(key),
+  });
+  const problem = el("p", { className: "note-text" });
+  const commit = () => {
+    const lines = area.value.split("\n").map((l) => l.trim()).filter(Boolean);
+    const unique = [...new Set(lines)];
+    const long = unique.find((l) => l.length > 160);
+    const tooMany = unique.length > 12;
+    const same = unique.length === stored.length && unique.every((l, i) => l === stored[i]);
+    problem.textContent = long ? "a hint is at most 160 characters"
+      : tooMany ? "at most 12 hints"
+        : same ? "Shown under this model on every Queue card that offers it. One per line."
+          : "Changes on the next run.";
+    problem.classList.toggle("bad-text", Boolean(long || tooMany));
+    if (long || tooMany || same) state.answers.delete(key);
+    else state.answers.set(key, { kind: "model-hints", name: model.name, excludes: unique, if_previous: stored.length ? stored : null });
+    block.classList.toggle("changed", state.answers.has(key));
+    refreshFooter();
+  };
+  area.oninput = commit;
+  block.append(
+    el("div", { className: "field" }, el("label", {}, "not this -- hints for whoever maps a name onto it")),
+    area, problem,
+  );
+  commit();
+  if (isSent(key)) block.append(el("p", { className: "note-text" }, "sent -- waiting for the run"));
+  return block;
 }
 
 /* Delete, for an entry that should never have been tracked. One record per
@@ -5526,12 +5625,16 @@ function fillModelCard(card, model, { key, rename, existing, columns }) {
     scores.append(row);
   }
   const missing = columns.filter((bench) => model.scores?.[bench] == null).length;
-  card.append(
-    el("div", { className: "field" }, el("label", {},
-      `scores -- ${columns.length - missing} of ${columns.length}, ${missing} missing`)),
+  /* Folded: a hundred-odd boxes are most of the card's height, and most
+     sittings open a card for its fields or its mappings. Unfolded by itself
+     when the draft already changes a score. */
+  const scoreFold = el("details", { className: "score-fold" }, [
+    el("summary", {}, `scores -- ${columns.length - missing} of ${columns.length}, ${missing} missing`),
     scores,
-    provenance,
-  );
+  ]);
+  scoreFold.open = state.scoresOpen.has(model.name) || Object.keys(draft.scores).length > 0;
+  scoreFold.ontoggle = () => (scoreFold.open ? state.scoresOpen.add(model.name) : state.scoresOpen.delete(model.name));
+  card.append(scoreFold, provenance);
   commit();
 }
 
