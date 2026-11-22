@@ -115934,7 +115934,11 @@
         "fp16": "https://www.spheron.network/tools/gpu-recommender/meta-models/Muse-Spark-Open-816B-A42B/",
         "int8": "https://www.spheron.network/tools/gpu-recommender/meta-models/Muse-Spark-Open-816B-A42B/",
         "int4": "https://www.spheron.network/tools/gpu-recommender/meta-models/Muse-Spark-Open-816B-A42B/"
-      }
+      },
+      "excludes": [
+        "not muse-spark",
+        "not muse-spark-1.1"
+      ]
     },
     {
       "name": "reflection-beam",
