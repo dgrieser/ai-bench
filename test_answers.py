@@ -364,6 +364,21 @@ class TestNewModels(AnswersTestCase):
         self.assertEqual(answers, [])
         self.assertIn("may only be true", failures[0].message)
 
+    def test_a_model_add_may_carry_what_is_known_about_it(self) -> None:
+        """The Models tab's "Add a model" form sends a model-add when the name
+        it was given is one Artificial Analysis offered; its fields come along,
+        checked like a model-create's."""
+        answer = self.accepted(
+            {"kind": MODEL_ADD, "name": "fresh-slug", "fields": {"params": "30B-A3B"}}
+        )
+        self.assertEqual(answer.fields, {"params": "30B-A3B"})
+        self.refused(
+            {"kind": MODEL_ADD, "name": "fresh-slug", "fields": {"url": "not a url"}}, "url"
+        )
+        self.refused(
+            {"kind": MODEL_ADD, "name": "fresh-slug", "fields": {"scores": "1"}}, "not editable"
+        )
+
     def test_a_closed_release_can_be_ignored(self) -> None:
         queue = self.queue | {(_answers.NEW_MODEL_ROUTE, _answers.NEW_CLOSED_MODEL, "closed-slug")}
         answers, failures = _answers.validate(
@@ -1021,6 +1036,43 @@ class TestCreateAndMap(AnswersTestCase):
                                side_effect=lambda a, _p: order.append(a.index) or []):
             _answers.apply(answers, llm_path=self.llm)
         self.assertEqual(order, [2, 0, 1])
+
+    def test_a_mapping_may_name_a_model_aa_offered_and_the_batch_adds(self) -> None:
+        """The Queue's double step: a new release on Artificial Analysis, and a
+        board that already lists it, answered in one sitting."""
+        answers, failures = self.batch([
+            self.mapping(answer="fresh-slug"),
+            {"kind": MODEL_ADD, "name": "fresh-slug"},
+        ])
+        self.assertEqual([str(f) for f in failures], [])
+        self.assertEqual([a.kind for a in answers], [MAPPING, MODEL_ADD])
+
+    def test_a_mapping_may_name_a_reference_model_the_batch_carries(self) -> None:
+        """A reference-add creates the entry too, so a closed release and the
+        board names that list it go in one sitting as well."""
+        reference = self.tmp / "reference-models.json"
+        reference.write_text(json.dumps(["aa-one"]), encoding="utf-8")
+        with mock.patch.object(_reference, "REFERENCE_MODELS", reference):
+            answers, failures = _answers.validate(
+                [self.mapping(answer="closed-slug"), {"kind": REFERENCE_ADD, "name": "closed-slug"}],
+                llm_path=self.llm,
+                universes={**UNIVERSES, propose.AA_SLUGS: ["closed-slug"]},
+                queue=self.queue,
+            )
+        self.assertEqual([str(f) for f in failures], [])
+        self.assertEqual([a.kind for a in answers], [MAPPING, REFERENCE_ADD])
+
+    def test_reference_adds_are_applied_before_mappings(self) -> None:
+        order = []
+        answers = [
+            Answer(0, MAPPING, "Some Model", route=TBENCH, route_kind="*", value="closed-slug"),
+            Answer(1, REFERENCE_ADD, "closed-slug"),
+        ]
+        with mock.patch.object(_answers, "touchable_paths", return_value=[]), \
+             mock.patch.object(_answers, "_apply_one",
+                               side_effect=lambda a, _p: order.append(a.index) or []):
+            _answers.apply(answers, llm_path=self.llm)
+        self.assertEqual(order, [1, 0])
 
 
 class TestCollectMode(AnswersTestCase):

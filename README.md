@@ -776,7 +776,8 @@ dispatches `update-benchmarks.yml` with the batch as an input; the run applies
 it with `answer.py` and pushes to `main`.
 
 Its **Models** tab edits every field `add.py` asks for plus any non-derived
-score, its **New models** tab adds a model nothing offered, and a model whose
+score and adds a model nothing offered (new Artificial Analysis releases are
+answered on the Queue, beside the board names that list them), and a model whose
 slug Artificial Analysis never adopted can be renamed onto AA's own — the
 suggestions come from AA's model list, which `api.php` fetches with an optional
 key in its config. See [A hand-added model meets Artificial

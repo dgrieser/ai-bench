@@ -204,7 +204,7 @@ tells you why.
   list, so the batch stays small and the page's copy of the list does not have
   to be current.
 
-  **Source ↗** on every Queue and New models card opens where the name was read,
+  **Source ↗** on every Queue card opens where the name was read,
   in a new tab. The asking script records it with the question (`source_url` in
   `_pending/pending.json`, see `_source_pages.py`): the model's own page where
   the source has one (OpenRouter, Spheron, llm-stats, an AA model, an llm.json
@@ -227,6 +227,34 @@ tells you why.
   answer, or typing in the search box, closes the form. Once a model is being
   added, every other Queue card's search box offers it too, so a second board
   listing the same release maps onto it rather than creating it twice.
+
+  **New on Artificial Analysis** heads the Queue: every release AA lists that
+  `llm.json` does not carry (`check_new.py`'s questions -- there is no New
+  models tab any more, and an old `#new` link lands here). Each card has three
+  answers whatever AA says about the weights, with AA's verdict outlined as
+  the suggestion:
+
+  | | record |
+  | --- | --- |
+  | *Add as open model* | `model-add` (with `"open_weights": true` for a release AA calls closed -- its weights are often only days away) |
+  | *Add as reference* | `reference-add`, the Reference tab's record: the slug on `reference-models.json` and the entry behind it |
+  | *Ignore it* | `new-model` `__ignored__`: the slug is never offered again |
+
+  *Add all* follows AA's verdict (open releases as open rows, closed ones as
+  reference models); *Ignore all* and *Reset* do what they say.
+
+  **Adding a release and mapping the boards that list it is one sitting.**
+  `ling-3.2-air` new on AA and `inclusionai/ling-3.2-air` queued from Vals:
+  the release's card lists the queued board names that read like it
+  (*the same name*, *this name with more to it*, *a shorter form*), and
+  ticking one maps it onto the release in the same batch. The other way
+  round works too: a board's card offers the release as an answer, tagged
+  *new on AA*, and it is in that card's search box -- picking it answers the
+  release's card with the suggested add if nothing else is chosen there.
+  Taking the add back (*Ignore it*, *Reset*) takes the mappings onto it with
+  it. `answer.py` accepts a mapping onto a model the same batch adds -- a
+  `model-create`, a `model-add` or a `reference-add` -- and applies the adds
+  first, so the pair lands in one run; if the add is refused, so is the batch.
 - **Updates** — what changed, day by day: models added, scores that arrived or
   moved (from `llm.json`'s `date_added` and `scores_history`, the same data the
   site's Recently Added panel reads), and every mapping written, with **who**
@@ -247,37 +275,6 @@ tells you why.
   (`./mapping_log.py backfill -w`); an admin batch's commit cannot be split
   into what was asked and what followed from it after the fact, so those
   entries are all *you* and marked as inferred.
-- **New models** — *Add it* runs `add.py` and records the answer; *Ignore it*
-  writes `__ignored__`, which removes the entry and stops the slug being offered.
-  (These are genuinely different records, not two values of one field — see the
-  comment in `_answers.py`, and `_new_models.apply_decisions`.)
-
-  *Add all* / *Ignore all* answer every open card in one tap.
-
-  Closed-weights releases are listed below the open ones, under their own
-  bar. `llm.json` carries a closed model only as a reference model, so their
-  yes is *Add as reference* — the same `reference-add` record the Reference
-  tab's "Carry more models" sends — and *Ignore it* dismisses the slug as for
-  an open model. `answer.py` refuses a `model-add` for one of them.
-
-  Above those cards is **Add a model**, for the other direction: a release
-  Artificial Analysis does not track, so nothing offered it and there is no
-  question to answer. Name it and fill in as much as you know; `add.py` fills
-  the rest from AA when it happens to know the name, and leaves it blank when it
-  does not. The name is checked as you type — it has to be a slug, and it says
-  whether AA already publishes one exactly like it, which decides whether scores
-  arrive by themselves (see *A hand-added model and AA* below). **+ Add another
-  model** adds a second card, and a third: a family released together is one
-  batch and one run. Only the name is required; the other fields fold away.
-
-  The **url** field searches Hugging Face as well as taking a URL: type part of
-  a name (`step 3.5`, `glm-5`) and it lists matching repos, original releases
-  first by likes and quants and fine-tunes after them; picking one writes
-  `https://huggingface.co/<repo>`. A URL typed or pasted is left alone, and a
-  bare `org/repo` becomes its URL when the field is left. The search goes from
-  the browser straight to the Hub's public API (it answers any origin, no
-  token), so `api.php` is not involved. The Models tab's url field does the
-  same.
 - **Cleanup** — maintenance the pipeline cannot finish by itself. Its first
   section, **Released previews**, lists preview entries whose model has since been released, and
   everything cleaning one up takes. The usual way a release lands here is that
@@ -368,7 +365,32 @@ tells you why.
   echo '[{"kind": "preview-cleanup", "name": "step-5-preview", "action": "dismiss"}]' \
     | ./answer.py --stdin --no-queue-check -w
   ```
-- **Models** — every model in `llm.json`, each folded to its name, creator, date
+- **Models** — at the top, folded, is **Add a model**, for a release nothing
+  on the Queue offers: one Artificial Analysis does not track, or one it does
+  that is past `check_new.py`'s 30-day window or was dismissed once. Name it
+  and fill in as much as you know; `add.py` fills the rest from AA when it
+  happens to know the name, and leaves it blank when it does not. The name box
+  offers every AA slug the site does not carry, and the name is checked as you
+  type — it has to be a slug, and it says whether AA already publishes one
+  exactly like it, which decides whether scores arrive by themselves (see *A
+  hand-added model and AA* below). For an AA slug, **carry it as a reference
+  model** sends a `reference-add` instead of a `model-create` (the details are
+  then not sent: a reference entry is filled from AA). A release the Queue is
+  asking about is answered there instead -- the form says so and links to it.
+  **+ Add another model** adds a second card, and a third: a family released
+  together is one batch and one run. Only the name is required; the other
+  fields fold away.
+
+  The **url** field searches Hugging Face as well as taking a URL: type part of
+  a name (`step 3.5`, `glm-5`) and it lists matching repos, original releases
+  first by likes and quants and fine-tunes after them; picking one writes
+  `https://huggingface.co/<repo>`. A URL typed or pasted is left alone, and a
+  bare `org/repo` becomes its URL when the field is left. The search goes from
+  the browser straight to the Hub's public API (it answers any origin, no
+  token), so `api.php` is not involved. The Models tab's url field does the
+  same.
+
+  Below that, every model in `llm.json`, each folded to its name, creator, date
   added and how many of the non-derived columns it has a score for. Sort by
   *least scored first* (the default; ties go to the newest) or *last added
   first*. One box filters by model or provider: its suggestions list every
@@ -392,7 +414,7 @@ tells you why.
   does know fills in **creator url** as well, with the page most of that
   creator's models point at — nine creators in `llm.json` currently have two
   spellings of theirs, which is what this stops growing. A URL typed by hand is
-  never overwritten. The same three lists back **Add a model** above.
+  never overwritten. The same three lists back **Add a model** at the top of the tab.
 
   Adding a score also asks when it was read and what page it was read from: the
   date defaults to today (yours, not the runner's — the run can start on the
