@@ -181,6 +181,10 @@ KINDS = frozenset(
 
 BENCHMARK_KINDS = frozenset({BENCHMARK_CREATE, BENCHMARK_EDIT, BENCHMARK_ORDER})
 
+# The kinds that bring a new entry into llm.json. A mapping in the same batch
+# may name the entry (batch_created_models), so apply() runs these first.
+ADDING_KINDS = (MODEL_CREATE, MODEL_ADD, REFERENCE_ADD)
+
 # The kinds that act on one entry in llm.json. A batch may touch each entry
 # once: the records are applied in order and rolled back together, so an edit
 # that follows a rename of the same model looks for a name that is no longer
@@ -310,7 +314,8 @@ class Answer:
         if self.kind == NEW_MODEL:
             return f"new model {self.subject!r} -> {self.value}"
         if self.kind == MODEL_ADD:
-            return f"add model {self.subject!r}"
+            named = ", ".join(f"{k}={v!r}" for k, v in sorted(self.fields.items()))
+            return f"add model {self.subject!r}" + (f" ({named})" if named else "")
         if self.kind == MODEL_CREATE:
             named = ", ".join(f"{k}={v!r}" for k, v in sorted(self.fields.items()))
             return f"create model {self.subject!r}" + (f" ({named})" if named else "")
@@ -643,10 +648,14 @@ def batch_created_models(records: Sequence[Any], model_names: set[str]) -> froze
     fails, the batch fails with it, so a mapping can never be left pointing at a
     model that was not made. apply() runs the creates first, so the order the
     records arrive in does not matter.
+
+    A reference-add counts too: it creates the entry as well as carrying the
+    slug, so a closed release Artificial Analysis offers and the board names
+    that already list it go in one sitting, the same as an open one.
     """
     names = set()
     for record in records:
-        if not isinstance(record, dict) or record.get("kind") not in (MODEL_CREATE, MODEL_ADD):
+        if not isinstance(record, dict) or record.get("kind") not in ADDING_KINDS:
             continue
         name = record.get("name")
         if isinstance(name, str) and _rename.SLUG_RE.fullmatch(name) and name not in model_names:
@@ -1289,7 +1298,11 @@ def _validate_model_add(
         raise AnswerError(
             f"'open_weights' overrules a closed verdict, and {subject!r} was not offered as closed"
         )
-    return Answer(index=index, kind=MODEL_ADD, subject=subject)
+    # Optional, as for a model-create: what the person already knows about the
+    # release (the Models tab's "Add a model" form, when the name it was given
+    # is one Artificial Analysis offered). Anything left out add.py fills in
+    # from AA, which is the whole point of a model-add.
+    return Answer(index=index, kind=MODEL_ADD, subject=subject, fields=_metadata_fields(record))
 
 
 def _metadata_fields(record: dict[str, Any]) -> dict[str, Any]:
@@ -2005,7 +2018,7 @@ def apply(answers: Sequence[Answer], *, llm_path: Path = DEFAULT_LLM_JSON) -> li
             # The reorder first of all: it is a permutation of the columns the
             # file holds, so it has to run before a create adds one.
             answer.kind != BENCHMARK_ORDER,
-            answer.kind not in (MODEL_CREATE, MODEL_ADD),
+            answer.kind not in ADDING_KINDS,
             # A cleanup last: a mapping onto the preview entry sent in the same
             # batch names the old slug, and has to be in its file before the
             # rename carries every mapping over to the new one.

@@ -1456,11 +1456,14 @@ const state = {
   modelOpen: new Set(), // the unfolded model cards, by name
   scoresOpen: new Set(), // the model cards whose score list is unfolded
   /* The hand-added models being typed, one card each: [{ id, name, fields,
-     key, question }], where `key` is the record the card last put in the batch,
+     key, question, as }], where `key` is the record the card last put in the batch,
      so a card can take back its own record without touching its neighbours'.
      `question` is set on the ones opened from a Queue card's "New model": the
-     KEY of that question, whose mapping the card also writes. */
+     KEY of that question, whose mapping the card also writes. `as` is
+     "reference" when an Artificial Analysis slug is to be carried as a
+     reference model rather than added as an open-weight one. */
   newModels: [],
+  addOpen: false,       // the Models tab's "Add a model" box is unfolded
   /* What the run does after the batch: "full" refreshes every score, "quick"
      only re-collects the mapping queue. The workflow's skip_refresh (answers
      and nothing else) is not offered: Quick costs a minute more and, unlike
@@ -2132,7 +2135,7 @@ function saveDraft() {
     }
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
       answers: [...state.answers.entries()],
-      newModels: drafts.map(({ id, name, fields, key, question }) => ({ id, name, fields, key, question })),
+      newModels: drafts.map(({ id, name, fields, key, question, as }) => ({ id, name, fields, key, question, as })),
       referenceDraft: state.referenceDraft,
       benchDraft,
     }));
@@ -2156,6 +2159,7 @@ function readDraft() {
         .map((d) => ({
           id: d.id || draftId(), name: d.name, fields: d.fields, key: d.key || "",
           question: typeof d.question === "string" ? d.question : "",
+          as: d.as === "reference" ? "reference" : "open",
         }));
     }
     if (typeof stored.referenceDraft === "string") state.referenceDraft = stored.referenceDraft;
@@ -2196,7 +2200,27 @@ function pruneDraft() {
     state.newModels = state.newModels.filter((d) => d !== draft);
     dropped += 1;
   }
+  dropped += dropOrphanMappings();
   if (dropped) saveDraft();
+  return dropped;
+}
+
+/* A Queue mapping onto a model that is neither in llm.json nor added by this
+   batch: what is left when the add it leaned on went -- a new release answered
+   "Ignore it" after a board's name was mapped onto it, or one the queue stopped
+   offering. answer.py would refuse it, and the whole batch with it. Only once
+   llm.json has been read: before that every model looks unknown. */
+function dropOrphanMappings() {
+  if (!state.llm?.models) return 0;
+  const known = new Set(models());
+  let dropped = 0;
+  for (const question of state.questions) {
+    if (question.universe !== "models") continue;
+    const record = state.answers.get(KEY(question));
+    if (record?.kind !== "mapping" || /^__.*__$/.test(record.answer) || known.has(record.answer)) continue;
+    state.answers.delete(KEY(question));
+    dropped += 1;
+  }
   return dropped;
 }
 
@@ -2908,7 +2932,7 @@ const models = () => [...new Set([
    answer.py runs the creates first -- so they are searchable on every Queue
    card, and a second board listing the same release maps onto it too. */
 const batchCreated = () => [...state.answers.values()]
-  .filter((record) => record.kind === "model-create" || record.kind === "model-add")
+  .filter((record) => ["model-create", "model-add", "reference-add"].includes(record.kind))
   .map((record) => record.name);
 
 /* What llm.json records of one score's past, newest first, each entry saying
@@ -3152,7 +3176,6 @@ function render() {
   document.getElementById("view").replaceChildren(
     state.tab === "queue" ? renderQueue()
       : state.tab === "updates" ? renderUpdates()
-      : state.tab === "new" ? renderNew()
       : state.tab === "cleanup" ? renderCleanup()
         : state.tab === "models" ? renderModels()
           : state.tab === "benchmarks" ? renderBenchmarks()
@@ -3223,9 +3246,12 @@ function staleQueueNote() {
   ]));
 }
 
-const tabList = (mappingCount = null, newCount = null) => [
-  ["queue", "Queue", mappingCount],
-  ["new", "New models", newCount],
+/* New releases Artificial Analysis offers are Queue questions like any other
+   now: answered beside the board names that list them, so a release and its
+   mappings are one sitting. There is no New models tab any more; an old
+   #new link lands on the Queue. */
+const tabList = (queueCount = null) => [
+  ["queue", "Queue", queueCount],
   /* Only the cases that look released: a preview with no sign of one yet, or
      one still waiting for the repo its release rule names, is nothing to do. */
   ["cleanup", "Cleanup", state.previews.cases?.filter((c) => c.evidence?.length).length || null],
@@ -3240,7 +3266,11 @@ const tabList = (mappingCount = null, newCount = null) => [
 /* The tab lives in the URL, so a reload lands where it was and a phone's back
    button steps back through the tabs instead of leaving the page. */
 function showTab(id, { push = true } = {}) {
-  if (!tabList().some(([tab]) => tab === id)) id = "queue";
+  if (!tabList().some(([tab]) => tab === id)) {
+    id = "queue";
+    /* An old #new bookmark, or a typo: say where it landed. */
+    if (location.hash) history.replaceState(null, "", "#queue");
+  }
   const changed = state.tab !== id;
   state.tab = id;
   if (push && location.hash !== `#${id}`) history.pushState(null, "", `#${id}`);
@@ -3252,10 +3282,8 @@ function showTab(id, { push = true } = {}) {
 }
 
 function renderTabs() {
-  const mappingCount = state.questions.filter((q) => q.route !== NEW_MODEL_ROUTE).length;
-  const newCount = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE).length;
   document.getElementById("tabs").replaceChildren(
-    ...tabList(mappingCount, newCount).map(([id, label, n]) => {
+    ...tabList(state.questions.length).map(([id, label, n]) => {
       const button = el("button", {
         type: "button",
         onclick: () => showTab(id),
@@ -3334,7 +3362,7 @@ const SOURCE_PAGES = {
   artificialanalysis: () => "https://artificialanalysis.ai/models",
 };
 
-/* A New models question names an AA slug, and an older one carries the model's
+/* A new-release question names an AA slug, and an older one carries the model's
    AA page only at the end of its note. */
 function sourceUrl(question) {
   if (/^https?:\/\//.test(question.source_url || "")) return question.source_url;
@@ -3371,13 +3399,20 @@ const questionMatches = (question, needle) => !needle
   || (question.candidates || []).some((c) => String(c.option).toLowerCase().includes(needle));
 
 function renderQueue() {
+  const offered = newQuestions();
   const questions = state.questions.filter((q) => q.route !== NEW_MODEL_ROUTE);
-  if (questions.some((q) => q.universe === "aa-slugs")) ensureAaSlugs();
-  if (!questions.length) {
+  if (offered.length || questions.some((q) => q.universe === "aa-slugs")) ensureAaSlugs();
+  if (!questions.length && !offered.length) {
     return el("p", { className: "empty" },
-      "Nothing pending. Every source name and benchmark label is mapped.");
+      "Nothing pending. Every source name and benchmark label is mapped, and "
+      + "Artificial Analysis has offered nothing this site does not already track.");
   }
   const box = el("div", { className: "stack" });
+  if (offered.length) {
+    box.append(renderNewReleases(offered));
+    if (!questions.length) return box;
+    box.append(el("h2", { className: "section-title" }, `Names to map (${questions.length})`));
+  }
   const list = el("div", { className: "stack" });
 
   /* Filters, once there are enough questions to need them. Kept in state so
@@ -3420,7 +3455,7 @@ function renderQueue() {
 
 /* "New model" on a Queue card: a release a board lists before Artificial
    Analysis does, added and mapped in one sitting. The card opens the same form
-   as the New models tab's "Add a model", pre-filled from the source's name, and
+   as the Models tab's "Add a model", pre-filled from the source's name, and
    while it is open it owns the question's answer -- its create record and the
    mapping onto it come and go together. answer.py runs creates first. */
 const createDraftFor = (key) => state.newModels.find((d) => d.question === key);
@@ -3568,6 +3603,35 @@ function renderQuestion(question) {
       onclick: () => choose(pressed ? null : mappingRecord(question, candidate.option)),
     }));
   }
+  /* The releases Artificial Analysis offers that read like this name: not in
+     llm.json yet, so the matcher never offered them, but picking one adds it
+     (its question on this tab is answered with the suggested add) and maps
+     this name onto it in the same batch. */
+  const offeredNew = question.universe === "models" ? openNewSlugs() : [];
+  const shownNew = new Set();
+  if (offeredNew.length) {
+    const listed = new Set((question.candidates || []).map((c) => c.option));
+    for (const slug of offeredNew) {
+      if (listed.has(slug)) continue;
+      const why = nameLikeness(question.subject, slug);
+      if (!why) continue;
+      const pressed = chosen?.kind === "mapping" && chosen.answer === slug;
+      shownNew.add(slug);
+      const release = newQuestionFor(slug);
+      const how = answerOf(release)?.kind === "reference-add" ? "as a reference model"
+        : answerOf(release)?.kind === "model-add" ? "as an open model"
+          : isClosedNew(release) ? "as a reference model" : "as an open model";
+      options.append(option(slug,
+        `${why}, new on Artificial Analysis: adds it ${how} and maps this name to it, in one batch`, {
+          pressed,
+          tag: "new on AA",
+          onclick: () => {
+            if (!pressed) ensureAdded(slug);
+            choose(pressed ? null : mappingRecord(question, slug));
+          },
+        }));
+    }
+  }
   if (question.universe === "models") {
     options.append(option("New model…", creating
       ? `adds ${creating.name.trim() || "it"} and maps this name to it, in one batch`
@@ -3648,14 +3712,19 @@ function renderQuestion(question) {
   }
 
   /* Anything the candidates missed. Filtered client-side purely so the control
-     is usable; the value is checked again on the runner. */
-  const universe = universeFor(question);
+     is usable; the value is checked again on the runner. A release Artificial
+     Analysis offers is in the list too: picking it adds it. */
+  const universe = offeredNew.length
+    ? [...new Set([...universeFor(question), ...offeredNew])].sort()
+    : universeFor(question);
+  const isNewRelease = (value) => offeredNew.includes(value) && !models().includes(value);
   if (universe.length) {
     const freeform = chosen
       && !creating
       && chosen.kind === "mapping"
       && chosen.answer !== "__unmappable__"
-      && !(question.candidates || []).some((c) => c.option === chosen.answer);
+      && !(question.candidates || []).some((c) => c.option === chosen.answer)
+      && !shownNew.has(chosen.answer);
     const noun = universeNoun(question, true);
     const input = slugInput({
       placeholder: `Search all ${universe.length} ${noun}...`,
@@ -3670,7 +3739,7 @@ function renderQuestion(question) {
         : question.universe === "benchmarks" ? (key) => {
           const name = state.llm?.benchmarks?.[key]?.name;
           return name && name !== key ? ` (${name})` : "";
-        } : () => "",
+        } : (name) => (isNewRelease(name) ? " (new on AA: picking it adds it)" : ""),
     });
     /* An answer typed here is an answer, and until now it was the only one
        that did not look like one: a button turns solid when it is chosen, and
@@ -3702,6 +3771,9 @@ function renderQuestion(question) {
       if (value && dropCreate(question)) {
         card.querySelector(".add-model")?.remove();
       }
+      /* Not re-rendered: that would replace the box being typed into. The
+         release's own card catches up on the next render. */
+      if (known && isNewRelease(value)) ensureAdded(value);
       setAnswer(question, known ? mappingRecord(question, value) : null, false);
       card.classList.toggle("answered", Boolean(answerOf(question)));
       if (value) {
@@ -3714,23 +3786,6 @@ function renderQuestion(question) {
     card.append(field);
   }
   return card;
-}
-
-function renderNew() {
-  ensureAaSlugs();
-  const offered = state.questions.filter((q) => q.route === NEW_MODEL_ROUTE);
-  const questions = offered.filter((q) => !isClosedNew(q));
-  const closed = offered.filter(isClosedNew);
-  const box = el("div", { className: "stack" }, renderAddModels());
-  if (!offered.length) {
-    box.append(el("p", { className: "empty" },
-      "No new models waiting. Artificial Analysis has offered nothing this site "
-      + "does not already track."));
-    return box;
-  }
-  if (questions.length) box.append(renderNewBulk(questions), ...questions.map(renderNewQuestion));
-  if (closed.length) box.append(renderNewClosedBulk(closed), ...closed.map(renderNewClosedQuestion));
-  return box;
 }
 
 /* The record that carries a closed release, keyed by its question like every
@@ -3748,104 +3803,6 @@ const openRecord = (question) => {
   state.answers.delete(REFERENCE_ADD_KEY(question.subject));
   return { kind: "model-add", name: question.subject, open_weights: true };
 };
-
-/* The bulk bar for closed releases: same as the open one, but "add" means
-   carrying them as reference models. */
-function renderNewClosedBulk(questions) {
-  const open = questions.filter((q) => !isSent(KEY(q)) && !isApplied(KEY(q)));
-  const all = (record) => {
-    for (const question of open) setAnswer(question, record(question), false);
-    render();
-  };
-  return el("div", { className: "toolbar" }, [
-    el("span", { className: "count grow" },
-      `${questions.length} closed, offered as reference models`),
-    el("button", {
-      type: "button", className: "btn ghost tiny", disabled: !open.length,
-      onclick: () => all(referenceRecord),
-    }, `Carry all ${open.length}`),
-    el("button", {
-      type: "button", className: "btn ghost tiny", disabled: !open.length,
-      onclick: () => all((q) => ({ kind: "new-model", subject: q.subject, answer: "__ignored__" })),
-    }, "Ignore all"),
-    el("button", {
-      type: "button", className: "btn ghost tiny",
-      disabled: !open.some((q) => answerOf(q)),
-      onclick: () => all(() => null),
-    }, "Reset"),
-  ]);
-}
-
-/* A closed release. llm.json carries closed models only as reference models,
-   so the usual yes is a reference-add, which puts the slug on
-   reference-models.json and creates the entry behind it -- what the Reference
-   tab's "Carry more models" sends. "Add as open model" is for AA being early
-   rather than right (weights announced, not yet published): a model-add with
-   the open_weights override. "Ignore it" dismisses the slug exactly as it does
-   for an open model. */
-function renderNewClosedQuestion(question) {
-  const chosen = answerOf(question);
-  const card = el("div", { className: `card${chosen ? " answered" : ""}` });
-  card.append(cardHead(question));
-  const chips = el("div", { className: "chips" }, chip("weights", "closed"));
-  if (question.note) chips.append(chip("", question.note, { prose: true }));
-  card.append(chips);
-
-  const carrying = chosen?.kind === "reference-add";
-  const adding = chosen?.kind === "model-add";
-  const ignoring = chosen?.kind === "new-model";
-  card.append(el("div", { className: "options" }, [
-    option("Add as reference", "carries it beside the open models; scores land on the next refresh", {
-      pressed: carrying,
-      className: "exact",
-      onclick: () => setAnswer(question, carrying ? null : referenceRecord(question)),
-    }),
-    /* AA says closed until the weights are on Hugging Face, so a release
-       announced as open is offered here for its first days. This overrules
-       that verdict: the record says so itself, and answer.py refuses a plain
-       model-add for a closed release. */
-    option("Add as open model", "AA calls it closed, but its weights are coming: add it like any open release", {
-      pressed: adding,
-      onclick: () => setAnswer(question, adding ? null : openRecord(question)),
-    }),
-    option("Ignore it", "never offer this slug again", {
-      pressed: ignoring,
-      className: "decline",
-      onclick: () => setAnswer(question, ignoring ? null
-        : { kind: "new-model", subject: question.subject, answer: "__ignored__" }),
-    }),
-  ]));
-  return guard(card, KEY(question));
-}
-
-/* Every offered model answered the same way in one tap -- a release week can
-   put a dozen on this tab, and on a phone that was a dozen scrolls and taps.
-   Only the open questions: one already sent or answered stays as it is. */
-function renderNewBulk(questions) {
-  const open = questions.filter((q) => !isSent(KEY(q)) && !isApplied(KEY(q)));
-  const all = (record) => {
-    for (const question of open) setAnswer(question, record(question), false);
-    render();
-  };
-  const bar = el("div", { className: "toolbar" }, [
-    el("span", { className: "count grow" },
-      `${questions.length} offered by Artificial Analysis`),
-    el("button", {
-      type: "button", className: "btn ghost tiny", disabled: !open.length,
-      onclick: () => all((q) => ({ kind: "model-add", name: q.subject })),
-    }, `Add all ${open.length}`),
-    el("button", {
-      type: "button", className: "btn ghost tiny", disabled: !open.length,
-      onclick: () => all((q) => ({ kind: "new-model", subject: q.subject, answer: "__ignored__" })),
-    }, "Ignore all"),
-    el("button", {
-      type: "button", className: "btn ghost tiny",
-      disabled: !open.some((q) => answerOf(q)),
-      onclick: () => all(() => null),
-    }, "Reset"),
-  ]);
-  return bar;
-}
 
 /* Models nothing offered. check_new.py finds the ones Artificial Analysis
    publishes; this is the other direction -- a release AA does not track, or
@@ -3923,6 +3880,14 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
 
   const status = el("div", { className: "chips" });
   const tip = el("p", { className: "tip-text", hidden: true });
+  /* Only for an Artificial Analysis slug, and only off the Queue: a closed
+     model is carried as a reference model, which is AA's slug by definition. */
+  const carryBox = el("input", { type: "checkbox", checked: draft.as === "reference" });
+  const carry = el("label", { className: "check", hidden: true }, [carryBox,
+    " carry it as a reference model (closed weights) rather than an open-weight one"]);
+  carryBox.onchange = () => { draft.as = carryBox.checked ? "reference" : "open"; commit(); };
+  /* Assigned below, once built; commit() only runs after that. */
+  let more = null;
   const commit = () => {
     if (draft.key) state.answers.delete(draft.key);
     draft.key = "";
@@ -3934,38 +3899,65 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
        record would have add.py refuse the whole batch for a duplicate name. */
     const inFlight = flying.includes(name);
     /* The same name on two cards is one entry twice, which answer.py refuses --
-       and so is one the New models tab is already adding from AA's offer. */
+       and so is one the Queue is already adding from AA's offer. */
     const twice = state.newModels.some((d) => d !== draft && d.name.trim() === name)
       || batchCreated().includes(name);
+    /* A release Artificial Analysis offers on the Queue is answered there: its
+       card is where the open/reference/ignore choice and the board names that
+       list it are, and a create here beside an answer there would be the same
+       entry twice. */
+    const offered = !twice && Boolean(newQuestionFor(name));
+    const aaSlug = Boolean(state.aa.slugs?.includes(name));
+    const asReference = !question && aaSlug && draft.as === "reference";
+    carry.hidden = question !== null || !aaSlug || !shaped || taken;
+    carryBox.checked = asReference;
+    if (more) more.hidden = asReference;
 
     status.replaceChildren(...(!name ? [] : [
       !shaped
         ? chip("", "not a slug: lowercase words joined by single dots or dashes",
           { prose: true, className: "now" })
         : taken
-          ? chip("", "already tracked -- edit it on the Models tab", { prose: true, className: "now" })
+          ? chip("", question ? "already tracked -- pick it in the search box below"
+            : "already tracked -- it is in the list below", { prose: true, className: "now" })
+          : offered
+            ? el("span", { className: "chip now" }, [
+              el("span", { className: "prose" }, question
+                ? "a new release Artificial Analysis offers -- close this and pick it among the answers above, or in the search box below"
+                : "a new release Artificial Analysis offers -- answer it on the Queue, with the board names that list it"),
+              question ? null : el("button", {
+                type: "button", className: "btn ghost tiny",
+                onclick: () => { state.queueFilter.text = name; showTab("queue"); },
+              }, "Open it"),
+            ])
           : inFlight
             ? chip("", "already sent -- the run is creating it", { prose: true, className: "now" })
             : twice
               ? chip("", question
                 ? "already being added in this batch -- close this and pick it in the search box below"
-                : "named on another card too -- one entry per name", { prose: true, className: "now" })
+                : "already being added in this batch (another card, the Queue or the Reference tab) -- one entry per name",
+                { prose: true, className: "now" })
               : state.aa.slugs === null
                 ? chip("", "adding it as a new entry", { prose: true })
                 : state.aa.slugs.includes(name)
-                  ? chip("", `an Artificial Analysis slug${aaSlugDetail(name)}: its scores arrive on the next refresh`,
-                    { prose: true })
+                  ? chip("", `an Artificial Analysis slug${aaSlugDetail(name)}: `
+                    + (asReference ? "carried as a reference model; " : "")
+                    + "its scores arrive on the next refresh", { prose: true })
                   : chip("", "not an AA slug: AA scores will need a mapping or a rename later",
                     { prose: true }),
     ]));
 
-    const ok = shaped && !taken && !broken && !inFlight && !twice;
+    const ok = shaped && !taken && (asReference || !broken) && !inFlight && !twice && !offered;
     if (ok) {
       const fields = Object.fromEntries(
         Object.entries(draft.fields).filter(([, value]) => value !== null)
       );
       draft.key = MODEL_CREATE_KEY(name);
-      state.answers.set(draft.key, { kind: "model-create", name, fields });
+      /* A reference model is the slug on reference-models.json plus the entry
+         behind it, filled from AA; nothing typed here goes with it. */
+      state.answers.set(draft.key, asReference
+        ? { kind: "reference-add", name }
+        : { kind: "model-create", name, fields });
     }
     if (question) {
       /* The pair goes in together or not at all: a mapping onto a name that is
@@ -3997,17 +3989,74 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
   /* The AA slugs the site does not carry yet: the names most likely to be
      wanted here, and the ones whose scores arrive without a mapping. Picking
      one also fills the creator, when AA names it and nothing is typed. */
-  const offered = () => (state.aa.slugs || []).filter((slug) => !known.has(slug));
+  /* And the Hub's repos for what is typed, after them: "ling 3.2 air" lists
+     inclusionAI/Ling-3.2-Air, and picking it writes the slug it reads as
+     (ling-3-2-air), the repo as the model's url and, when the org names one
+     creator the site knows, the creator. Searched the way the url field
+     searches (hfSearch: originals first, quants and fine-tunes after), only
+     while what is typed is not a URL. */
+  let hubIds = [];
+  let hubTimer = 0;
+  let hubController = null;
+  const offered = () => [
+    ...(state.aa.slugs || []).filter((slug) => !known.has(slug)),
+    ...hubIds,
+  ];
+  const isRepo = (value) => value.includes("/");
+  /* Dots read as dashes, the way Artificial Analysis spells its slugs, so a
+     model added from its repo is the name AA will publish scores under. */
+  const repoSlug = (id) => normSlug(id.split("/").pop());
   const nameBox = comboBox(nameInput, offered, {
-    detail: aaSlugDetail,
-    onPick: (slug) => {
-      const creator = state.aa.models?.get(slug)?.creator;
-      if (creator && !draft.fields.creator && inputs.creator) {
-        inputs.creator.value = creator;
-        inputs.creator.oninput();
+    min: 2,
+    max: 16,
+    match: (value, needle) => (isRepo(value)
+      ? hfMatch(value, needle) || normSlug(value).includes(normSlug(needle))
+      : value.includes(needle) || value.includes(normSlug(needle))),
+    detail: (value) => (isRepo(value)
+      ? `${known.has(repoSlug(value)) ? "already tracked · " : ""}Hugging Face${hfDetail(value).replace(/^ /, " · ")}`
+      : `AA${aaSlugDetail(value)}`),
+    toValue: (value) => (isRepo(value) ? repoSlug(value) : value),
+    onPick: (value) => {
+      const fill = (field, text) => {
+        if (!text || !inputs[field] || draft.fields[field]) return;
+        inputs[field].value = text;
+        inputs[field].oninput();
+      };
+      if (isRepo(value)) {
+        /* The repo is the url; the creator only when its org reads as exactly
+           one creator llm.json knows, the same guess a Queue card makes. */
+        if (inputs.url) {
+          inputs.url.value = HF_BASE + value;
+          inputs.url.oninput();
+        }
+        fill("creator", guessCreator(value));
+        if (more) more.open = true;
+        urlPicker?.draw();
+      } else {
+        fill("creator", state.aa.models?.get(value)?.creator);
       }
       lookUp();
     },
+  });
+  nameInput.placeholder = "acme-model-1, or a name to search AA and Hugging Face";
+  nameInput.addEventListener("input", () => {
+    const query = nameInput.value.trim();
+    clearTimeout(hubTimer);
+    hubController?.abort();
+    if (query.length < 2 || looksLikeUrl(query)) { hubIds = []; return; }
+    hubTimer = setTimeout(async () => {
+      hubController = new AbortController();
+      try {
+        /* A slug typed as such, "ling-3-2-air", is not how the repo is
+           spelled: asked again with "3-2" read as "3.2" when it finds nothing. */
+        let ranked = await hfSearch(query, hubController.signal);
+        const dotted = query.replace(/(\d)-(?=\d)/g, "$1.");
+        if (!ranked.length && dotted !== query) ranked = await hfSearch(dotted, hubController.signal);
+        if (nameInput.value.trim() !== query) return;
+        hubIds = ranked.slice(0, 12);
+        nameBox.redraw();
+      } catch { /* offline, rate-limited, aborted: AA's slugs are still offered */ }
+    }, 250);
   });
   /* The url picker asks the Hub about the name a moment after typing stops,
      and again when the field is left changed. */
@@ -4025,7 +4074,7 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
     lookTimer = setTimeout(lookUp, 700);
   });
   nameInput.addEventListener("change", lookUp);
-  card.append(el("div", { className: "field" }, [el("label", {}, "name"), nameBox]), status);
+  card.append(el("div", { className: "field" }, [el("label", {}, "name"), nameBox]), status, carry);
 
   /* Held so the creator field can reach the creator url field below it: the
      handler runs long after the loop, by which time both are in here. */
@@ -4034,7 +4083,7 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
   const fillCreatorUrl = creatorUrlFiller(inputs, "");
   /* Only the name is needed; the rest folds away on a phone, where six empty
      fields per card is a lot of scrolling for what add.py fills from AA. */
-  const more = el("details", { open: Object.keys(draft.fields).length > 0 });
+  more = el("details", { open: Object.keys(draft.fields).length > 0 });
   more.append(el("summary", { className: "note-text", style: "cursor:pointer" },
     "Details (optional): params, context, url, creator"));
   for (const [field, type, placeholder] of META_FIELDS) {
@@ -4070,34 +4119,219 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
   return card;
 }
 
+/* ── New on Artificial Analysis ──
+   check_new.py's questions: a release AA lists that llm.json does not carry.
+   They sit at the top of the Queue rather than on a tab of their own, because
+   the usual reason to add one is that a board already lists it -- and that
+   board's name is a question on this same tab. Each card offers the three
+   answers whatever AA's verdict on the weights (AA says closed until the
+   weights are on Hugging Face, and a closed model may still be wanted as an
+   open row for its first days, or an open one as a yardstick), with AA's own
+   verdict outlined as the suggestion. Under the answers are the queued board
+   names that look like the release: ticking one maps it onto the model in the
+   same batch, which answer.py accepts because the add runs first. */
+const newQuestions = () => state.questions.filter((q) => q.route === NEW_MODEL_ROUTE);
+const newQuestionFor = (slug) => newQuestions().find((q) => q.subject === slug);
+const isAdding = (record) => record?.kind === "model-add" || record?.kind === "reference-add";
+const ignoreRecord = (question) => ({ kind: "new-model", subject: question.subject, answer: "__ignored__" });
+/* "Add as open model": a plain model-add, or the explicit override answer.py
+   asks for when AA called the release closed. */
+const openAddRecord = (question) => (isClosedNew(question)
+  ? openRecord(question) : { kind: "model-add", name: question.subject });
+/* What AA's verdict suggests: open releases as open rows, closed ones carried
+   for reference. */
+const suggestedAdd = (question) => (isClosedNew(question)
+  ? referenceRecord(question) : openAddRecord(question));
+
+/* Whether a board's name reads as a release's slug, and how, or null. Only
+   used to offer the pairing -- the mapping is checked on the runner against
+   the batch's own adds either way. "inclusionai/Ling-3.2-Air" is the same name
+   as ling-3-2-air; "Ling 3.2 Air (thinking)" is that name with more to it. */
+const nameTokens = (value) => normSlug(value).split("-").filter(Boolean);
+function nameLikeness(subject, slug) {
+  const last = String(subject).split("/").pop();
+  const squash = (value) => normSlug(value).replace(/-/g, "");
+  const target = squash(slug);
+  if (!target) return null;
+  if (squash(last) === target || squash(subject) === target) return "the same name";
+  const within = (short, long) => short.length >= 2
+    && long.some((_, i) => short.every((token, j) => long[i + j] === token));
+  const name = nameTokens(last);
+  const wanted = nameTokens(slug);
+  if (within(wanted, name)) return "this name with more to it";
+  if (within(name, wanted)) return "a shorter form of this name";
+  return null;
+}
+
+/* The queued board names that look like a new release. */
+const mappingQuestionsLike = (slug) => state.questions
+  .filter((q) => q.universe === "models" && q.route !== NEW_MODEL_ROUTE)
+  .map((q) => [q, nameLikeness(q.subject, slug)])
+  .filter(([, why]) => why);
+
+/* The new releases still open to answer: one already sent or applied is the
+   run's now, and mapping onto it would lean on an add this batch does not
+   carry. */
+const openNewSlugs = () => newQuestions()
+  .filter((q) => !isSent(KEY(q)) && !isApplied(KEY(q)))
+  .map((q) => q.subject);
+
+/* Mapping onto a new release means adding it: answer its question with the
+   suggested add unless the batch already adds it one way or the other. */
+function ensureAdded(slug) {
+  const question = newQuestionFor(slug);
+  if (!question || isAdding(answerOf(question))) return;
+  state.answers.set(KEY(question), suggestedAdd(question));
+}
+
+/* A release's add taken back: the board names mapped onto it go too, since
+   answer.py would refuse them and the whole batch with them. */
+function dropMappingsOnto(slug) {
+  for (const question of state.questions) {
+    if (question.universe !== "models" || question.route === NEW_MODEL_ROUTE) continue;
+    const record = answerOf(question);
+    if (record?.kind === "mapping" && record.answer === slug) state.answers.delete(KEY(question));
+  }
+}
+
+function answerNew(question, record) {
+  if (record === null) state.answers.delete(KEY(question));
+  else state.answers.set(KEY(question), record);
+  if (!isAdding(record)) dropMappingsOnto(question.subject);
+  render();
+}
+
+function renderNewReleases(offered) {
+  const box = el("div", { className: "stack" });
+  const needle = state.queueFilter.text.trim().toLowerCase();
+  const shown = needle ? offered.filter((q) => q.subject.toLowerCase().includes(needle)) : offered;
+  box.append(el("h2", { className: "section-title" },
+    `New on Artificial Analysis (${offered.length})`));
+  box.append(renderNewBulk(offered));
+  box.append(...(shown.length ? shown.map(renderNewQuestion)
+    : [el("p", { className: "empty" }, "No new release matches the filter below.")]));
+  return box;
+}
+
+/* Every offered release answered the same way in one tap -- a release week can
+   put a dozen here. "Add all" follows AA's verdict: open releases as open
+   rows, closed ones carried for reference. Only the cards still open: one
+   already sent or answered elsewhere stays as it is. */
+function renderNewBulk(questions) {
+  const open = questions.filter((q) => !isSent(KEY(q)) && !isApplied(KEY(q)));
+  const all = (record) => {
+    for (const question of open) {
+      const chosen = record(question);
+      if (chosen === null) state.answers.delete(KEY(question));
+      else state.answers.set(KEY(question), chosen);
+      if (!isAdding(chosen)) dropMappingsOnto(question.subject);
+    }
+    render();
+  };
+  const closed = questions.filter(isClosedNew).length;
+  return el("div", { className: "toolbar" }, [
+    el("span", { className: "count grow" }, closed
+      ? `${questions.length - closed} open, ${closed} closed`
+      : `${questions.length} open-weight`),
+    el("button", {
+      type: "button", className: "btn ghost tiny", disabled: !open.length,
+      title: "Open releases as open models, closed ones as reference models",
+      onclick: () => all(suggestedAdd),
+    }, `Add all ${open.length}`),
+    el("button", {
+      type: "button", className: "btn ghost tiny", disabled: !open.length,
+      onclick: () => all(ignoreRecord),
+    }, "Ignore all"),
+    el("button", {
+      type: "button", className: "btn ghost tiny",
+      disabled: !open.some((q) => answerOf(q)),
+      onclick: () => all(() => null),
+    }, "Reset"),
+  ]);
+}
+
 function renderNewQuestion(question) {
   const chosen = answerOf(question);
+  const closed = isClosedNew(question);
   const card = el("div", { className: `card${chosen ? " answered" : ""}` });
   card.append(cardHead(question));
-  if (question.note) {
-    card.append(el("div", { className: "chips" }, chip("", question.note, { prose: true })));
-  }
+  const chips = el("div", { className: "chips" }, [
+    chip("source", "new on Artificial Analysis", { prose: true }),
+    chip("weights", closed ? "closed" : "open"),
+  ]);
+  if (question.note) chips.append(chip("", question.note, { prose: true }));
+  card.append(chips);
 
-  /* "Yes" is a model-add, not an __added__ decision. apply_decisions() keeps
+  /* "Add" is a model-add, not an __added__ decision. apply_decisions() keeps
      __added__ only for an entry already in llm.json; for a new slug it clears
      the line without dismissing it, so the model is offered again on every
      run after this one. */
-  const adding = chosen?.kind === "model-add";
+  const asOpen = chosen?.kind === "model-add";
+  const asReference = chosen?.kind === "reference-add";
   const ignoring = chosen?.kind === "new-model";
+  const openOption = option("Add as open model", closed
+    ? "AA calls it closed, but its weights are coming: add it like any open release"
+    : "adds the entry; scores land on the next refresh", {
+    pressed: asOpen,
+    className: closed ? "" : "exact",
+    onclick: () => answerNew(question, asOpen ? null : openAddRecord(question)),
+  });
+  const referenceOption = option("Add as reference", closed
+    ? "carries it beside the open models; scores land on the next refresh"
+    : "a closed yardstick rather than an open-weight row: put on the reference list", {
+    pressed: asReference,
+    className: closed ? "exact" : "",
+    onclick: () => answerNew(question, asReference ? null : referenceRecord(question)),
+  });
   card.append(el("div", { className: "options" }, [
-    option("Add it", "adds the entry; scores land on the next refresh", {
-      pressed: adding,
-      className: "exact",
-      onclick: () => setAnswer(question, adding ? null
-        : { kind: "model-add", name: question.subject }),
-    }),
+    ...(closed ? [referenceOption, openOption] : [openOption, referenceOption]),
     option("Ignore it", "never offer this slug again", {
       pressed: ignoring,
       className: "decline",
-      onclick: () => setAnswer(question, ignoring ? null
-        : { kind: "new-model", subject: question.subject, answer: "__ignored__" }),
+      onclick: () => answerNew(question, ignoring ? null : ignoreRecord(question)),
     }),
   ]));
+
+  /* The double step: board names in the queue that read as this release,
+     mapped onto it in the same batch. Ticking one answers that name's card
+     too; ticking one before an add is chosen picks the suggested add. */
+  const alike = mappingQuestionsLike(question.subject);
+  if (alike.length) {
+    const adding = isAdding(chosen);
+    const along = el("div", { className: "map-along" }, el("div", { className: "note-text" },
+      adding
+        ? `Map these queued names onto ${question.subject} in the same batch:`
+        : `Queued names that look like it -- ticking one adds it (${closed ? "as reference" : "as an open model"}) and maps the name, in one batch:`));
+    for (const [other, why] of alike) {
+      const key = KEY(other);
+      const current = answerOf(other);
+      const on = current?.kind === "mapping" && current.answer === question.subject;
+      const locked = isSent(key) || isApplied(key);
+      const box = el("input", { type: "checkbox", checked: on, disabled: locked || ignoring });
+      box.onchange = () => {
+        if (box.checked) {
+          ensureAdded(question.subject);
+          dropCreate(other);
+          state.answers.set(key, mappingRecord(other, question.subject));
+        } else {
+          state.answers.delete(key);
+        }
+        render();
+      };
+      const elsewhere = current && !on
+        ? ` -- answered ${current.answer ? `"${current.answer}"` : "otherwise"} on its card; ticking replaces that`
+        : "";
+      along.append(el("label", { className: "check" }, [
+        box,
+        el("span", {}, [
+          el("b", {}, sourceOf(other)), " ",
+          el("span", { className: "mono" }, other.subject),
+          el("span", { className: "why" }, ` -- ${why}${locked ? ", already sent" : ""}${elsewhere}`),
+        ]),
+      ]));
+    }
+    card.append(along);
+  }
   return guard(card, KEY(question));
 }
 
@@ -5031,8 +5265,8 @@ function renderReferenceAdd() {
       .map((key) => key.slice("reference-add  ".length))
     : [];
   const carried = new Set(state.reference.slugs || []);
-  /* Closed releases answered "Add as reference" on the New models tab: keyed by
-     their question, so not in `queued`, but the same record all the same. */
+  /* Releases answered "Add as reference" on the Queue, or carried from the
+     Models tab's "Add a model": keyed by their question or their card, so not in `queued`, but the same record all the same. */
   const fromNew = [...state.answers.entries()]
     .filter(([key, record]) => !key.startsWith("reference-add  ") && record.kind === "reference-add")
     .map(([, record]) => record.name);
@@ -5042,7 +5276,7 @@ function renderReferenceAdd() {
     if (!SLUG_RE.test(slug)) return "not a slug: lowercase words joined by single dots or dashes";
     if (carried.has(slug)) return "already carried -- it is one of the cards below";
     if (queued.includes(slug)) return "already in this batch";
-    if (fromNew.includes(slug)) return "already in this batch, from the New models tab";
+    if (fromNew.includes(slug)) return "already in this batch, from the Queue or the Models tab";
     if (flying.includes(slug)) return "already sent -- the run is adding it";
     if (state.aa.slugs !== null && !state.aa.slugs.includes(slug)) {
       return "Artificial Analysis does not publish this slug, so nothing would find the model";
@@ -5311,11 +5545,27 @@ function renderModels() {
      take the card being worked on with it. */
   search.oninput = () => { state.modelSearch = search.value; draw(); };
   box.append(
+    renderAddBox(),
     el("div", { className: "toolbar search" }, [
       el("div", { className: "grow" }, combo), el("div", {}, sort), shown]),
     results,
   );
   draw();
+  return box;
+}
+
+/* "Add a model", folded above the model list: a release nothing offered, or
+   one Artificial Analysis lists that the Queue is not asking about (older than
+   check_new.py's window, or dismissed once). Open by itself while a card holds
+   something, so a draft restored after a reload is not hidden. */
+function renderAddBox() {
+  const busy = state.newModels.some((d) => !d.question && (d.name.trim() || Object.keys(d.fields).length))
+    || flyingCreates().length > 0;
+  const box = el("details", { className: "add-box", open: state.addOpen || busy });
+  box.ontoggle = () => { state.addOpen = box.open; };
+  box.append(el("summary", { className: "section-title", style: "cursor:pointer" },
+    "Add a model -- by hand, or one Artificial Analysis lists"));
+  box.append(renderAddModels());
   return box;
 }
 
