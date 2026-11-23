@@ -1934,7 +1934,8 @@
     "aa_omniscience_1_1",
     "aa_omniscience_hallucination_1_1",
     "aa_omniscience_accuracy_1_1",
-    "terminal_bench_science_0_1"
+    "terminal_bench_science_0_1",
+    "frontiercode_2_0"
    ],
    "update_llmstats_mapping.py llmstats-model": [
     "mmmlu"
@@ -5669,6 +5670,25 @@
     "terminal_bench_science_0_1",
     "frontiercode_2_0",
     "critpt_2_0",
+    "critpt_hard_2_0"
+   ]
+  },
+  "ling-3-2-air": {
+   "update_artificialanalysis_mapping.py *": [
+    "aa_intelligence_index_5_0",
+    "aa_engineering_index",
+    "aa_strategy_ops_index",
+    "aa_legal_index",
+    "aa_finance_index",
+    "aa_economics_index",
+    "frontiercode_2_0",
+    "terminal_bench_4_0",
+    "terminal_bench_science_0_1",
+    "automation_bench_aa",
+    "aa_briefcase",
+    "aa_omniscience_1_1",
+    "aa_omniscience_hallucination_1_1",
+    "aa_omniscience_accuracy_1_1",
     "critpt_hard_2_0"
    ]
   },
@@ -15323,11 +15343,6 @@
    ],
    "AA-Omni. Non-Halluc.": [
     [
-     "kolibri-1",
-     56,
-     3
-    ],
-    [
      "lfm2-5-8b-a1b",
      63.5,
      0
@@ -15406,11 +15421,6 @@
    ],
    "AA-Omniscience Non-Hallucination Rate": [
     [
-     "kolibri-1",
-     56,
-     3
-    ],
-    [
      "lfm2-5-8b-a1b",
      63.5,
      0
@@ -15424,11 +15434,6 @@
     ]
    ],
    "AA-Omniscience non-hallucination (public)": [
-    [
-     "kolibri-1",
-     56,
-     3
-    ],
     [
      "lfm3-1-7b",
      92.9,
@@ -15684,11 +15689,6 @@
    ],
    "Agentic coding DeepSWE 1.1": [
     [
-     "nanbeige4-3-33b",
-     65.5,
-     6
-    ],
-    [
      "qwen3-8-27b",
      42.2,
      0
@@ -15697,18 +15697,6 @@
      "qwen3-8-flash-next",
      58.7,
      0
-    ]
-   ],
-   "Agentic coding SWE-bench Pro": [
-    [
-     "hy4",
-     65.7,
-     7
-    ],
-    [
-     "k2-horizon-375b-a23b",
-     42.6,
-     7
     ]
    ],
    "Agents' Last Exam": [
@@ -15954,16 +15942,6 @@
    ],
    "CharXiv (RQ)": [
     [
-     "dots3-note-prev",
-     83.1,
-     7
-    ],
-    [
-     "inkling-small",
-     77.4,
-     7
-    ],
-    [
      "kimi-k2-5",
      77.5,
      0
@@ -15989,29 +15967,9 @@
      "apriel-v1-6-15b-thinker",
      56,
      0
-    ],
-    [
-     "dots3-note-prev",
-     83.1,
-     7
-    ],
-    [
-     "inkling-small",
-     77.4,
-     7
     ]
    ],
    "CharXiv (reasoning, val)": [
-    [
-     "dots3-note-prev",
-     83.1,
-     7
-    ],
-    [
-     "inkling-small",
-     77.4,
-     7
-    ],
     [
      "lfm3-vl-2b",
      70.2,
@@ -16019,16 +15977,6 @@
     ]
    ],
    "CharXiv RQ": [
-    [
-     "dots3-note-prev",
-     83.1,
-     7
-    ],
-    [
-     "inkling-small",
-     77.4,
-     7
-    ],
     [
      "minimax-m3-1-flash",
      82.5,
@@ -16041,16 +15989,6 @@
     ]
    ],
    "CharXiv(RQ)": [
-    [
-     "dots3-note-prev",
-     83.1,
-     7
-    ],
-    [
-     "inkling-small",
-     77.4,
-     7
-    ],
     [
      "qwen3-5-0-8b",
      41.3,
@@ -16099,16 +16037,6 @@
    ],
    "Charxiv Reasoning": [
     [
-     "dots3-note-prev",
-     83.1,
-     7
-    ],
-    [
-     "inkling-small",
-     77.4,
-     7
-    ],
-    [
      "muse-glimmer",
      78.8,
      0
@@ -16121,36 +16049,9 @@
    ],
    "Competitive coding LiveCodeBench v6": [
     [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
-    [
      "qwen3-8-flash-next",
      91.9,
      0
-    ]
-   ],
-   "Computer use OSWorld 2.0": [
-    [
-     "qwen3-8-27b",
-     19.4,
-     3
     ]
    ],
    "Computer use OSWorld-Verified": [
@@ -16174,19 +16075,7 @@
      0
     ]
    ],
-   "DeepSWE (v1.1)": [
-    [
-     "nanbeige4-3-33b",
-     65.5,
-     6
-    ]
-   ],
    "DeepSWE 1.1": [
-    [
-     "nanbeige4-3-33b",
-     65.5,
-     6
-    ],
     [
      "ripple-65b-preview",
      44.3,
@@ -16225,11 +16114,6 @@
      0
     ],
     [
-     "nanbeige4-3-33b",
-     65.5,
-     6
-    ],
-    [
      "nex-n2-5-max",
      65.6,
      0
@@ -16255,11 +16139,6 @@
      "deepseek-v4-1-flash",
      74.2,
      0
-    ],
-    [
-     "nanbeige4-3-33b",
-     65.5,
-     6
     ]
    ],
    "DeepSWE v1.1 mini-swe-agent v2.4.6": [
@@ -16267,11 +16146,6 @@
      "inkling-2-mini",
      48.2,
      0
-    ],
-    [
-     "nanbeige4-3-33b",
-     65.5,
-     6
     ]
    ],
    "Frontier agentic tasks Agents' Last Exam": [
@@ -16281,179 +16155,11 @@
      0
     ]
    ],
-   "GDPVal v2": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
-   "GDPVal-AA Real-world professional tasks (Elo)": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
-   "GDPVal-AA v2": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
-   "GDPVal-AA v2.1": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
-   "GDPval-AA 2.1": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
-   "GDPval-AA v2": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
-   "GDPval-AA v2 (Elo)": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
-   "GDPval-AA v2.1 (Elo-score)": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
-   "GDPval-AA-V2": [
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
-    ]
-   ],
    "GDPval-AA-V2 (Elo)": [
     [
      "nemotron-labs-dory-1-0",
      815,
      0
-    ],
-    [
-     "nex-n2-5-max",
-     1715,
-     10
-    ],
-    [
-     "nex-n2-5-mini",
-     1445,
-     10
-    ],
-    [
-     "nex-n2-5-pro",
-     1630,
-     10
     ]
    ],
    "GPQA Diamond": [
@@ -16512,36 +16218,12 @@
    ],
    "HLE": [
     [
-     "hy4",
-     43.4,
-     24
-    ],
-    [
      "lfm-2-5-24b-a2b",
      7.4,
      0
     ]
    ],
-   "HLE (Pass@1)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE (Text-only)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
    "HLE (no tools)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ],
     [
      "ornith-1-5-35b-a3b",
      25.6,
@@ -16563,67 +16245,6 @@
      "daisyrose-27b",
      34.3,
      0
-    ],
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE (text)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE (text-only, no tools)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE (w/o tools)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE (without tools)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE *(no tools)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE Text (AA)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE no tools": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "HLE w/o tools": [
-    [
-     "hy4",
-     43.4,
-     24
     ]
    ],
    "HLE-Diamond": [
@@ -16664,58 +16285,11 @@
      0
     ]
    ],
-   "Humanity's Last Exam": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
    "Humanity's Last Exam (EN)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ],
     [
      "kolibri-1",
      21.5,
      0
-    ]
-   ],
-   "Humanity's Last Exam (HLE)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "Humanity's Last Exam (Pass@1)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "Humanity's Last Exam (no tools)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "Humanity’s Last Exam": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
-   "IF Bench": [
-    [
-     "flint-v1-0",
-     89.2,
-     3
     ]
    ],
    "IFBench": [
@@ -16728,11 +16302,6 @@
      "daisyrose-27b",
      82.4,
      0
-    ],
-    [
-     "flint-v1-0",
-     89.2,
-     3
     ],
     [
      "inkling-small",
@@ -16831,11 +16400,6 @@
    ],
    "Instruction following IFBench": [
     [
-     "flint-v1-0",
-     89.2,
-     3
-    ],
-    [
      "qwen3-8-27b",
      79.5,
      0
@@ -16848,52 +16412,12 @@
    ],
    "LCB v6": [
     [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
      "glm-4-7-flash",
      64.0,
      0
-    ],
-    [
-     "hy3",
-     34.9,
-     19
     ]
    ],
    "Live Code Bench v6": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
     [
      "sarvam-105b",
      71.7,
@@ -16907,52 +16431,12 @@
    ],
    "Live-Code-Bench-V6": [
     [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
-    [
      "nanbeige4-1-3b",
      76.9,
      0
     ]
    ],
    "LiveCodeBench (Mean@4)": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
     [
      "longcat-flash-thinking",
      79.4,
@@ -16961,52 +16445,12 @@
    ],
    "LiveCodeBench (Pass@1)": [
     [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
      "ernie-5-5-flash-preview",
      40.1,
      0
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
     ]
    ],
    "LiveCodeBench (pass@1)": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
     [
      "longcat-flash-chat",
      48,
@@ -17015,74 +16459,12 @@
    ],
    "LiveCodeBench (v1–v6 cumul)": [
     [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
-    [
      "solar-open-100b-reasoning",
      74.2,
      0
     ]
    ],
-   "LiveCodeBench (v6 2025-08–2025-05)": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ]
-   ],
    "LiveCodeBench (v6)": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
     [
      "solar-open2-250b",
      92.4,
@@ -17094,21 +16476,6 @@
      "diffusiongemma-26b-a4b",
      69.1,
      0
-    ],
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
     ],
     [
      "gemma-4-26b-a4b",
@@ -17144,11 +16511,6 @@
      "granite-4-2-8b",
      73.2,
      0
-    ],
-    [
-     "hy3",
-     34.9,
-     19
     ],
     [
      "k2-horizon-3-7b",
@@ -17216,98 +16578,14 @@
      0
     ]
    ],
-   "LiveCodeBench v6 (02/2025-05/2025)": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ]
-   ],
-   "LiveCodeBench v6 (25.02-25.05)": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ]
-   ],
    "LiveCodeBench v6 (Feb–May)": [
     [
      "a-x-k2",
      84,
      0
-    ],
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
     ]
    ],
    "LiveCodeBench v6 Competitive coding": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
     [
      "k2-horizon-0-9b",
      37.4,
@@ -17316,96 +16594,12 @@
    ],
    "LiveCodeBench-V6": [
     [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
-    [
      "step-3-5-flash",
      86.4,
      0
     ]
    ],
-   "LiveCodeBench-v6": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ]
-   ],
-   "LiveCodeBenchV6": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ]
-   ],
    "LiveCodeBenchv6": [
-    [
-     "dots3-note-prev",
-     91.5,
-     19
-    ],
-    [
-     "flint-v1-0",
-     80.3,
-     19
-    ],
-    [
-     "gemma-4-12b",
-     72.0,
-     19
-    ],
-    [
-     "hy3",
-     34.9,
-     19
-    ],
     [
      "lfm2-5-2-6b",
      59.4,
@@ -17414,59 +16608,12 @@
    ],
    "MCP Atlas": [
     [
-     "ornith-1-0-35b",
-     64.4,
-     3
-    ],
-    [
-     "ornith-1-0-397b",
-     76.4,
-     3
-    ],
-    [
-     "ornith-1-0-9b",
-     49.4,
-     3
-    ],
-    [
      "ripple-65b-preview",
      71.7,
      0
     ]
    ],
-   "MCP Atlas Public": [
-    [
-     "ornith-1-0-35b",
-     64.4,
-     3
-    ],
-    [
-     "ornith-1-0-397b",
-     76.4,
-     3
-    ],
-    [
-     "ornith-1-0-9b",
-     49.4,
-     3
-    ]
-   ],
    "MCP-Atlas": [
-    [
-     "ornith-1-0-35b",
-     64.4,
-     3
-    ],
-    [
-     "ornith-1-0-397b",
-     76.4,
-     3
-    ],
-    [
-     "ornith-1-0-9b",
-     49.4,
-     3
-    ],
     [
      "ornith-1-5-35b-a3b",
      70.2,
@@ -17494,11 +16641,6 @@
     ]
    ],
    "MMLU (MC acc)": [
-    [
-     "hy3",
-     80.2,
-     3
-    ],
     [
      "ripple-65b-preview",
      83.7,
@@ -17535,11 +16677,6 @@
      "gemma-4-e4b",
      69.4,
      0
-    ],
-    [
-     "hy3",
-     65.8,
-     7
     ],
     [
      "nemotron-3-5-lightning",
@@ -17602,11 +16739,6 @@
      "hermes-4-3-36b",
      80.7,
      0
-    ],
-    [
-     "hy3",
-     65.8,
-     7
     ],
     [
      "hy4",
@@ -17706,11 +16838,6 @@
    ],
    "MMLU-Pro (acc)": [
     [
-     "hy3",
-     65.8,
-     7
-    ],
-    [
      "longcat-flash-chat",
      82.7,
      0
@@ -17723,11 +16850,6 @@
    ],
    "MMLU-Pro CoT (EN)": [
     [
-     "hy3",
-     65.8,
-     7
-    ],
-    [
      "kolibri-1",
      80,
      0
@@ -17735,21 +16857,9 @@
    ],
    "MMLU-Pro(acc)": [
     [
-     "hy3",
-     65.8,
-     7
-    ],
-    [
      "longcat-flash-lite",
      78.3,
      0
-    ]
-   ],
-   "MMLUPro": [
-    [
-     "hy3",
-     65.8,
-     7
     ]
    ],
    "MMMLU": [
@@ -17769,11 +16879,6 @@
      0
     ],
     [
-     "hy3",
-     80.2,
-     3
-    ],
-    [
      "seed-oss-36b-instruct",
      78.4,
      0
@@ -17784,11 +16889,6 @@
      "deepseek-v4-pro",
      90.3,
      0
-    ],
-    [
-     "hy3",
-     80.2,
-     3
     ]
    ],
    "MMMU-PRO (10 choice)": [
@@ -18088,19 +17188,7 @@
      0
     ]
    ],
-   "Multidisciplinary reasoning HLE": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
    "Multilingual software engineering SWE-bench Multilingual": [
-    [
-     "hy4",
-     82.9,
-     9
-    ],
     [
      "qwen3-8-flash-next",
      81,
@@ -18108,11 +17196,6 @@
     ]
    ],
    "Multimodal software engineering SWE-MM": [
-    [
-     "qwen3-6-27b",
-     25.7,
-     2
-    ],
     [
      "qwen3-8-27b",
      38.6,
@@ -18173,11 +17256,6 @@
      "kimi-k3",
      58.3,
      0
-    ],
-    [
-     "qwen3-8-27b",
-     19.4,
-     3
     ]
    ],
    "OSWorld V2.1": [
@@ -18197,11 +17275,6 @@
      "nex-n2-5-pro",
      56.4,
      0
-    ],
-    [
-     "qwen3-8-27b",
-     19.4,
-     3
     ]
    ],
    "OSWorld-Verified": [
@@ -18278,28 +17351,6 @@
      "motif-3",
      71.6,
      0
-    ]
-   ],
-   "Real-world tool use Toolathlon Verified (Pass@1)": [
-    [
-     "hy4",
-     74.1,
-     6
-    ],
-    [
-     "ornith-1-0-35b",
-     42.4,
-     6
-    ],
-    [
-     "ornith-1-0-397b",
-     43.2,
-     6
-    ],
-    [
-     "ornith-1-0-9b",
-     33.4,
-     6
     ]
    ],
    "SWE Atlas - QnA": [
@@ -18388,11 +17439,6 @@
      "granite-4-2-8b",
      30.8,
      0
-    ],
-    [
-     "hy4",
-     82.9,
-     9
     ]
    ],
    "SWE Bench Pro": [
@@ -18405,23 +17451,6 @@
      "granite-4-2-8b",
      19.1,
      0
-    ],
-    [
-     "hy4",
-     65.7,
-     7
-    ],
-    [
-     "k2-horizon-375b-a23b",
-     42.6,
-     7
-    ]
-   ],
-   "SWE Bench Pro V2": [
-    [
-     "flint-v1-0",
-     89.7,
-     6
     ]
    ],
    "SWE Bench Pro v2": [
@@ -18429,11 +17458,6 @@
      "daisyrose-27b",
      94.7,
      0
-    ],
-    [
-     "flint-v1-0",
-     89.7,
-     6
     ]
    ],
    "SWE Bench Verified": [
@@ -18470,23 +17494,6 @@
      "deepseek-v4-pro",
      76.2,
      0
-    ],
-    [
-     "hy4",
-     82.9,
-     9
-    ]
-   ],
-   "SWE Pro (Resolved)": [
-    [
-     "hy4",
-     65.7,
-     7
-    ],
-    [
-     "k2-horizon-375b-a23b",
-     42.6,
-     7
     ]
    ],
    "SWE-Atlas-QnA": [
@@ -18512,22 +17519,12 @@
    ],
    "SWE-Bench Multiligual": [
     [
-     "hy4",
-     82.9,
-     9
-    ],
-    [
      "longcat-flash-lite",
      38.1,
      0
     ]
    ],
    "SWE-Bench Multilingual": [
-    [
-     "hy4",
-     82.9,
-     9
-    ],
     [
      "kimi-k2-6",
      76.7,
@@ -18545,16 +17542,6 @@
     ]
    ],
    "SWE-Bench Pro": [
-    [
-     "hy4",
-     65.7,
-     7
-    ],
-    [
-     "k2-horizon-375b-a23b",
-     42.6,
-     7
-    ],
     [
      "muse-glimmer",
      51.2,
@@ -18579,20 +17566,6 @@
      "nex-n2-5-pro",
      61.2,
      0
-    ]
-   ],
-   "SWE-Bench Pro V2": [
-    [
-     "flint-v1-0",
-     89.7,
-     6
-    ]
-   ],
-   "SWE-Bench Pro v2": [
-    [
-     "flint-v1-0",
-     89.7,
-     6
     ]
    ],
    "SWE-Bench Verified": [
@@ -18641,11 +17614,6 @@
      "nex-n2-5-pro",
      38.2,
      0
-    ],
-    [
-     "qwen3-6-27b",
-     25.7,
-     2
     ]
    ],
    "SWE-bench Multilingual": [
@@ -18653,11 +17621,6 @@
      "glm-4-7",
      66.7,
      0
-    ],
-    [
-     "hy4",
-     82.9,
-     9
     ],
     [
      "kimi-k2-thinking",
@@ -18725,24 +17688,7 @@
      0
     ]
    ],
-   "SWE-bench Multilingual (OpenCode)": [
-    [
-     "hy4",
-     82.9,
-     9
-    ]
-   ],
    "SWE-bench Pro": [
-    [
-     "hy4",
-     65.7,
-     7
-    ],
-    [
-     "k2-horizon-375b-a23b",
-     42.6,
-     7
-    ],
     [
      "longcat-2-0",
      59.5,
@@ -18784,35 +17730,11 @@
      0
     ]
    ],
-   "SWE-bench Pro V2": [
-    [
-     "flint-v1-0",
-     89.7,
-     6
-    ]
-   ],
    "SWE-bench Pro v1.0": [
-    [
-     "hy4",
-     65.7,
-     7
-    ],
-    [
-     "k2-horizon-375b-a23b",
-     42.6,
-     7
-    ],
     [
      "ripple-65b-preview",
      61.4,
      0
-    ]
-   ],
-   "SWE-bench Pro v2": [
-    [
-     "flint-v1-0",
-     89.7,
-     6
     ]
    ],
    "SWE-bench Pro v2.0 Hard": [
@@ -18916,11 +17838,6 @@
      "granite-4-2-8b",
      30.8,
      0
-    ],
-    [
-     "hy4",
-     82.9,
-     9
     ],
     [
      "kimi-k2-6",
@@ -19130,13 +18047,6 @@
      0
     ]
    ],
-   "SWEBench Multilingual Inkling 2 Mini with bash only": [
-    [
-     "hy4",
-     82.9,
-     9
-    ]
-   ],
    "SWEBench Pro v2 (Hard) mini-swe-agent v2.4.6": [
     [
      "inkling-2-mini",
@@ -19166,11 +18076,6 @@
      0
     ],
     [
-     "hy4",
-     65.7,
-     7
-    ],
-    [
      "inkling",
      54.3,
      0
@@ -19179,11 +18084,6 @@
      "inkling-small",
      55.9,
      0
-    ],
-    [
-     "k2-horizon-375b-a23b",
-     42.6,
-     7
     ],
     [
      "ling-3-0-flash",
@@ -19292,16 +18192,6 @@
    ],
    "Scientific chart analysis CharXiv (RQ)": [
     [
-     "dots3-note-prev",
-     83.1,
-     7
-    ],
-    [
-     "inkling-small",
-     77.4,
-     7
-    ],
-    [
      "qwen3-8-27b",
      83.7,
      0
@@ -19386,11 +18276,6 @@
      "granite-4-2-8b",
      74,
      0
-    ],
-    [
-     "hy3",
-     65.8,
-     7
     ],
     [
      "kolibri-1",
@@ -19581,11 +18466,6 @@
      0
     ],
     [
-     "hy3",
-     54.4,
-     8
-    ],
-    [
      "qwen3-5-122b-a10b",
      49.4,
      0
@@ -19606,23 +18486,11 @@
      0
     ]
    ],
-   "Terminal Bench 2.0": [
-    [
-     "hy3",
-     54.4,
-     8
-    ]
-   ],
    "Terminal Bench 2.0 (Acc)": [
     [
      "deepseek-v4-pro",
      67.9,
      0
-    ],
-    [
-     "hy3",
-     54.4,
-     8
     ]
    ],
    "Terminal Bench 2.1": [
@@ -19640,11 +18508,6 @@
     ]
    ],
    "Terminal Bench Core 2.0": [
-    [
-     "hy3",
-     54.4,
-     8
-    ],
     [
      "nvidia-nemotron-3-super-120b-a12b",
      31,
@@ -19667,11 +18530,6 @@
    ],
    "Terminal-Bench 2.0": [
     [
-     "hy3",
-     54.4,
-     8
-    ],
-    [
      "mimo-v2-flash",
      38.5,
      0
@@ -19680,13 +18538,6 @@
      "step-3-5-flash",
      51.0,
      0
-    ]
-   ],
-   "Terminal-Bench 2.0 (Terminus-2)": [
-    [
-     "hy3",
-     54.4,
-     8
     ]
    ],
    "Terminal-Bench 2.1": [
@@ -19785,44 +18636,12 @@
    ],
    "TerminalBench(acc)": [
     [
-     "hy3",
-     54.4,
-     8
-    ],
-    [
      "longcat-flash-lite",
      33.8,
      0
     ]
    ],
-   "Toolathlon (Pass@1)": [
-    [
-     "hy4",
-     74.1,
-     6
-    ],
-    [
-     "ornith-1-0-35b",
-     42.4,
-     6
-    ],
-    [
-     "ornith-1-0-397b",
-     43.2,
-     6
-    ],
-    [
-     "ornith-1-0-9b",
-     33.4,
-     6
-    ]
-   ],
    "Toolathlon Verified": [
-    [
-     "hy4",
-     74.1,
-     6
-    ],
     [
      "nex-n2-5-max",
      74.7,
@@ -19837,48 +18656,13 @@
      "nex-n2-5-pro",
      68.5,
      0
-    ],
-    [
-     "ornith-1-0-35b",
-     42.4,
-     6
-    ],
-    [
-     "ornith-1-0-397b",
-     43.2,
-     6
-    ],
-    [
-     "ornith-1-0-9b",
-     33.4,
-     6
     ]
    ],
    "Toolathlon Verified Agentic tool use": [
     [
-     "hy4",
-     74.1,
-     6
-    ],
-    [
      "k2-horizon-375b-a23b",
      65.3,
      0
-    ],
-    [
-     "ornith-1-0-35b",
-     42.4,
-     6
-    ],
-    [
-     "ornith-1-0-397b",
-     43.2,
-     6
-    ],
-    [
-     "ornith-1-0-9b",
-     33.4,
-     6
     ]
    ],
    "Toolathlon-Verified": [
@@ -19886,11 +18670,6 @@
      "deepseek-v4-flash-vision",
      75.9,
      0
-    ],
-    [
-     "hy4",
-     74.1,
-     6
     ],
     [
      "kimi-k3",
@@ -19911,21 +18690,6 @@
      "nanbeige4-3-33b",
      70.4,
      0
-    ],
-    [
-     "ornith-1-0-35b",
-     42.4,
-     6
-    ],
-    [
-     "ornith-1-0-397b",
-     43.2,
-     6
-    ],
-    [
-     "ornith-1-0-9b",
-     33.4,
-     6
     ],
     [
      "ornith-1-5-35b-a3b",
@@ -20033,11 +18797,6 @@
    ],
    "cais/hle": [
     [
-     "hy4",
-     43.4,
-     24
-    ],
-    [
      "kolibri-1",
      21.5,
      0
@@ -20048,19 +18807,7 @@
      0
     ]
    ],
-   "cais/hle (default)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ]
-   ],
    "cais/hle (no tools)": [
-    [
-     "hy4",
-     43.4,
-     24
-    ],
     [
      "ornith-1-5-35b-a3b",
      25.6,
@@ -20075,13 +18822,6 @@
      "ornith-1-5-9b",
      20.2,
      0
-    ]
-   ],
-   "cais/hle (none)": [
-    [
-     "hy4",
-     43.4,
-     24
     ]
    ],
    "claw-eval/Claw-Eval (general)": [
@@ -20188,11 +18928,6 @@
      "deepseek-v4-pro",
      67.9,
      0
-    ],
-    [
-     "hy3",
-     54.4,
-     8
     ],
     [
      "mimo-v2-5-0424",
@@ -20309,11 +19044,6 @@
      0
     ],
     [
-     "hy4",
-     74.1,
-     6
-    ],
-    [
      "kimi-k3",
      76.5,
      0
@@ -20337,21 +19067,6 @@
      "nex-n2-5-pro",
      68.5,
      0
-    ],
-    [
-     "ornith-1-0-35b",
-     42.4,
-     6
-    ],
-    [
-     "ornith-1-0-397b",
-     43.2,
-     6
-    ],
-    [
-     "ornith-1-0-9b",
-     33.4,
-     6
     ],
     [
      "ornith-1-5-35b-a3b",
@@ -21290,6 +20005,220 @@
      0
     ]
    ],
+   "osworld_2_0": [
+    [
+     "claude-fable-5-1",
+     77.9,
+     2
+    ],
+    [
+     "claude-fable-5-2",
+     89.3,
+     2
+    ],
+    [
+     "claude-haiku-5-5",
+     72.4,
+     2
+    ],
+    [
+     "claude-opus-5-5",
+     81.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     80.1,
+     2
+    ],
+    [
+     "gemini-4-argon",
+     69.2,
+     2
+    ],
+    [
+     "gemini-4-carbon",
+     81.5,
+     2
+    ],
+    [
+     "gemini-4-hydrogen",
+     77.6,
+     2
+    ],
+    [
+     "gpt-5-6-luna",
+     45.6,
+     2
+    ],
+    [
+     "gpt-5-6-sol",
+     62.6,
+     2
+    ],
+    [
+     "gpt-5-6-terra",
+     50.2,
+     2
+    ],
+    [
+     "gpt-6-1-sol",
+     71.4,
+     2
+    ],
+    [
+     "gpt-6-astra",
+     72.6,
+     2
+    ],
+    [
+     "gpt-6-luna",
+     52.7,
+     2
+    ],
+    [
+     "gpt-6-sol",
+     64.4,
+     2
+    ],
+    [
+     "hy4-flash",
+     68.1,
+     2
+    ],
+    [
+     "minimax-m3-1-flash",
+     61.7,
+     2
+    ],
+    [
+     "muse-ember",
+     69.5,
+     2
+    ],
+    [
+     "muse-wonder",
+     72.6,
+     2
+    ],
+    [
+     "muse-wonder-full",
+     78.4,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     19.4,
+     2
+    ]
+   ],
+   "osworld_2_1_partial": [
+    [
+     "claude-fable-5-1",
+     77.9,
+     2
+    ],
+    [
+     "claude-fable-5-2",
+     89.3,
+     2
+    ],
+    [
+     "claude-haiku-5-5",
+     72.4,
+     2
+    ],
+    [
+     "claude-opus-5-5",
+     81.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     80.1,
+     2
+    ],
+    [
+     "gemini-4-argon",
+     69.2,
+     2
+    ],
+    [
+     "gemini-4-carbon",
+     81.5,
+     2
+    ],
+    [
+     "gemini-4-hydrogen",
+     77.6,
+     2
+    ],
+    [
+     "gpt-5-6-luna",
+     45.6,
+     2
+    ],
+    [
+     "gpt-5-6-sol",
+     62.6,
+     2
+    ],
+    [
+     "gpt-5-6-terra",
+     50.2,
+     2
+    ],
+    [
+     "gpt-6-1-sol",
+     71.4,
+     2
+    ],
+    [
+     "gpt-6-astra",
+     72.6,
+     2
+    ],
+    [
+     "gpt-6-luna",
+     52.7,
+     2
+    ],
+    [
+     "gpt-6-sol",
+     64.4,
+     2
+    ],
+    [
+     "hy4-flash",
+     68.1,
+     2
+    ],
+    [
+     "minimax-m3-1-flash",
+     61.7,
+     2
+    ],
+    [
+     "muse-ember",
+     69.5,
+     2
+    ],
+    [
+     "muse-wonder",
+     72.6,
+     2
+    ],
+    [
+     "muse-wonder-full",
+     78.4,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     19.4,
+     2
+    ]
+   ],
    "scicode": [
     [
      "glm-4-5-air",
@@ -21881,6 +20810,90 @@
      "qwen3-next-80b-a3b-reasoning",
      67.8,
      0
+    ]
+   ],
+   "toolathlon": [
+    [
+     "claude-opus-5-5",
+     77.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     77.8,
+     2
+    ],
+    [
+     "glm-5-3",
+     73,
+     2
+    ],
+    [
+     "glm-5-3-flash",
+     78.4,
+     2
+    ],
+    [
+     "muse-spark-open",
+     72.8,
+     2
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     26.9,
+     2
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     72.5,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     73.5,
+     2
+    ]
+   ],
+   "toolathlon_verified": [
+    [
+     "claude-opus-5-5",
+     77.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     77.8,
+     2
+    ],
+    [
+     "glm-5-3",
+     73,
+     2
+    ],
+    [
+     "glm-5-3-flash",
+     78.4,
+     2
+    ],
+    [
+     "muse-spark-open",
+     72.8,
+     2
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     26.9,
+     2
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     72.5,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     73.5,
+     2
     ]
    ]
   }

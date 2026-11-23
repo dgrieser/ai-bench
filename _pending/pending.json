@@ -1,40 +1,162 @@
 {
   "questions": [
     {
-      "candidates": [],
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "qwen4-max",
+          "reason": "exact to Qwen4-Max, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m3",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-5",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "minimax-m2-7",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-max",
+          "reason": "the same name without its first 1 word(s): exact to max, substring match"
+        }
+      ],
+      "context": {
+        "known": 313,
+        "mapped": {
+          "minimax-m2-5": [
+            "MiniMax-M2.5"
+          ],
+          "minimax-m2-7": [
+            "MiniMax-M2.7"
+          ],
+          "minimax-m3": [
+            "MiniMax-M3"
+          ]
+        },
+        "siblings": []
+      },
       "default": null,
       "if_previous": null,
-      "note": "released 2026-11-23 - InclusionAI - https://huggingface.co/inclusionAI/Ling-3.2-air",
-      "question": "Add newly released model 'ling-3-2-air' to llm.json?",
-      "route": "check_new.py",
-      "route_kind": "new-model",
-      "source_url": "https://huggingface.co/inclusionAI/Ling-3.2-air",
-      "subject": "ling-3-2-air",
-      "universe": null
+      "note": null,
+      "question": "Map Epoch AI model 'Qwen4-Max' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Qwen4-Max",
+      "universe": "models"
     },
     {
       "candidates": [
         {
-          "confidence": "weak",
+          "confidence": "exact",
           "option": "ling-3-2-air",
-          "reason": "exact to ling-3-2-flash, most components match"
+          "reason": "exact to Ling-3.2-air, exact match"
         },
         {
           "confidence": "weak",
-          "option": "lingsante-3-1-flash",
-          "reason": "the same name without its first 1 word(s): exact to 3-2-flash, most components match"
+          "option": "ling-3-2-flash",
+          "reason": "exact to Ling-3.2-air, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-tiny",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-mini-2-0",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-0-flash",
+          "reason": "drop suffix to a variant, most components match"
         }
       ],
-      "default": null,
+      "context": {
+        "known": 233,
+        "mapped": {
+          "ling-3-0-flash": [
+            "inclusionAI/Ling-3.0-flash"
+          ],
+          "ling-3-0-tiny": [
+            "inclusionAI/Ling-3.0-tiny"
+          ],
+          "ling-3-2-flash": [
+            "inclusionAI/Ling-3.2-flash"
+          ],
+          "ling-mini-2-0": [
+            "inclusionAI/Ling-mini-2.0"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "ling-3-2-flash"
+            ],
+            "name": "inclusionAI/Ling-3.2-flash"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-tiny"
+            ],
+            "name": "inclusionAI/Ling-3.0-tiny"
+          },
+          {
+            "mapped_to": [
+              "ling-mini-2-0"
+            ],
+            "name": "inclusionAI/Ling-mini-2.0"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-flash"
+            ],
+            "name": "inclusionAI/Ling-3.0-flash"
+          },
+          {
+            "mapped_to": [
+              "ling-3-1-flash"
+            ],
+            "name": "inclusionAI/Ling-3.1-flash"
+          },
+          {
+            "mapped_to": [
+              "ling-flash-2-0"
+            ],
+            "name": "inclusionAI/Ling-flash-2.0"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-flash-vl"
+            ],
+            "name": "inclusionAI/Ling-3.0-flash-VL"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-flash-fin"
+            ],
+            "name": "inclusionAI/Ling-3.0-flash-Fin"
+          }
+        ]
+      },
+      "default": "ling-3-2-air",
       "if_previous": null,
       "note": null,
-      "question": "Which Artificial Analysis slug is llm.json model 'ling-3-2-flash'?",
-      "route": "update_artificialanalysis_mapping.py",
-      "route_kind": "aa-mapping",
-      "ruled_out": 742,
-      "source_url": "https://huggingface.co/inclusionAI/Ling-3.2-flash",
-      "subject": "ling-3-2-flash",
-      "universe": "aa-slugs"
+      "question": "Map Spheron path 'inclusionAI/Ling-3.2-air' to llm.json model",
+      "route": "update_spheron_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.spheron.network/tools/gpu-recommender/inclusionAI/Ling-3.2-air/",
+      "subject": "inclusionAI/Ling-3.2-air",
+      "universe": "models"
     }
   ]
 }
