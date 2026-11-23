@@ -1,61 +1,40 @@
 {
   "questions": [
     {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": "released 2026-11-23 - InclusionAI - https://huggingface.co/inclusionAI/Ling-3.2-air",
+      "question": "Add newly released model 'ling-3-2-air' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "source_url": "https://huggingface.co/inclusionAI/Ling-3.2-air",
+      "subject": "ling-3-2-air",
+      "universe": null
+    },
+    {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "inkling-2-mini",
-          "reason": "exact to inkling 2 mini, exact match"
+          "confidence": "weak",
+          "option": "ling-3-2-air",
+          "reason": "exact to ling-3-2-flash, most components match"
         },
         {
           "confidence": "weak",
-          "option": "inkling-2-small",
-          "reason": "exact to inkling 2 mini, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "ling-mini-2-0",
-          "reason": "the same name without its first 1 word(s): exact to 2-mini, all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "a-x-k2",
-          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-5-2",
-          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+          "option": "lingsante-3-1-flash",
+          "reason": "the same name without its first 1 word(s): exact to 3-2-flash, most components match"
         }
       ],
-      "context": {
-        "known": 443,
-        "mapped": {
-          "glm-5-2": [
-            "glm-5.2"
-          ],
-          "inkling-2-small": [
-            "inkling 2 small"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "inkling-2-small"
-            ],
-            "name": "inkling 2 small"
-          }
-        ]
-      },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Arena model 'inkling 2 mini' to llm.json model",
-      "route": "update_arena_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://arena.ai/leaderboard/text",
-      "subject": "inkling 2 mini",
-      "universe": "models"
+      "question": "Which Artificial Analysis slug is llm.json model 'ling-3-2-flash'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "ruled_out": 742,
+      "source_url": "https://huggingface.co/inclusionAI/Ling-3.2-flash",
+      "subject": "ling-3-2-flash",
+      "universe": "aa-slugs"
     }
   ]
 }
