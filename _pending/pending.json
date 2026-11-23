@@ -1,3 +1,61 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "inkling-2-mini",
+          "reason": "exact to inkling 2 mini, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "inkling-2-small",
+          "reason": "exact to inkling 2 mini, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-mini-2-0",
+          "reason": "the same name without its first 1 word(s): exact to 2-mini, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 443,
+        "mapped": {
+          "glm-5-2": [
+            "glm-5.2"
+          ],
+          "inkling-2-small": [
+            "inkling 2 small"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-2-small"
+            ],
+            "name": "inkling 2 small"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Arena model 'inkling 2 mini' to llm.json model",
+      "route": "update_arena_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "subject": "inkling 2 mini",
+      "universe": "models"
+    }
+  ]
 }
