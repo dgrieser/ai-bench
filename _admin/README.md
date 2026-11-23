@@ -370,7 +370,13 @@ tells you why.
   that is past `check_new.py`'s 30-day window or was dismissed once. Name it
   and fill in as much as you know; `add.py` fills the rest from AA when it
   happens to know the name, and leaves it blank when it does not. The name box
-  offers every AA slug the site does not carry, and the name is checked as you
+  offers every AA slug the site does not carry and, after them, the Hugging
+  Face repos for what is typed (`ling 3.2 air`, or the slug `ling-3-2-air`,
+  retried as `ling-3.2` when that finds nothing), originals before quants and
+  fine-tunes, one already tracked marked so. Picking a repo writes the slug
+  it reads as (`inclusionAI/Ling-3.2-Air` → `ling-3-2-air`, dots as dashes
+  the way AA spells its slugs), the repo as the model's url, and the creator
+  when the repo's org names exactly one the site knows. The name is checked as you
   type — it has to be a slug, and it says whether AA already publishes one
   exactly like it, which decides whether scores arrive by themselves (see *A
   hand-added model and AA* below). For an AA slug, **carry it as a reference

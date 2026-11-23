@@ -3989,17 +3989,74 @@ function renderAddModel(draft, index, flying, { question = null, onCommit = null
   /* The AA slugs the site does not carry yet: the names most likely to be
      wanted here, and the ones whose scores arrive without a mapping. Picking
      one also fills the creator, when AA names it and nothing is typed. */
-  const offered = () => (state.aa.slugs || []).filter((slug) => !known.has(slug));
+  /* And the Hub's repos for what is typed, after them: "ling 3.2 air" lists
+     inclusionAI/Ling-3.2-Air, and picking it writes the slug it reads as
+     (ling-3-2-air), the repo as the model's url and, when the org names one
+     creator the site knows, the creator. Searched the way the url field
+     searches (hfSearch: originals first, quants and fine-tunes after), only
+     while what is typed is not a URL. */
+  let hubIds = [];
+  let hubTimer = 0;
+  let hubController = null;
+  const offered = () => [
+    ...(state.aa.slugs || []).filter((slug) => !known.has(slug)),
+    ...hubIds,
+  ];
+  const isRepo = (value) => value.includes("/");
+  /* Dots read as dashes, the way Artificial Analysis spells its slugs, so a
+     model added from its repo is the name AA will publish scores under. */
+  const repoSlug = (id) => normSlug(id.split("/").pop());
   const nameBox = comboBox(nameInput, offered, {
-    detail: aaSlugDetail,
-    onPick: (slug) => {
-      const creator = state.aa.models?.get(slug)?.creator;
-      if (creator && !draft.fields.creator && inputs.creator) {
-        inputs.creator.value = creator;
-        inputs.creator.oninput();
+    min: 2,
+    max: 16,
+    match: (value, needle) => (isRepo(value)
+      ? hfMatch(value, needle) || normSlug(value).includes(normSlug(needle))
+      : value.includes(needle) || value.includes(normSlug(needle))),
+    detail: (value) => (isRepo(value)
+      ? `${known.has(repoSlug(value)) ? "already tracked · " : ""}Hugging Face${hfDetail(value).replace(/^ /, " · ")}`
+      : `AA${aaSlugDetail(value)}`),
+    toValue: (value) => (isRepo(value) ? repoSlug(value) : value),
+    onPick: (value) => {
+      const fill = (field, text) => {
+        if (!text || !inputs[field] || draft.fields[field]) return;
+        inputs[field].value = text;
+        inputs[field].oninput();
+      };
+      if (isRepo(value)) {
+        /* The repo is the url; the creator only when its org reads as exactly
+           one creator llm.json knows, the same guess a Queue card makes. */
+        if (inputs.url) {
+          inputs.url.value = HF_BASE + value;
+          inputs.url.oninput();
+        }
+        fill("creator", guessCreator(value));
+        if (more) more.open = true;
+        urlPicker?.draw();
+      } else {
+        fill("creator", state.aa.models?.get(value)?.creator);
       }
       lookUp();
     },
+  });
+  nameInput.placeholder = "acme-model-1, or a name to search AA and Hugging Face";
+  nameInput.addEventListener("input", () => {
+    const query = nameInput.value.trim();
+    clearTimeout(hubTimer);
+    hubController?.abort();
+    if (query.length < 2 || looksLikeUrl(query)) { hubIds = []; return; }
+    hubTimer = setTimeout(async () => {
+      hubController = new AbortController();
+      try {
+        /* A slug typed as such, "ling-3-2-air", is not how the repo is
+           spelled: asked again with "3-2" read as "3.2" when it finds nothing. */
+        let ranked = await hfSearch(query, hubController.signal);
+        const dotted = query.replace(/(\d)-(?=\d)/g, "$1.");
+        if (!ranked.length && dotted !== query) ranked = await hfSearch(dotted, hubController.signal);
+        if (nameInput.value.trim() !== query) return;
+        hubIds = ranked.slice(0, 12);
+        nameBox.redraw();
+      } catch { /* offline, rate-limited, aborted: AA's slugs are still offered */ }
+    }, 250);
   });
   /* The url picker asks the Hub about the name a moment after typing stops,
      and again when the field is left changed. */
