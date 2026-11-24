@@ -44,6 +44,9 @@
    ]
   },
   "aion-1-0-instruct": {
+   "card": [
+    "mmlu_pro"
+   ],
    "update_llmstats_mapping.py llmstats-model": [
     "gpqa_diamond",
     "mmmlu"
@@ -643,6 +646,7 @@
    "card": [
     "deepswe_1_1",
     "swe_bench_pro_2_0",
+    "swe_bench_pro",
     "terminal_bench_4_1",
     "terminal_bench_2_1",
     "ifbench",
@@ -4108,7 +4112,8 @@
     "toolathlon",
     "hle",
     "mmlu_pro",
-    "mmmu_pro"
+    "mmmu_pro",
+    "agents_last_exam_1_0"
    ],
    "update_agents_last_exam_mapping.py *": [
     "agents_last_exam_1_1"
@@ -16355,6 +16360,11 @@
    ],
    "Idavidrein/gpqa (diamond)": [
     [
+     "daisyrose-27b",
+     90.7,
+     0
+    ],
+    [
      "kolibri-1",
      84.3,
      0
@@ -16887,17 +16897,15 @@
      0
     ]
    ],
-   "MMMU-Pro (Standard, 10 opts)": [
-    [
-     "hy4",
-     59.6,
-     0
-    ]
-   ],
    "MMMU/MMMU_Pro (mmmu_pro_standard_10_options)": [
     [
      "dots3-note-prev",
      79.1,
+     0
+    ],
+    [
+     "hy4",
+     78.6,
      0
     ]
    ],
@@ -18038,6 +18046,11 @@
    ],
    "ScaleAI/SWE-bench_Pro": [
     [
+     "daisyrose-27b",
+     94.7,
+     0
+    ],
+    [
      "dots3-note-prev",
      61,
      0
@@ -18199,6 +18212,11 @@
     ]
    ],
    "TIGER-Lab/MMLU-Pro": [
+    [
+     "aion-1-0-instruct",
+     33.4,
+     0
+    ],
     [
      "diffusiongemma-26b-a4b",
      77.6,
@@ -18757,6 +18775,11 @@
      0
     ],
     [
+     "hy4",
+     41,
+     0
+    ],
+    [
      "kimi-k3-1-pro",
      43.2,
      0
@@ -18790,6 +18813,11 @@
     ]
    ],
    "cais/hle (no tools)": [
+    [
+     "daisyrose-27b",
+     34.3,
+     0
+    ],
     [
      "ornith-1-5-35b-a3b",
      25.6,
@@ -18905,6 +18933,13 @@
      0
     ]
    ],
+   "harborframework/terminal-bench (terminalbench_4_1)": [
+    [
+     "daisyrose-27b",
+     12,
+     0
+    ]
+   ],
    "harborframework/terminal-bench-2.0 (terminalbench_2)": [
     [
      "deepseek-v4-pro",
@@ -18974,6 +19009,11 @@
      0
     ],
     [
+     "daisyrose-27b",
+     75.5,
+     0
+    ],
+    [
      "dots3-note-prev",
      75.1,
      0
@@ -18981,6 +19021,11 @@
     [
      "flint-v1-0",
      54.9,
+     0
+    ],
+    [
+     "inkling-2-mini",
+     71.6,
      0
     ],
     [
@@ -19987,6 +20032,220 @@
      0
     ]
    ],
+   "osworld_2_0": [
+    [
+     "claude-fable-5-1",
+     77.9,
+     2
+    ],
+    [
+     "claude-fable-5-2",
+     89.3,
+     2
+    ],
+    [
+     "claude-haiku-5-5",
+     72.4,
+     2
+    ],
+    [
+     "claude-opus-5-5",
+     81.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     80.1,
+     2
+    ],
+    [
+     "gemini-4-argon",
+     69.2,
+     2
+    ],
+    [
+     "gemini-4-carbon",
+     81.5,
+     2
+    ],
+    [
+     "gemini-4-hydrogen",
+     77.6,
+     2
+    ],
+    [
+     "gpt-5-6-luna",
+     45.6,
+     2
+    ],
+    [
+     "gpt-5-6-sol",
+     62.6,
+     2
+    ],
+    [
+     "gpt-5-6-terra",
+     50.2,
+     2
+    ],
+    [
+     "gpt-6-1-sol",
+     71.4,
+     2
+    ],
+    [
+     "gpt-6-astra",
+     72.6,
+     2
+    ],
+    [
+     "gpt-6-luna",
+     52.7,
+     2
+    ],
+    [
+     "gpt-6-sol",
+     64.4,
+     2
+    ],
+    [
+     "hy4-flash",
+     68.1,
+     2
+    ],
+    [
+     "minimax-m3-1-flash",
+     61.7,
+     2
+    ],
+    [
+     "muse-ember",
+     69.5,
+     2
+    ],
+    [
+     "muse-wonder",
+     72.6,
+     2
+    ],
+    [
+     "muse-wonder-full",
+     78.4,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     19.4,
+     2
+    ]
+   ],
+   "osworld_2_1_partial": [
+    [
+     "claude-fable-5-1",
+     77.9,
+     2
+    ],
+    [
+     "claude-fable-5-2",
+     89.3,
+     2
+    ],
+    [
+     "claude-haiku-5-5",
+     72.4,
+     2
+    ],
+    [
+     "claude-opus-5-5",
+     81.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     80.1,
+     2
+    ],
+    [
+     "gemini-4-argon",
+     69.2,
+     2
+    ],
+    [
+     "gemini-4-carbon",
+     81.5,
+     2
+    ],
+    [
+     "gemini-4-hydrogen",
+     77.6,
+     2
+    ],
+    [
+     "gpt-5-6-luna",
+     45.6,
+     2
+    ],
+    [
+     "gpt-5-6-sol",
+     62.6,
+     2
+    ],
+    [
+     "gpt-5-6-terra",
+     50.2,
+     2
+    ],
+    [
+     "gpt-6-1-sol",
+     71.4,
+     2
+    ],
+    [
+     "gpt-6-astra",
+     72.6,
+     2
+    ],
+    [
+     "gpt-6-luna",
+     52.7,
+     2
+    ],
+    [
+     "gpt-6-sol",
+     64.4,
+     2
+    ],
+    [
+     "hy4-flash",
+     68.1,
+     2
+    ],
+    [
+     "minimax-m3-1-flash",
+     61.7,
+     2
+    ],
+    [
+     "muse-ember",
+     69.5,
+     2
+    ],
+    [
+     "muse-wonder",
+     72.6,
+     2
+    ],
+    [
+     "muse-wonder-full",
+     78.4,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     19.4,
+     2
+    ]
+   ],
    "scicode": [
     [
      "glm-4-5-air",
@@ -20578,6 +20837,90 @@
      "qwen3-next-80b-a3b-reasoning",
      67.8,
      0
+    ]
+   ],
+   "toolathlon": [
+    [
+     "claude-opus-5-5",
+     77.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     77.8,
+     2
+    ],
+    [
+     "glm-5-3",
+     73,
+     2
+    ],
+    [
+     "glm-5-3-flash",
+     78.4,
+     2
+    ],
+    [
+     "muse-spark-open",
+     72.8,
+     2
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     26.9,
+     2
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     72.5,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     73.5,
+     2
+    ]
+   ],
+   "toolathlon_verified": [
+    [
+     "claude-opus-5-5",
+     77.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     77.8,
+     2
+    ],
+    [
+     "glm-5-3",
+     73,
+     2
+    ],
+    [
+     "glm-5-3-flash",
+     78.4,
+     2
+    ],
+    [
+     "muse-spark-open",
+     72.8,
+     2
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     26.9,
+     2
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     72.5,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     73.5,
+     2
     ]
    ]
   }
