@@ -3,12 +3,28 @@
     {
       "name": "ernie-5-5-flash-preview",
       "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
-      "new_url": null,
+      "new_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
       "creator": "Baidu",
       "date_added": "2026-11-11",
       "reference": false,
       "released": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "rule",
+          "text": "Hugging Face has baidu/ERNIE-5.5-Flash-Preview, which is what this entry waits for",
+          "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
+        },
+        {
+          "kind": "rule",
+          "text": "Hugging Face has baidu/ERNIE-5.5-Flash-Preview-BF16, which is what this entry waits for",
+          "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview-BF16"
+        },
+        {
+          "kind": "rule",
+          "text": "Hugging Face has baidu/ERNIE-5.5-Flash-Preview-FP8, which is what this entry waits for",
+          "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview-FP8"
+        }
+      ],
       "hints": [
         {
           "kind": "self",
@@ -31,7 +47,11 @@
         "lookup_owner": "baidu",
         "date": "2026-11-16",
         "hub": "checked",
-        "matched": [],
+        "matched": [
+          "baidu/ERNIE-5.5-Flash-Preview",
+          "baidu/ERNIE-5.5-Flash-Preview-BF16",
+          "baidu/ERNIE-5.5-Flash-Preview-FP8"
+        ],
         "own_matches": false
       },
       "renames": [
@@ -98,7 +118,7 @@
           "why": "no release date to compare against",
           "suggest": "keep",
           "note": null,
-          "recredit_to": null,
+          "recredit_to": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
           "follows_url": true
         },
         {
