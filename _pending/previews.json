@@ -3,18 +3,12 @@
     {
       "name": "ernie-5-5-flash-preview",
       "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
-      "new_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base-BF16",
+      "new_url": null,
       "creator": "Baidu",
       "date_added": "2026-11-11",
       "reference": false,
       "released": null,
-      "evidence": [
-        {
-          "kind": "rule",
-          "text": "Hugging Face has baidu/ERNIE-5.5-Flash-Base-BF16, which is what this entry waits for",
-          "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base-BF16"
-        }
-      ],
+      "evidence": [],
       "hints": [
         {
           "kind": "self",
@@ -31,16 +25,19 @@
             "op": "contains",
             "value": "preview",
             "not": true
+          },
+          {
+            "op": "contains",
+            "value": "base",
+            "not": true
           }
         ],
-        "describe": "a Hugging Face repo whose id contains 'baidu/ERNIE-5.5-Flash' and does not contain 'preview'",
+        "describe": "a Hugging Face repo whose id contains 'baidu/ERNIE-5.5-Flash' and does not contain 'preview' and does not contain 'base'",
         "lookup_owner": "baidu",
         "date": "2026-11-24",
         "hub": "checked",
-        "matched": [
-          "baidu/ERNIE-5.5-Flash-Base-BF16"
-        ],
-        "own_matches": true
+        "matched": [],
+        "own_matches": false
       },
       "renames": [
         {
@@ -106,7 +103,7 @@
           "why": "no release date to compare against",
           "suggest": "keep",
           "note": null,
-          "recredit_to": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base-BF16",
+          "recredit_to": null,
           "follows_url": true
         },
         {

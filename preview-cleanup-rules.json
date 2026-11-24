@@ -9,6 +9,11 @@
         "op": "contains",
         "value": "preview",
         "not": true
+      },
+      {
+        "op": "contains",
+        "value": "base",
+        "not": true
       }
     ],
     "date": "2026-11-24"
