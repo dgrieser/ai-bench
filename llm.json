@@ -28289,7 +28289,7 @@
         "ifbench": 73.9,
         "itbench_aa": null,
         "gdpval_aa": 520,
-        "aa_briefcase": 360,
+        "aa_briefcase": 355,
         "browsecomp": null,
         "cybergym": null,
         "exploitgym": null,
@@ -28379,7 +28379,7 @@
         "ifbench": "2026-08-21",
         "itbench_aa": null,
         "gdpval_aa": "2026-10-26",
-        "aa_briefcase": "2026-11-21",
+        "aa_briefcase": "2026-11-24",
         "browsecomp": null,
         "cybergym": null,
         "exploitgym": null,
@@ -28765,6 +28765,11 @@
           {
             "date": "2026-11-21",
             "score": 360,
+            "source": "https://artificialanalysis.ai/models/command-a-plus"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 355,
             "source": "https://artificialanalysis.ai/models/command-a-plus"
           }
         ],
@@ -62088,7 +62093,7 @@
       "scores": {
         "openbench_index": 65790,
         "coding_index": 63468,
-        "tooling_index": 71043,
+        "tooling_index": 71042,
         "knowledge_index": 77723,
         "vision_index": null,
         "trust_index": 55114,
@@ -62129,7 +62134,7 @@
         "ifbench": 76.5,
         "itbench_aa": null,
         "gdpval_aa": 1455,
-        "aa_briefcase": 1255,
+        "aa_briefcase": 1250,
         "browsecomp": 83.4,
         "cybergym": 83.3,
         "exploitgym": null,
@@ -62165,7 +62170,7 @@
         "mmmlu": 90.3,
         "arena_text": 1458,
         "arena_text_non_english": 1445,
-        "arena_webdev": 1449,
+        "arena_webdev": 1448,
         "aa_intelligence_index_5_0": 23.1,
         "aa_omniscience_1_0": 0.8,
         "aa_omniscience_1_1": -6.4,
@@ -62191,7 +62196,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -62232,7 +62237,7 @@
         "ifbench": "2026-08-21",
         "itbench_aa": null,
         "gdpval_aa": "2026-10-29",
-        "aa_briefcase": "2026-10-02",
+        "aa_briefcase": "2026-11-24",
         "browsecomp": "2026-07-20",
         "cybergym": "2026-09-26",
         "exploitgym": null,
@@ -62268,7 +62273,7 @@
         "mmmlu": "2026-10-30",
         "arena_text": "2026-10-30",
         "arena_text_non_english": "2026-11-20",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "aa_intelligence_index_5_0": "2026-10-28",
         "aa_omniscience_1_0": "2026-08-13",
         "aa_omniscience_1_1": "2026-10-28",
@@ -62829,6 +62834,11 @@
             "date": "2026-10-02",
             "score": 1255,
             "source": "https://artificialanalysis.ai/models/deepseek-v4-pro"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1250,
+            "source": "https://artificialanalysis.ai/models/deepseek-v4-pro"
           }
         ],
         "browsecomp": [
@@ -62886,6 +62896,11 @@
           {
             "date": "2026-11-23",
             "score": 1449,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1448,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -64947,9 +64962,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 58956,
+        "openbench_index": 58955,
         "coding_index": 43049,
-        "tooling_index": 54653,
+        "tooling_index": 54652,
         "knowledge_index": 78325,
         "vision_index": 70698,
         "trust_index": 71585,
@@ -65037,7 +65052,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -66506,9 +66521,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 79448,
+        "openbench_index": 79447,
         "coding_index": 75194,
-        "tooling_index": 78583,
+        "tooling_index": 78582,
         "knowledge_index": 87522,
         "vision_index": 84128,
         "trust_index": 80745,
@@ -66586,7 +66601,7 @@
         "vending_bench_2": 5165,
         "arena_text": 1488,
         "arena_text_non_english": 1477,
-        "arena_webdev": 1659,
+        "arena_webdev": 1658,
         "arena_agent": -0.2,
         "arena_agent_tool_hallucination": 1.3,
         "real_swe_1_0": 20,
@@ -66609,7 +66624,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -66687,7 +66702,7 @@
         "vending_bench_2": "2026-10-30",
         "arena_text": "2026-11-20",
         "arena_text_non_english": "2026-11-13",
-        "arena_webdev": "2026-11-21",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-16",
         "arena_agent_tool_hallucination": "2026-11-23",
         "real_swe_1_0": "2026-09-23",
@@ -67257,6 +67272,11 @@
           {
             "date": "2026-11-21",
             "score": 1659,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1658,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -69438,7 +69458,7 @@
         "hmmt_feb_2026": 90.2,
         "arena_text": 1405,
         "arena_text_non_english": 1390,
-        "arena_webdev": 1408,
+        "arena_webdev": 1407,
         "arena_agent": -18.2,
         "arena_agent_tool_hallucination": -2.7,
         "frontiercode_2_0": 4.8,
@@ -69539,7 +69559,7 @@
         "hmmt_feb_2026": "2026-10-30",
         "arena_text": "2026-11-23",
         "arena_text_non_english": "2026-10-30",
-        "arena_webdev": "2026-11-11",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "frontiercode_2_0": "2026-11-04",
@@ -70007,6 +70027,11 @@
           {
             "date": "2026-11-11",
             "score": 1408,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1407,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -74774,9 +74799,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 79319,
+        "openbench_index": 79318,
         "coding_index": 75282,
-        "tooling_index": 83298,
+        "tooling_index": 83297,
         "knowledge_index": 83421,
         "vision_index": null,
         "trust_index": 76926,
@@ -74887,7 +74912,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -79250,7 +79275,7 @@
       "scores": {
         "openbench_index": 60190,
         "coding_index": 48685,
-        "tooling_index": 72846,
+        "tooling_index": 72845,
         "knowledge_index": 68957,
         "vision_index": 51295,
         "trust_index": 53548,
@@ -79326,7 +79351,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -79804,9 +79829,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 74087,
+        "openbench_index": 74074,
         "coding_index": 58277,
-        "tooling_index": 85673,
+        "tooling_index": 85628,
         "knowledge_index": 77664,
         "vision_index": null,
         "trust_index": 77011,
@@ -79911,7 +79936,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -83857,7 +83882,7 @@
       "scores": {
         "openbench_index": 74084,
         "coding_index": 73879,
-        "tooling_index": 82798,
+        "tooling_index": 82797,
         "knowledge_index": 80128,
         "vision_index": 25337,
         "trust_index": 60246,
@@ -83952,7 +83977,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -84718,7 +84743,7 @@
       "scores": {
         "openbench_index": 60892,
         "coding_index": 44009,
-        "tooling_index": 62665,
+        "tooling_index": 62664,
         "knowledge_index": 68422,
         "vision_index": null,
         "trust_index": 74506,
@@ -84806,7 +84831,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -85984,7 +86009,7 @@
       "scores": {
         "openbench_index": 72437,
         "coding_index": 76166,
-        "tooling_index": 79501,
+        "tooling_index": 79500,
         "knowledge_index": 76858,
         "vision_index": 64508,
         "trust_index": 56833,
@@ -86062,7 +86087,7 @@
         "nl2repo": 64,
         "arena_text": 1474,
         "arena_text_non_english": 1460,
-        "arena_webdev": 1622,
+        "arena_webdev": 1621,
         "arena_agent": 1.9,
         "arena_agent_tool_hallucination": 0.6,
         "real_swe_1_1": 38.4,
@@ -86080,7 +86105,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -86158,7 +86183,7 @@
         "nl2repo": "2026-10-30",
         "arena_text": "2026-11-23",
         "arena_text_non_english": "2026-11-07",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-10-30",
         "arena_agent_tool_hallucination": "2026-10-30",
         "real_swe_1_1": "2026-10-15",
@@ -86538,6 +86563,11 @@
           {
             "date": "2026-11-23",
             "score": 1622,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1621,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -87315,9 +87345,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 87516,
+        "openbench_index": 87515,
         "coding_index": 91904,
-        "tooling_index": 88266,
+        "tooling_index": 88265,
         "knowledge_index": 94879,
         "vision_index": null,
         "trust_index": 76931,
@@ -87424,7 +87454,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -88554,9 +88584,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 64516,
+        "openbench_index": 64515,
         "coding_index": 62294,
-        "tooling_index": 67657,
+        "tooling_index": 67656,
         "knowledge_index": 78366,
         "vision_index": 72264,
         "trust_index": 55102,
@@ -88657,7 +88687,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -89546,9 +89576,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 75293,
+        "openbench_index": 75292,
         "coding_index": 72192,
-        "tooling_index": 80912,
+        "tooling_index": 80911,
         "knowledge_index": 85433,
         "vision_index": 82704,
         "trust_index": 66186,
@@ -89649,7 +89679,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -90598,7 +90628,7 @@
       "scores": {
         "openbench_index": 79233,
         "coding_index": 74974,
-        "tooling_index": 84004,
+        "tooling_index": 84003,
         "knowledge_index": 93208,
         "vision_index": 89795,
         "trust_index": 70233,
@@ -90692,7 +90722,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -91665,9 +91695,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 89748,
+        "openbench_index": 89747,
         "coding_index": 94051,
-        "tooling_index": 88754,
+        "tooling_index": 88753,
         "knowledge_index": 97986,
         "vision_index": 97337,
         "trust_index": 80833,
@@ -91777,7 +91807,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-20",
         "trust_index": "2026-11-23",
@@ -96096,7 +96126,7 @@
       "scores": {
         "openbench_index": 76316,
         "coding_index": 70304,
-        "tooling_index": 82312,
+        "tooling_index": 82311,
         "knowledge_index": 83947,
         "vision_index": 71111,
         "trust_index": 71758,
@@ -96195,7 +96225,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -99355,7 +99385,7 @@
         "swe_bench_pro_hard_2_0": null,
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
-        "swe_atlas_qna": 38.4,
+        "swe_atlas_qna": 39.5,
         "deepswe_1_1": 63.7,
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99443,7 +99473,7 @@
         "terminal_bench_science_0_1": 8.6,
         "critpt_2_0": 65.1,
         "critpt_hard_2_0": 42.5,
-        "terminal_bench_4_1": 15.2,
+        "terminal_bench_4_1": 16.7,
         "aa_coding_agent_index_2_1": 25.9
       },
       "scores_updated": {
@@ -99462,7 +99492,7 @@
         "swe_bench_pro_hard_2_0": null,
         "swe_atlas_rf": null,
         "swe_atlas_tw": null,
-        "swe_atlas_qna": "2026-11-09",
+        "swe_atlas_qna": "2026-11-24",
         "deepswe_1_1": "2026-09-22",
         "deepswe_1_0": null,
         "frontierswe_2_0": null,
@@ -99550,7 +99580,7 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13",
+        "terminal_bench_4_1": "2026-11-24",
         "aa_coding_agent_index_2_1": "2026-11-14"
       },
       "scores_source": {
@@ -99657,7 +99687,7 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gpt-6-luna",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-luna",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
       },
       "scores_history": {
@@ -99844,6 +99874,11 @@
             "date": "2026-11-09",
             "score": 38.4,
             "source": "https://artificialanalysis.ai/agents/coding-agents"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 39.5,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "scicode": [
@@ -99858,6 +99893,11 @@
             "date": "2026-11-13",
             "score": 15.2,
             "source": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 16.7,
+            "source": "https://artificialanalysis.ai/agents/coding-agents"
           }
         ],
         "terminal_bench_4_0": [
@@ -100452,7 +100492,7 @@
       "scores": {
         "openbench_index": 83668,
         "coding_index": 83099,
-        "tooling_index": 83648,
+        "tooling_index": 83647,
         "knowledge_index": 93804,
         "vision_index": 90391,
         "trust_index": 78294,
@@ -100493,7 +100533,7 @@
         "ifbench": null,
         "itbench_aa": 49.4,
         "gdpval_aa": 1515,
-        "aa_briefcase": 1475,
+        "aa_briefcase": 1470,
         "browsecomp": null,
         "cybergym": null,
         "exploitgym": null,
@@ -100557,7 +100597,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-20",
         "trust_index": "2026-11-23",
@@ -100598,7 +100638,7 @@
         "ifbench": null,
         "itbench_aa": "2026-09-24",
         "gdpval_aa": "2026-10-28",
-        "aa_briefcase": "2026-10-23",
+        "aa_briefcase": "2026-11-24",
         "browsecomp": null,
         "cybergym": null,
         "exploitgym": null,
@@ -101022,6 +101062,11 @@
           {
             "date": "2026-10-23",
             "score": 1475,
+            "source": "https://artificialanalysis.ai/models/gpt-6-sol"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1470,
             "source": "https://artificialanalysis.ai/models/gpt-6-sol"
           }
         ],
@@ -101488,7 +101533,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 56675,
+        "tooling_index": 56674,
         "knowledge_index": null,
         "vision_index": 74995,
         "trust_index": null,
@@ -101559,7 +101604,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": null,
         "vision_index": "2026-11-21",
         "trust_index": null,
@@ -103655,7 +103700,7 @@
         "vending_bench_2": 11165,
         "arena_text": 1473,
         "arena_text_non_english": 1457,
-        "arena_webdev": 1772,
+        "arena_webdev": 1773,
         "arena_agent": 15.2,
         "arena_agent_tool_hallucination": 1.1,
         "real_swe_1_1": 51.2,
@@ -103759,7 +103804,7 @@
         "vending_bench_2": "2026-10-30",
         "arena_text": "2026-11-20",
         "arena_text_non_english": "2026-11-13",
-        "arena_webdev": "2026-11-21",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "real_swe_1_1": "2026-10-15",
@@ -104312,6 +104357,11 @@
             "date": "2026-11-21",
             "score": 1772,
             "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1773,
+            "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
         "arena_agent": [
@@ -104759,7 +104809,7 @@
         "ale_bench": 2744,
         "arena_text": 1482,
         "arena_text_non_english": 1469,
-        "arena_webdev": 1744,
+        "arena_webdev": 1745,
         "arena_agent": 11,
         "arena_agent_tool_hallucination": 1.3,
         "real_swe_1_1": 47.2,
@@ -104863,7 +104913,7 @@
         "ale_bench": "2026-10-30",
         "arena_text": "2026-11-23",
         "arena_text_non_english": "2026-11-20",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "real_swe_1_1": "2026-10-15",
@@ -105397,6 +105447,11 @@
           {
             "date": "2026-11-23",
             "score": 1744,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1745,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -106061,7 +106116,7 @@
       "scores": {
         "openbench_index": 89993,
         "coding_index": 86623,
-        "tooling_index": 92427,
+        "tooling_index": 92428,
         "knowledge_index": 94291,
         "vision_index": null,
         "trust_index": 88537,
@@ -106135,7 +106190,7 @@
         "vending_bench_2": 13718,
         "arena_text": 1520,
         "arena_text_non_english": 1512,
-        "arena_webdev": 1681,
+        "arena_webdev": 1682,
         "arena_agent": 10.3,
         "arena_agent_tool_hallucination": 0.9,
         "real_swe_1_1": 39.2,
@@ -106166,7 +106221,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -106240,7 +106295,7 @@
         "vending_bench_2": "2026-10-30",
         "arena_text": "2026-11-20",
         "arena_text_non_english": "2026-11-23",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-19",
         "arena_agent_tool_hallucination": "2026-11-23",
         "real_swe_1_1": "2026-10-15",
@@ -106783,6 +106838,11 @@
             "date": "2026-11-23",
             "score": 1681,
             "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1682,
+            "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
         "arena_agent": [
@@ -107111,9 +107171,9 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 74449,
+        "openbench_index": 74470,
         "coding_index": 64323,
-        "tooling_index": 82238,
+        "tooling_index": 82307,
         "knowledge_index": 83124,
         "vision_index": null,
         "trust_index": 72050,
@@ -107153,7 +107213,7 @@
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
-        "gdpval_aa": 1655,
+        "gdpval_aa": 1660,
         "aa_briefcase": 1515,
         "browsecomp": 91.7,
         "cybergym": 87.9,
@@ -107200,7 +107260,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -107240,7 +107300,7 @@
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
-        "gdpval_aa": "2026-11-14",
+        "gdpval_aa": "2026-11-24",
         "aa_briefcase": "2026-11-21",
         "browsecomp": "2026-09-30",
         "cybergym": "2026-09-30",
@@ -107550,6 +107610,11 @@
             "date": "2026-11-14",
             "score": 1655,
             "source": "https://artificialanalysis.ai/models/ling-3-1-flash"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1660,
+            "source": "https://artificialanalysis.ai/models/ling-3-1-flash"
           }
         ],
         "aa_briefcase": [
@@ -107793,9 +107858,9 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 75534,
+        "openbench_index": 75533,
         "coding_index": 64853,
-        "tooling_index": 81976,
+        "tooling_index": 81975,
         "knowledge_index": 85790,
         "vision_index": 61645,
         "trust_index": 74466,
@@ -107894,7 +107959,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -109433,7 +109498,7 @@
       "scores": {
         "openbench_index": 70028,
         "coding_index": 63457,
-        "tooling_index": 72861,
+        "tooling_index": 72860,
         "knowledge_index": 75115,
         "vision_index": 61645,
         "trust_index": 71461,
@@ -109509,7 +109574,7 @@
         "ale_bench": 1213,
         "arena_text": 1424,
         "arena_text_non_english": 1409,
-        "arena_webdev": 1573,
+        "arena_webdev": 1572,
         "arena_agent": -6.2,
         "arena_agent_tool_hallucination": 0.4,
         "frontiercode_2_0": 15,
@@ -109536,7 +109601,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": "2026-11-21",
         "trust_index": "2026-11-23",
@@ -109612,7 +109677,7 @@
         "ale_bench": "2026-10-30",
         "arena_text": "2026-11-23",
         "arena_text_non_english": "2026-11-23",
-        "arena_webdev": "2026-11-21",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "frontiercode_2_0": "2026-11-04",
@@ -110170,6 +110235,11 @@
           {
             "date": "2026-11-21",
             "score": 1573,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1572,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -112596,7 +112666,7 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "arena_webdev": 1723,
+        "arena_webdev": 1724,
         "arena_agent": 8,
         "arena_agent_tool_hallucination": 0.5,
         "aa_intelligence_index_5_0": 50.1,
@@ -112688,7 +112758,7 @@
         "zerobench": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "arena_webdev": "2026-11-19",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-16",
         "arena_agent_tool_hallucination": "2026-11-23",
         "aa_intelligence_index_5_0": "2026-11-03",
@@ -113021,6 +113091,11 @@
             "date": "2026-11-19",
             "score": 1723,
             "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1724,
+            "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
         "arena_agent": [
@@ -113266,9 +113341,9 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 81977,
+        "openbench_index": 81976,
         "coding_index": 79712,
-        "tooling_index": 81424,
+        "tooling_index": 81422,
         "knowledge_index": 83837,
         "vision_index": null,
         "trust_index": 84243,
@@ -113376,7 +113451,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -115522,7 +115597,7 @@
         "apex_agents": 33.4,
         "arc_agi_2": 57.5,
         "ale_bench": 1590,
-        "arena_webdev": 1528,
+        "arena_webdev": 1527,
         "aa_intelligence_index_5_0": 24.9,
         "aa_omniscience_1_0": 24.7,
         "aa_omniscience_1_1": 25.8,
@@ -115618,7 +115693,7 @@
         "apex_agents": "2026-10-30",
         "arc_agi_2": "2026-10-30",
         "ale_bench": "2026-10-30",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "aa_intelligence_index_5_0": "2026-11-03",
         "aa_omniscience_1_0": "2026-10-15",
         "aa_omniscience_1_1": "2026-10-28",
@@ -115969,6 +116044,11 @@
             "date": "2026-11-23",
             "score": 1528,
             "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1527,
+            "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
         "aa_omniscience_1_1": [
@@ -116295,7 +116375,7 @@
         "cybergym_e2e_aa": 45,
         "arena_text": 1434,
         "arena_text_non_english": 1420,
-        "arena_webdev": 1438,
+        "arena_webdev": 1437,
         "arena_agent": -9.5,
         "arena_agent_tool_hallucination": -7.5,
         "apex_agents": 48.8,
@@ -116397,7 +116477,7 @@
         "cybergym_e2e_aa": "2026-10-27",
         "arena_text": "2026-11-13",
         "arena_text_non_english": "2026-11-19",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "apex_agents": "2026-10-30",
@@ -116837,6 +116917,11 @@
             "date": "2026-11-23",
             "score": 1438,
             "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1437,
+            "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
         "arena_agent": [
@@ -117248,7 +117333,7 @@
         "arc_agi_2": 78.1,
         "ale_bench": 1622,
         "nl2repo": 68.2,
-        "arena_webdev": 1658,
+        "arena_webdev": 1659,
         "arena_agent": 0.7,
         "arena_agent_tool_hallucination": 0,
         "aa_intelligence_index_5_0": 32.6,
@@ -117355,7 +117440,7 @@
         "arc_agi_2": "2026-10-30",
         "ale_bench": "2026-10-30",
         "nl2repo": "2026-10-30",
-        "arena_webdev": "2026-11-21",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "aa_intelligence_index_5_0": "2026-11-03",
@@ -117755,6 +117840,11 @@
           {
             "date": "2026-11-21",
             "score": 1658,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1659,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -122610,7 +122700,7 @@
       "scores": {
         "openbench_index": 67522,
         "coding_index": 56630,
-        "tooling_index": 73953,
+        "tooling_index": 73952,
         "knowledge_index": 68530,
         "vision_index": null,
         "trust_index": 72270,
@@ -122697,7 +122787,7 @@
       "scores_updated": {
         "openbench_index": "2026-11-24",
         "coding_index": "2026-11-23",
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -126813,7 +126903,7 @@
         "browsecomp": null,
         "arena_text": 1412,
         "arena_text_non_english": 1398,
-        "arena_webdev": 1641,
+        "arena_webdev": 1642,
         "arena_agent": 1.4,
         "arena_agent_tool_hallucination": 0.1,
         "cwe_bench_aa": null,
@@ -126937,7 +127027,7 @@
         "browsecomp": null,
         "arena_text": "2026-11-09",
         "arena_text_non_english": "2026-11-23",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "cwe_bench_aa": null,
@@ -127362,6 +127452,11 @@
           {
             "date": "2026-11-23",
             "score": 1641,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1642,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -128573,7 +128668,7 @@
         "browsecomp": null,
         "arena_text": null,
         "arena_text_non_english": null,
-        "arena_webdev": 1608,
+        "arena_webdev": 1607,
         "arena_agent": -1,
         "arena_agent_tool_hallucination": -2.6,
         "cwe_bench_aa": null,
@@ -128698,7 +128793,7 @@
         "browsecomp": null,
         "arena_text": null,
         "arena_text_non_english": null,
-        "arena_webdev": "2026-11-21",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "cwe_bench_aa": null,
@@ -129016,6 +129111,11 @@
           {
             "date": "2026-11-21",
             "score": 1608,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1607,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -129979,7 +130079,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 66607,
+        "tooling_index": 66606,
         "knowledge_index": 69387,
         "vision_index": null,
         "trust_index": 60733,
@@ -130102,7 +130202,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-11-23",
+        "tooling_index": "2026-11-24",
         "knowledge_index": "2026-11-24",
         "vision_index": null,
         "trust_index": "2026-11-23",
@@ -132885,7 +132985,7 @@
         "browsecomp": null,
         "arena_text": 1467,
         "arena_text_non_english": 1454,
-        "arena_webdev": 1759,
+        "arena_webdev": 1761,
         "arena_agent": 13.9,
         "arena_agent_tool_hallucination": 1.3,
         "cwe_bench_aa": 65,
@@ -133010,7 +133110,7 @@
         "browsecomp": null,
         "arena_text": "2026-11-23",
         "arena_text_non_english": "2026-11-23",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "cwe_bench_aa": "2026-11-18",
@@ -133359,6 +133459,11 @@
           {
             "date": "2026-11-23",
             "score": 1759,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1761,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -134463,7 +134568,7 @@
         "browsecomp": null,
         "arena_text": 1512,
         "arena_text_non_english": 1509,
-        "arena_webdev": 1766,
+        "arena_webdev": 1765,
         "arena_agent": 18.3,
         "arena_agent_tool_hallucination": 1.1,
         "cwe_bench_aa": null,
@@ -134588,7 +134693,7 @@
         "browsecomp": null,
         "arena_text": "2026-11-23",
         "arena_text_non_english": "2026-11-23",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "cwe_bench_aa": null,
@@ -134940,6 +135045,11 @@
           {
             "date": "2026-11-23",
             "score": 1766,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1765,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -135611,7 +135721,7 @@
         "browsecomp": 79,
         "arena_text": 1367,
         "arena_text_non_english": 1342,
-        "arena_webdev": 1557,
+        "arena_webdev": 1560,
         "arena_agent": -7.7,
         "arena_agent_tool_hallucination": 1.2,
         "cwe_bench_aa": null,
@@ -135736,7 +135846,7 @@
         "browsecomp": "2026-11-20",
         "arena_text": "2026-11-23",
         "arena_text_non_english": "2026-11-23",
-        "arena_webdev": "2026-11-23",
+        "arena_webdev": "2026-11-24",
         "arena_agent": "2026-11-23",
         "arena_agent_tool_hallucination": "2026-11-23",
         "cwe_bench_aa": null,
@@ -136074,6 +136184,11 @@
           {
             "date": "2026-11-23",
             "score": 1557,
+            "source": "https://arena.ai/leaderboard/webdev"
+          },
+          {
+            "date": "2026-11-24",
+            "score": 1560,
             "source": "https://arena.ai/leaderboard/webdev"
           }
         ],
@@ -137781,8 +137896,8 @@
         "muse-ember": 29,
         "qwen3-8-2-4t-a95b": 30,
         "ling-3-1-flash": 31,
-        "glm-5-3-flash": 32,
-        "hy4": 33,
+        "hy4": 32,
+        "glm-5-3-flash": 33,
         "deepseek-v4-1-flash": 34,
         "muse-spark-open": 35,
         "ling-3-1-flash-1019": 36,
@@ -138634,6 +138749,32 @@
         "from": 5,
         "to": 6,
         "of": 96
+      },
+      {
+        "date": "2026-11-24",
+        "index": "openbench_index",
+        "model": "hy4",
+        "from": 33,
+        "to": 32,
+        "of": 96,
+        "open": {
+          "from": 11,
+          "to": 10,
+          "of": 72
+        }
+      },
+      {
+        "date": "2026-11-24",
+        "index": "openbench_index",
+        "model": "glm-5-3-flash",
+        "from": 32,
+        "to": 33,
+        "of": 96,
+        "open": {
+          "from": 10,
+          "to": 11,
+          "of": 72
+        }
       },
       {
         "date": "2026-11-24",

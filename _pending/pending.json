@@ -1,3 +1,73 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "glm-5-3-flash",
+          "reason": "exact to glm 5.3 flash, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-3",
+          "reason": "exact to glm 5.3 flash, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4.5",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-4-5-air",
+          "reason": "drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 65,
+        "mapped": {
+          "glm-5-2": [
+            "glm 5.2"
+          ],
+          "glm-5-3": [
+            "glm 5.3"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "glm-5-3"
+            ],
+            "name": "glm 5.3"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "glm 5.1"
+          },
+          {
+            "mapped_to": [
+              "glm-5-2"
+            ],
+            "name": "glm 5.2"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Coding Agent Index model 'glm 5.3 flash' to llm.json model",
+      "route": "update_aa_coding_agents_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
+      "subject": "glm 5.3 flash",
+      "universe": "models"
+    }
+  ]
 }
