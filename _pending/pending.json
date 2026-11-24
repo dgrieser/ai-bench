@@ -3,68 +3,88 @@
     {
       "candidates": [
         {
-          "confidence": "exact",
-          "option": "gemini-4-neon",
-          "reason": "exact to gemini 4 neon, exact match"
+          "confidence": "weak",
+          "option": "mimo-v2-6-flash",
+          "reason": "the same name without the vendor prefix: exact to mimo-v2.6-flash-mopd, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-4-argon",
-          "reason": "exact to gemini 4 neon, most components match"
+          "option": "mimo-v2-flash",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-4-carbon",
-          "reason": "exact to gemini 4 neon, most components match"
+          "option": "mimo-v2-6-pro",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         },
         {
           "confidence": "weak",
-          "option": "gemini-4-hydrogen",
-          "reason": "exact to gemini 4 neon, most components match"
+          "option": "mimo-v2-5-pro",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "mimo-v2-5-0424",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
         }
       ],
       "context": {
-        "known": 149,
+        "known": 441,
         "mapped": {
-          "gemini-4-argon": [
-            "gemini 4 argon"
+          "mimo-v2-5-0424": [
+            "xiaomi/mimo-v2.5"
           ],
-          "gemini-4-carbon": [
-            "gemini 4 carbon"
+          "mimo-v2-5-pro": [
+            "xiaomi/mimo-v2.5-pro"
           ],
-          "gemini-4-hydrogen": [
-            "gemini 4 hydrogen"
+          "mimo-v2-6-flash": [
+            "xiaomi/mimo-v2.6-flash"
+          ],
+          "mimo-v2-6-pro": [
+            "xiaomi/mimo-v2.6-pro"
           ]
         },
         "siblings": [
           {
             "mapped_to": [
-              "gemini-4-argon"
+              "mimo-v2-6-flash"
             ],
-            "name": "gemini 4 argon"
+            "name": "xiaomi/mimo-v2.6-flash"
           },
           {
             "mapped_to": [
-              "gemini-4-carbon"
+              "mimo-v2-6-pro"
             ],
-            "name": "gemini 4 carbon"
+            "name": "xiaomi/mimo-v2.6-pro"
           },
           {
             "mapped_to": [
-              "gemini-4-hydrogen"
+              "__unmappable__"
             ],
-            "name": "gemini 4 hydrogen"
+            "name": "xiaomi/mimo-v2.6-pro-ultraspeed"
+          },
+          {
+            "mapped_to": [
+              "mimo-v2-5-0424"
+            ],
+            "name": "xiaomi/mimo-v2.5"
+          },
+          {
+            "mapped_to": [
+              "mimo-v2-5-pro"
+            ],
+            "name": "xiaomi/mimo-v2.5-pro"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map ARC Prize model 'gemini 4 neon' to llm.json model",
-      "route": "update_arc_prize_mapping.py",
+      "question": "Map OpenRouter model 'xiaomi/mimo-v2.6-flash-mopd' to llm.json model",
+      "route": "update_openrouter_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://arcprize.org/leaderboard",
-      "subject": "gemini 4 neon",
+      "source_url": "https://openrouter.ai/xiaomi/mimo-v2.6-flash-mopd",
+      "subject": "xiaomi/mimo-v2.6-flash-mopd",
       "universe": "models"
     }
   ]
