@@ -4,207 +4,68 @@
       "candidates": [
         {
           "confidence": "exact",
-          "option": "glm-5-3-flash",
-          "reason": "exact to glm 5.3 flash, exact match"
+          "option": "gemini-4-neon",
+          "reason": "exact to gemini 4 neon, exact match"
         },
         {
           "confidence": "weak",
-          "option": "glm-5-3",
-          "reason": "exact to glm 5.3 flash, most components match"
+          "option": "gemini-4-argon",
+          "reason": "exact to gemini 4 neon, most components match"
         },
         {
           "confidence": "weak",
-          "option": "glm-4.5",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "gemini-4-carbon",
+          "reason": "exact to gemini 4 neon, most components match"
         },
         {
           "confidence": "weak",
-          "option": "glm-5-2",
-          "reason": "drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "glm-4-5-air",
-          "reason": "drop suffix to a variant, most components match"
+          "option": "gemini-4-hydrogen",
+          "reason": "exact to gemini 4 neon, most components match"
         }
       ],
       "context": {
-        "known": 65,
+        "known": 149,
         "mapped": {
-          "glm-5-2": [
-            "glm 5.2"
+          "gemini-4-argon": [
+            "gemini 4 argon"
           ],
-          "glm-5-3": [
-            "glm 5.3"
+          "gemini-4-carbon": [
+            "gemini 4 carbon"
+          ],
+          "gemini-4-hydrogen": [
+            "gemini 4 hydrogen"
           ]
         },
         "siblings": [
           {
             "mapped_to": [
-              "glm-5-3"
+              "gemini-4-argon"
             ],
-            "name": "glm 5.3"
+            "name": "gemini 4 argon"
           },
           {
             "mapped_to": [
-              "__unmappable__"
+              "gemini-4-carbon"
             ],
-            "name": "glm 5.1"
+            "name": "gemini 4 carbon"
           },
           {
             "mapped_to": [
-              "glm-5-2"
+              "gemini-4-hydrogen"
             ],
-            "name": "glm 5.2"
+            "name": "gemini 4 hydrogen"
           }
         ]
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map Coding Agent Index model 'glm 5.3 flash' to llm.json model",
-      "route": "update_aa_coding_agents_mapping.py",
+      "question": "Map ARC Prize model 'gemini 4 neon' to llm.json model",
+      "route": "update_arc_prize_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://artificialanalysis.ai/agents/coding-agents",
-      "subject": "glm 5.3 flash",
+      "source_url": "https://arcprize.org/leaderboard",
+      "subject": "gemini 4 neon",
       "universe": "models"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "swe_bench_pro_hard_2_0",
-          "reason": "the same name without the vendor prefix: exact to SWE-bench_Pro (SWE_Bench_Pro_hard), all components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_pro",
-          "reason": "the same name without the vendor prefix: exact to SWE-bench_Pro (SWE_Bench_Pro_hard), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_pro_2_0",
-          "reason": "the same name without the vendor prefix: exact to SWE-bench_Pro (SWE_Bench_Pro_hard), most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_verified",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "swe_bench_multimodal",
-          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
-        }
-      ],
-      "context": {
-        "known": 1697,
-        "mapped": {
-          "swe_bench_multimodal": [
-            "Multimodal software engineering SWE-MM",
-            "SWE-MM"
-          ],
-          "swe_bench_pro": [
-            "Agentic coding SWE-bench Pro",
-            "SWE Bench Pro",
-            "SWE Pro (Resolved)",
-            "SWE-Bench Pro",
-            "SWE-bench Pro",
-            "SWE-bench Pro v1.0",
-            "ScaleAI/SWE-bench_Pro"
-          ],
-          "swe_bench_pro_2_0": [
-            "SWE Bench Pro V2",
-            "SWE Bench Pro v2",
-            "SWE-Bench Pro V2",
-            "SWE-Bench Pro v2",
-            "SWE-bench Pro V2",
-            "SWE-bench Pro v2"
-          ],
-          "swe_bench_pro_hard_2_0": [
-            "SWE-Bench Pro V2 HARD",
-            "SWE-Bench Pro V2 Hard",
-            "SWE-bench Pro v2 Hard",
-            "SWE-bench Pro v2.0 Hard",
-            "SWEBench Pro v2 (Hard) mini-swe-agent v2.4.6"
-          ],
-          "swe_bench_verified": [
-            "SWE Bench Verified",
-            "SWE Bench Verified (SWE-Agent Harness)",
-            "SWE Verified",
-            "SWE Verified (Resolved)",
-            "SWE-Bench Verified",
-            "SWE-Bench Verified (OpenCode)",
-            "SWE-Bench Verified (OpenHands)",
-            "SWE-Bench-Verified (acc)",
-            "SWE-bench Verified",
-            "SWE-bench Verified (OpenCode)",
-            "SWE-bench Verified Software engineering",
-            "SWE-bench/SWE-bench_Verified (swe_bench_%_resolved)",
-            "SWEBench Verified",
-            "SWEBench Verified bash only"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "swe_bench_pro"
-            ],
-            "name": "ScaleAI/SWE-bench_Pro"
-          },
-          {
-            "mapped_to": [
-              "swe_bench_pro_hard_2_0"
-            ],
-            "name": "SWE-Bench Pro V2 HARD"
-          },
-          {
-            "mapped_to": [
-              "swe_bench_pro_hard_2_0"
-            ],
-            "name": "SWE-Bench Pro V2 Hard"
-          },
-          {
-            "mapped_to": [
-              "swe_bench_pro_hard_2_0"
-            ],
-            "name": "SWE-bench Pro v2 Hard"
-          },
-          {
-            "mapped_to": [
-              "swe_bench_pro_hard_2_0"
-            ],
-            "name": "SWE-bench Pro v2.0 Hard"
-          },
-          {
-            "mapped_to": [
-              "swe_bench_pro"
-            ],
-            "name": "SWE Bench Pro"
-          },
-          {
-            "mapped_to": [
-              "swe_bench_pro"
-            ],
-            "name": "SWE-Bench Pro"
-          },
-          {
-            "mapped_to": [
-              "swe_bench_pro"
-            ],
-            "name": "SWE-bench Pro"
-          }
-        ]
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'ScaleAI/SWE-bench_Pro (SWE_Bench_Pro_hard)' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/thinkingmachines/Inkling-2-Mini",
-      "subject": "ScaleAI/SWE-bench_Pro (SWE_Bench_Pro_hard)",
-      "universe": "benchmarks"
     }
   ]
 }
