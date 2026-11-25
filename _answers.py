@@ -2347,7 +2347,8 @@ def _add_reference(answer: Answer, llm_path: Path) -> list[str]:
 
     add.py fills the entry from Artificial Analysis, which for these models is
     the source that has the numbers -- the creator and the context window come
-    back, the parameter count does not, because nobody published one. The URL
+    back, the parameter count usually does not, because few labs publish one
+    for a closed model (when one does, it is optional and entered by hand). The URL
     is passed rather than left to AA: a closed model has no weights repository,
     so the model page its scores are read off is what the row is checked
     against.
