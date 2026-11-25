@@ -978,16 +978,8 @@ select {
   align-items: center;
   gap: .55rem .75rem;
 }
-/* While a phone keyboard is up the bar would sit on top of it and take a
-   third of what is left to see; nothing on it can be used mid-typing anyway. */
-@media (pointer: coarse) {
-  html:has(:is(textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])):focus) {
-    --bar-h: 0px;
-  }
-  html:has(:is(textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])):focus) .bar {
-    display: none;
-  }
-}
+/* Always shown, keyboard up or not: the count and Send are what a sitting is
+   steering by, and a bar that came and went with focus made the page jump. */
 @media (min-width: 34rem) {
   .bar .wrap {
     grid-template-columns: minmax(0, 1fr) auto auto;
@@ -8365,7 +8357,7 @@ window.addEventListener("popstate", () => showTab((location.hash || "#queue").sl
 const measureHeader = () => {
   const root = document.documentElement.style;
   root.setProperty("--header-h", `${document.querySelector("header").offsetHeight}px`);
-  /* Hidden while a keyboard is up, when the CSS zeroes --bar-h itself. */
+  /* The bar is always shown; its height pads the page so nothing ends under it. */
   const bar = document.querySelector(".bar").offsetHeight;
   if (bar) root.setProperty("--bar-measured", `${bar}px`);
 };
