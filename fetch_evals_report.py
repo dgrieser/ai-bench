@@ -37,6 +37,7 @@ import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
+from _openness import status_from_open
 from _fetch_checks import check_percentages, require_columns, require_rows
 import _source_pages
 
@@ -253,6 +254,7 @@ def get_scores(slugs: list[str], include_unverified: bool) -> list[dict]:
                     "raw": raw,
                     "lab": row.get("lab"),
                     "open_weights": _open_weights(raw, row.get("lab")),
+                    "weights": status_from_open(_open_weights(raw, row.get("lab"))),
                     "score": round(value, 2),
                     "status": status,
                     "date": row.get("date") or None,

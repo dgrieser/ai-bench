@@ -48,6 +48,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 from _fetch_checks import check_fractions
+from _openness import CLOSED, OPEN, merge
 
 
 SITE_URL = "https://openrouter.ai"
@@ -129,6 +130,44 @@ def fetch_model_names() -> list[str]:
     if not names:
         raise ValueError(f"No model ids in {MODELS_API_URL} -- refusing to report none.")
     return names
+
+
+# Artificial Analysis' Openness Index, which the catalogue carries per model:
+# a proprietary model scores 5.6 or 11.1 (the "model availability" part is
+# zero), an open-weight one 22.2 and up. Below this, with no weights repo
+# linked, the model is closed.
+CLOSED_OPENNESS_BELOW = 15.0
+
+
+def catalogue_weights(entry: dict) -> str | None:
+    """One catalogue entry's weight status, or None when it does not say.
+
+    ``hugging_face_id`` is set only where OpenRouter links the weights, so it
+    is open; a missing link alone proves nothing (plenty of open models have
+    none), so closed also needs AA's Openness Index to read proprietary.
+    """
+    if isinstance(entry.get("hugging_face_id"), str) and entry["hugging_face_id"].strip():
+        return OPEN
+    aa = ((entry.get("benchmarks") or {}).get("artificial_analysis") or {})
+    index = aa.get("openness_index") if isinstance(aa, dict) else None
+    if isinstance(index, (int, float)) and not isinstance(index, bool):
+        return CLOSED if index < CLOSED_OPENNESS_BELOW else OPEN
+    return None
+
+
+def fetch_model_weights() -> dict[str, str | None]:
+    """Model id (variants folded) -> weight status, from the catalogue."""
+    payload = json.loads(fetch_text(MODELS_API_URL))
+    data = payload.get("data") if isinstance(payload, dict) else None
+    if not isinstance(data, list):
+        raise ValueError(f"{MODELS_API_URL} did not return a data list -- the API changed.")
+    weights: dict[str, str | None] = {}
+    for entry in data:
+        if not isinstance(entry, dict) or not isinstance(entry.get("id"), str):
+            continue
+        model = base_id(entry["id"])
+        weights[model] = merge(weights.get(model), catalogue_weights(entry))
+    return weights
 
 
 def flight_text(page_html: str) -> str:

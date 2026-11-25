@@ -615,8 +615,11 @@ current address.
 #   out whatever check_new-decisions.json already says -- see below.
 ./check_new.py
 
-# Assess model openness (open-source vs closed-weight)
-python3 -c "from _openness import open_index; open_index('llm.json')"
+# Weight status (open / upcoming / closed) of some names, or the whole index
+./_openness.py "Kimi K3" "GPT-6 Astra"
+./_openness.py --refresh
+# Override it by hand (written to weights-overrides.json; 'auto' clears)
+./_openness.py --set upcoming "Some Model 2"
 ```
 
 ## Key Workflows
@@ -3799,12 +3802,73 @@ not refusal-free, only refused rarely.
 
 ## Openness Classification
 
-The `_openness.py` module classifies models as:
+`_openness.py` gives every model a source lists one of three weight statuses:
 
-- **`open`**: Open-source weights available
-- **`closed`**: Closed-weight proprietary model
+- **`open`**: the weights are published
+- **`upcoming`**: the weights are announced but not out yet ("coming soon",
+  "to be released") -- the release llm.json will want in a few days
+- **`closed`**: proprietary / API only
 
-This information is stored in each model's `weights` metadata and affects aggregation logic (some analyses exclude closed models).
+Only `closed` is ever acted on without a person: the mapping updaters record
+such a name as `__closed_weights__` instead of asking. An `upcoming` name is
+always asked.
+
+### Where the status comes from
+
+Each fetcher that can read one reports it on its rows, as `weights` (the
+status) beside the older `open_weights` boolean (`None` for upcoming):
+
+| Source | Signal |
+| --- | --- |
+| llm-stats.com | `license` ("proprietary" closed, "unknown" no verdict, any licence open) |
+| BFCL | `License`, read the same way |
+| LMArena | `license`, read the same way |
+| DeepSWE (benchlm.ai) | `sourceType` ("Open Weight" / "Proprietary") |
+| Toolathlon | model type ("Open-Weights" / "Open-Source" / "Proprietary") |
+| Epoch AI | `accessibility` ("Open weights (...)" open, everything else closed) |
+| evals.report | the " Open" suffix on a model label |
+| SEC-bench | `open_source` |
+| OpenRouter | `hugging_face_id` (open), else AA's Openness Index under 15 (closed) |
+| Artificial Analysis | `licensing.is_open_weights` (check_new.py) |
+| Spheron, Hugging Face cards | open by construction: both read Hugging Face repos |
+
+Every label is also checked for announcement wording first ("coming soon",
+"to be released", "planned", "TBA") which reads as `upcoming`. As of
+2026-11 no source publishes such a value as a field -- a survey of all thirty
+fetchers found none -- so in practice `upcoming` comes from a person (below)
+or from the boards disagreeing with Artificial Analysis. The other boards
+(SWE-Rebench, Terminal-Bench, OSWorld, MCP Atlas, ...) publish nothing about
+weights; Vals publishes it only on per-model pages the fetcher does not read.
+
+The sources that publish a status are pooled into one index keyed by a
+normalized name (cached for 12 h under `~/.cache/ai-bench/openness.json`), so
+a board that publishes nothing is judged by what the others say about the same
+name. Pooling ranks open > upcoming > closed: a name reads closed only while
+every source that knows it agrees.
+
+### Overriding
+
+`weights-overrides.json` holds the statuses a person set, and beats every
+source. It is matched by the normalized name, so one line covers every board's
+spelling. Three ways to write it:
+
+- the admin page: every Queue card for a model name and every new release
+  carries a **weights** chip whose select sets the override (a
+  `weights-override` record), and the Reference tab lists all of them with a
+  field for a name no card shows;
+- adding a release AA calls closed as an open model (`"open_weights": true`
+  on a model-add) records it as `upcoming`;
+- `./_openness.py --set open|upcoming|closed|auto NAME...` locally.
+
+An override to `open` or `upcoming` also takes back a name an earlier run
+skipped as `__closed_weights__`: the reviewed-name loaders treat it as
+unreviewed, so the next run asks about it -- `--recheck-closed` for one name.
+An override to `closed` lets the next run skip a name nothing labels.
+
+`check_new.py` lifts AA's verdict with the same data: a release AA calls closed
+that an override or the pooled index reads as `upcoming` (or `open`) is
+offered with "add as open" as the suggestion, in the terminal and on the admin
+page alike, and the queue says so next to AA's own verdict.
 
 `artificialanalysis.py --open` / `--closed` reads the same distinction off AA's
 `licensing.is_open_weights`, falling back to whether the model page links a
@@ -4441,11 +4505,9 @@ print(json.dumps(models['gpt-4']['scores'], indent=2))
 ### Find models by openness:
 ```bash
 python3 -c "
-import json
-from pathlib import Path
-from _openness import open_index
-oi = open_index('llm.json')
-print('Open models:', [k for k,v in oi.items() if v])
+from _openness import status_index
+index = status_index()
+print('Upcoming:', [k for k, v in index.items() if v == 'upcoming'])
 "
 ```
 

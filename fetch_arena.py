@@ -48,6 +48,7 @@ import urllib.request
 from dataclasses import dataclass
 from typing import Any, Iterable
 
+from _openness import license_open, license_status
 from _fetch_checks import require_columns, require_rows
 import _source_pages
 
@@ -218,6 +219,8 @@ def parse_board(key: str, rows: list[dict[str, Any]], source: str) -> list[dict]
                 "model": normalize_model(raw),
                 "raw": raw,
                 "license": row.get("license"),
+                "open_weights": license_open(row.get("license")),
+                "weights": license_status(row.get("license")),
                 "score": round(float(value), 2) if board.kind == "rating" else round(float(value) * 100, 2),
                 "votes": row.get("vote_count") if board.kind == "rating" else row.get("observation_count"),
                 "published": row.get("leaderboard_publish_date"),
@@ -232,7 +235,8 @@ def parse_board(key: str, rows: list[dict[str, Any]], source: str) -> list[dict]
 
 def get_scores(keys: list[str] | None = None, fetch=None, fetch_json=None) -> list[dict]:
     """Rows for every column (or the ones named): key, model, raw, license,
-    score, votes, published, source. Each subset is downloaded once."""
+    open_weights, weights (the licence read as a status, "Proprietary" being
+    the only closed value), score, votes, published, source. Each subset is downloaded once."""
     fetch = fetch or fetch_bytes
     keys = keys or list(BOARDS)
     tables: dict[str, tuple[list[dict[str, Any]], str]] = {}

@@ -194,9 +194,9 @@ class TestRead(unittest.TestCase):
         self.assertEqual(
             fe.get_catalogue(archive(files)),
             [
-                {"model": "GLM-5.2", "open_weights": True},
-                {"model": "GPT-5.6 Sol", "open_weights": False},
-                {"model": "Mystery", "open_weights": None},
+                {"model": "GLM-5.2", "open_weights": True, "weights": "open"},
+                {"model": "GPT-5.6 Sol", "open_weights": False, "weights": "closed"},
+                {"model": "Mystery", "open_weights": None, "weights": None},
             ],
         )
 

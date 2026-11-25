@@ -44,6 +44,7 @@ import urllib.request
 from typing import Any
 
 import _fetch_warnings
+from _openness import status_from_open
 from _fetch_checks import check_percentages, require_rows
 
 
@@ -156,6 +157,10 @@ def parse_rows(payload: Any, snapshot_id: str = SNAPSHOT) -> list[dict]:
                 "total": headline.get("total"),
                 "timeouts": row.get("timeouts"),
                 "date": row.get("date"),
+                # The board's own "open source" flag, the only weights signal
+                # it publishes (true/false; nothing for weights to come).
+                "open_weights": row.get("open_source") if isinstance(row.get("open_source"), bool) else None,
+                "weights": status_from_open(row.get("open_source")),
                 "score": round(float(score), 2),
             }
         )

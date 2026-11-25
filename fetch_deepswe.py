@@ -28,7 +28,7 @@ import sys
 import urllib.request
 
 from _fetch_checks import check_percentages, require_rows
-from _openness import source_type_open
+from _openness import source_type_open, source_type_status
 from _revisions import revision_label
 
 
@@ -121,6 +121,7 @@ def get_scores() -> list[dict]:
                 "context_window": item.get("contextWindow"),
                 "source_type": item.get("sourceType"),
                 "open_weights": source_type_open(item.get("sourceType")),
+                "weights": source_type_status(item.get("sourceType")),
             }
         )
 

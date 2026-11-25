@@ -36,7 +36,7 @@ import urllib.error
 import urllib.request
 
 from _fetch_checks import check_percentages, require_columns, require_rows
-from _openness import source_type_open
+from _openness import source_type_open, source_type_status
 
 
 URL = "https://toolathlon.xyz/docs/leaderboard"
@@ -167,6 +167,7 @@ def get_scores(include_self_reported: bool = False) -> list[dict]:
                 "model": row["raw"],
                 "raw": row["raw"],
                 "open_weights": source_type_open(row["model_type"]),
+                "weights": source_type_status(row["model_type"]),
                 "verified": row["verified"],
                 "agent": row["agent"] or None,
                 "score": round(float(match.group(1)), 2),
