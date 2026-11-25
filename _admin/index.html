@@ -911,8 +911,9 @@ select {
 .bench-tag.pill .pill-model { font-weight: 400; }
 .bench-tag.pill.shared { border-style: dashed; opacity: .8; }
 .map-line > .map-supplies { grid-column: 1 / -1; margin-top: 0; }
-.score-fold { margin-top: 1rem; }
-.score-fold > summary { cursor: pointer; font: 500 .8125rem var(--font-mono); color: var(--faint); }
+/* The ruled-out slugs: a count until opened to edit. */
+.ruled-fold > summary { cursor: pointer; font-size: .8125rem; color: var(--muted); }
+.ruled-fold[open] > summary { margin-bottom: .4rem; }
 .provenance.hints textarea { margin-top: .35rem; }
 .provenance.hints.changed > .field > label { color: var(--good); }
 .model-note { grid-column: 1; }
@@ -1460,6 +1461,7 @@ const state = {
   mapAdd: { route: "", name: "" },     // the Models tab's "add a mapping" boxes
   mapRule: { route: "", name: "" },    // and its "rule this model out" boxes
   mapOpen: new Set(),                  // model cards whose mappings are unfolded
+  ruledOpen: new Set(),                // AA "ruled out" lists unfolded to edit (route + model)
   mapMoving: new Set(),                // mapping lines whose "Move" box is open
   labelAdd: { route: "", name: "" },   // the Benchmarks tab's "file a label" boxes
   modelSearch: "",      // kept here so a re-render does not empty the tab
@@ -5754,10 +5756,13 @@ function renderModels() {
 function renderAddBox() {
   const busy = state.newModels.some((d) => !d.question && (d.name.trim() || Object.keys(d.fields).length))
     || flyingCreates().length > 0;
-  const box = el("details", { className: "add-box", open: state.addOpen || busy });
+  /* Folded the way a card's mappings are: a quiet dashed box, not a heading. */
+  const box = el("details", { className: "add-box provenance mappings", open: state.addOpen || busy });
   box.ontoggle = () => { state.addOpen = box.open; };
-  box.append(el("summary", { className: "section-title", style: "cursor:pointer" },
-    "Add a model -- by hand, or one Artificial Analysis lists"));
+  box.append(el("summary", {}, [
+    "add a model",
+    el("span", { className: "map-sum" }, "by hand, or one Artificial Analysis lists"),
+  ]));
   box.append(renderAddModels());
   return box;
 }
@@ -6071,8 +6076,11 @@ function fillModelCard(card, model, { key, rename, existing, columns }) {
   /* Folded: a hundred-odd boxes are most of the card's height, and most
      sittings open a card for its fields or its mappings. Unfolded by itself
      when the draft already changes a score. */
-  const scoreFold = el("details", { className: "score-fold" }, [
-    el("summary", {}, `scores -- ${columns.length - missing} of ${columns.length}, ${missing} missing`),
+  const scoreFold = el("details", { className: "score-fold provenance mappings" }, [
+    el("summary", {}, [
+      "scores",
+      el("span", { className: "map-sum" }, `${columns.length - missing} of ${columns.length}, ${missing} missing`),
+    ]),
     scores,
   ]);
   scoreFold.open = state.scoresOpen.has(model.name) || Object.keys(draft.scores).length > 0;
@@ -6548,6 +6556,16 @@ function ruledRow(rid, entry, name, isAa, redraw) {
   const sent = isSent(RULE_EDIT_KEY(rid, entry.subject));
   if (isAa) {
     row.append(el("label", {}, `AA slugs ruled out for ${name}`));
+    /* Folded to a count: the list can run to dozens of slugs, and it is only
+       ever opened to take one back. Open by itself while one is being taken
+       back in this batch. */
+    const pending = entry.options.filter((slug) => ruleOp(rid, name, slug) === "remove").length;
+    const fold = el("details", { className: "ruled-fold" });
+    fold.open = pending > 0 || state.ruledOpen.has(`${rid}  ${name}`);
+    fold.ontoggle = () => (fold.open ? state.ruledOpen.add(`${rid}  ${name}`)
+      : state.ruledOpen.delete(`${rid}  ${name}`));
+    fold.append(el("summary", {}, `${entry.options.length} slug${entry.options.length === 1 ? "" : "s"}`
+      + (pending ? ` · ${pending} offered again in this batch` : " · edit")));
     const chips = el("div", { className: "seg" });
     for (const slug of entry.options) {
       const op = ruleOp(rid, name, slug);
@@ -6557,7 +6575,9 @@ function ruledRow(rid, entry, name, isAa, redraw) {
       button.setAttribute("aria-pressed", String(op === "remove"));
       chips.append(button);
     }
-    row.append(chips);
+    fold.append(chips);
+    row.append(fold);
+    row.classList.toggle("changed", pending > 0);
     return row;
   }
   const op = ruleOp(rid, entry.subject, name);
