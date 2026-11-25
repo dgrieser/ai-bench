@@ -576,6 +576,26 @@ tells you why.
   echo '[{"kind": "benchmark-edit", "key": "hle", "fields": {"short_name": "HLE"}}]' \
     | ./answer.py --stdin --no-queue-check -w
   ```
+- **Weights** — every Queue card for a model name, and every new release,
+  carries a **weights** chip: open (green), upcoming (amber: weights announced,
+  not out yet) or closed (red), with where the verdict came from -- this
+  source, the other sources pooled, or an override (see "Openness
+  Classification" in the main README). Its select is the override: a
+  `weights-override` record (`name`, `weights`: open / upcoming / closed or
+  null to hand the name back to the sources, `if_previous`: the override the
+  page showed). It lands in `weights-overrides.json` and beats every source on
+  the next run. Upcoming or open takes back a name a run skipped as
+  `__closed_weights__`; closed lets the runs skip a name nothing labels. A new
+  release AA calls closed but that reads upcoming (or is overridden so) has
+  **Add as open model** as its suggestion, and "Add all" follows the same
+  status. Adding a closed release as open records it as upcoming. The
+  Reference tab lists every override, and sets one for a name no card shows:
+
+  ```sh
+  echo '[{"kind": "weights-override", "name": "Some Model 2",
+          "weights": "upcoming", "if_previous": null}]' | ./answer.py --stdin -w
+  ```
+
 - **Reference** — the closed frontier models the index carries as a yardstick for
   the open field, which is `reference-models.json` and nothing else: a list of
   Artificial Analysis slugs. *Carry another model* takes a slug AA publishes —

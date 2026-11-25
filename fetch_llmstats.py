@@ -48,7 +48,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 import _cache
-from _openness import license_open
+from _openness import license_open, license_status
 
 URL = "https://api.zeroeval.com/leaderboard/models/full"
 # Per-model endpoint. Same records as URL plus a ``benchmarks`` list, where each
@@ -542,6 +542,7 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
             "name": item.get("name"),
             "license": item.get("license"),
             "open_weights": license_open(item.get("license")),
+            "weights": license_status(item.get("license")),
             "scores": _flat_scores(item),
         }
         results.append(record)
@@ -566,7 +567,7 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
                 # but the score is still the model's own.
                 record = {
                     "model": model_id, "name": None, "license": None,
-                    "open_weights": None, "scores": {},
+                    "open_weights": None, "weights": None, "scores": {},
                 }
                 results.append(record)
                 by_id[model_id] = record

@@ -38,7 +38,7 @@ import urllib.error
 import urllib.request
 
 from _fetch_checks import check_percentages, require_rows
-from _openness import license_open
+from _openness import license_open, license_status
 
 
 # Human-facing page; the CSV below is what it hydrates its table from.
@@ -192,6 +192,7 @@ def get_scores() -> list[dict]:
                 "organization": row.get("Organization") or None,
                 "license": row.get("License") or None,
                 "open_weights": license_open(row.get("License")),
+                "weights": license_status(row.get("License")),
             }
         )
 

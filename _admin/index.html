@@ -428,6 +428,17 @@ main { padding-block: 1rem; }
 .chip .prose { font-family: var(--font-ui); }
 .chip.now { background: var(--warn-soft); border-color: transparent; color: var(--warn); }
 .chip .mono { font-size: .95em; }
+/* The weights chip: open, weights announced, closed -- and the select that
+   overrides it, which sits in the chip so the verdict and the way to correct
+   it are one thing. */
+.chip.weights select {
+  font: inherit; font-size: .95em; color: inherit; background: transparent;
+  border: 0; padding: 0 .1rem; min-height: 0; width: auto;
+}
+.chip.w-open { background: var(--good-soft); border-color: var(--good-line); color: var(--good); }
+.chip.w-upcoming { background: var(--warn-soft); border-color: var(--warn-line); color: var(--warn); }
+.chip.w-closed { background: var(--bad-soft); border-color: var(--bad-line); color: var(--bad); }
+.chip.w-pending { outline: 2px dashed var(--accent-line); outline-offset: 1px; }
 
 .note-text {
   margin-top: .5rem;
@@ -900,8 +911,9 @@ select {
 .bench-tag.pill .pill-model { font-weight: 400; }
 .bench-tag.pill.shared { border-style: dashed; opacity: .8; }
 .map-line > .map-supplies { grid-column: 1 / -1; margin-top: 0; }
-.score-fold { margin-top: 1rem; }
-.score-fold > summary { cursor: pointer; font: 500 .8125rem var(--font-mono); color: var(--faint); }
+/* The ruled-out slugs: a count until opened to edit. */
+.ruled-fold > summary { cursor: pointer; font-size: .8125rem; color: var(--muted); }
+.ruled-fold[open] > summary { margin-bottom: .4rem; }
 .provenance.hints textarea { margin-top: .35rem; }
 .provenance.hints.changed > .field > label { color: var(--good); }
 .model-note { grid-column: 1; }
@@ -966,16 +978,8 @@ select {
   align-items: center;
   gap: .55rem .75rem;
 }
-/* While a phone keyboard is up the bar would sit on top of it and take a
-   third of what is left to see; nothing on it can be used mid-typing anyway. */
-@media (pointer: coarse) {
-  html:has(:is(textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])):focus) {
-    --bar-h: 0px;
-  }
-  html:has(:is(textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])):focus) .bar {
-    display: none;
-  }
-}
+/* Always shown, keyboard up or not: the count and Send are what a sitting is
+   steering by, and a bar that came and went with focus made the page jump. */
 @media (min-width: 34rem) {
   .bar .wrap {
     grid-template-columns: minmax(0, 1fr) auto auto;
@@ -1449,6 +1453,7 @@ const state = {
   mapAdd: { route: "", name: "" },     // the Models tab's "add a mapping" boxes
   mapRule: { route: "", name: "" },    // and its "rule this model out" boxes
   mapOpen: new Set(),                  // model cards whose mappings are unfolded
+  ruledOpen: new Set(),                // AA "ruled out" lists unfolded to edit (route + model)
   mapMoving: new Set(),                // mapping lines whose "Move" box is open
   labelAdd: { route: "", name: "" },   // the Benchmarks tab's "file a label" boxes
   modelSearch: "",      // kept here so a re-render does not empty the tab
@@ -1479,6 +1484,9 @@ const state = {
      read from the repository like everything else. null until it is read, and
      [] is a state the file cannot be in -- the list may never be emptied. */
   reference: { slugs: null, error: "" },
+  /* weights-overrides.json: model name -> open | upcoming | closed, set by
+     hand. Read beside the queue so a card can say what is overridden. */
+  weights: { map: {}, error: "" },
   /* The commit of main the data was read at, when it could be resolved; see
      dataBase(). null reads through the branch name instead. */
   sha: null,
@@ -1517,6 +1525,96 @@ const ALL_KNOWN = "__all_known__";
    model, never as an open-weight entry. */
 const NEW_CLOSED_KIND = "new-closed-model";
 const isClosedNew = (question) => question.route_kind === NEW_CLOSED_KIND;
+
+/* ── Weights ──
+   Every model a source lists is open, upcoming (weights announced, not out
+   yet) or closed -- see _openness.py. The queue carries what is known for each
+   question (`weights`, and `weights_from`: "source", "sources" or
+   "override"); a person overrides it with a weights-override record, which
+   lands in weights-overrides.json and beats every source on the next run.
+   Overrides match by the same normalized name _openness.normalize() builds, so
+   one covers every board's spelling of a model. */
+const WEIGHTS = ["open", "upcoming", "closed"];
+const WEIGHTS_KEY = (name) => `weights-override  ${name}`;
+const WEIGHTS_LABEL = { open: "open", upcoming: "upcoming (weights announced)", closed: "closed" };
+const EFFORT_SUFFIX = /[-_ [(]+(?:xhigh|x-high|very-high|high|medium|low|minimal|max|no[- ]?thinking|thinking|reasoning)[\])]*\s*$/i;
+function weightsKey(name) {
+  let text = String(name).trim().toLowerCase()
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/[-_/](?:19|20)\d\d[-_/]\d\d[-_/]\d\d\b/g, " ");
+  for (;;) {
+    const stripped = text.replace(EFFORT_SUFFIX, "").trim();
+    if (stripped === text) break;
+    text = stripped;
+  }
+  return text.replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
+}
+/* The override the file holds for a name, by its normalized key. */
+function storedWeights(name) {
+  const key = weightsKey(name);
+  for (const [other, status] of Object.entries(state.weights.map || {})) {
+    if (weightsKey(other) === key) return status;
+  }
+  return null;
+}
+/* The override record this batch carries for a name, and its key. */
+function pendingWeights(name) {
+  const key = weightsKey(name);
+  for (const [answerKey, record] of state.answers) {
+    if (record?.kind === "weights-override" && weightsKey(record.name) === key) return [answerKey, record];
+  }
+  return null;
+}
+/* What to show: the batch's override, else the file's, else what the queue
+   said -- {status, from} with from one of "batch", "override", "source",
+   "sources", or null. An override the batch clears shows the sources' verdict
+   when the queue knew one apart from the override. */
+function effectiveWeights(name, status = null, from = null) {
+  const pending = pendingWeights(name);
+  if (pending) {
+    const wanted = pending[1].weights;
+    if (wanted) return { status: wanted, from: "batch" };
+    return from === "override" ? { status: null, from: null } : { status, from };
+  }
+  const stored = storedWeights(name);
+  if (stored) return { status: stored, from: "override" };
+  return from === "override" ? { status: null, from: null } : { status, from };
+}
+/* Set (or with null clear) a name's override in the batch. Back to what the
+   file holds is no record at all. */
+function setWeights(name, wanted) {
+  const pending = pendingWeights(name);
+  if (pending) state.answers.delete(pending[0]);
+  const previous = storedWeights(name);
+  if (wanted !== previous) {
+    state.answers.set(WEIGHTS_KEY(name),
+      { kind: "weights-override", name, weights: wanted, if_previous: previous });
+  }
+  render();
+}
+/* The chip: the verdict, coloured, with the select that overrides it. */
+function weightsChip(name, status = null, from = null) {
+  const shown = effectiveWeights(name, status, from);
+  const sourced = from && from !== "override" ? status : null;
+  const current = pendingWeights(name)?.[1].weights ?? storedWeights(name) ?? "auto";
+  const select = el("select", {
+    title: "Override what the sources say about this model's weights",
+    onchange: () => setWeights(name, select.value === "auto" ? null : select.value),
+  }, [
+    el("option", { value: "auto", selected: current === "auto" },
+      sourced ? `${sourced} (${from === "source" ? "this source" : "other sources"})`
+        : from === "override" ? "per sources (next run)" : "unknown"),
+    ...WEIGHTS.map((w) => el("option", { value: w, selected: current === w }, `${w} (override)`)),
+  ]);
+  const chipEl = el("span", {
+    className: `chip weights${shown.status ? ` w-${shown.status}` : ""}${shown.from === "batch" ? " w-pending" : ""}`,
+  }, [el("b", {}, "weights"), select]);
+  chipEl.title = shown.status
+    ? `${WEIGHTS_LABEL[shown.status]}${shown.from === "batch" ? " -- override in this batch"
+      : shown.from === "override" ? " -- set by hand" : ""}`
+    : "no source says";
+  return chipEl;
+}
 
 /* What one dispatch may weigh: _answers.MAX_ANSWER_BYTES, the UTF-8 size of
    the answers as the workflow input carries them -- compact JSON, which is
@@ -2182,7 +2280,7 @@ function readDraft() {
 /* The records that answer a question of the queue, as opposed to the ones that
    name a model -- the same split inferQueued draws for a sent batch. */
 const isQueueKey = (key) =>
-  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit|model-hints) /.test(key);
+  !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit|model-hints|weights-override) /.test(key);
 
 function pruneDraft() {
   const asked = new Set(state.questions.map(KEY));
@@ -2364,7 +2462,7 @@ const queueKeys = (keys) => {
 /* A record written before `queued` existed. The three kinds that are not queue
    questions all name themselves, so the rest are the questions. */
 const inferQueued = (keys) =>
-  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit|model-hints) /.test(key));
+  keys.filter((key) => !/^(model-(create|edit|rename|delete)|reference-(add|remove)|benchmark-(create|edit|order)|preview-(cleanup|watch)|mapping-edit|rejection-edit|model-hints|weights-override) /.test(key));
 
 function readSent() {
   try {
@@ -2751,13 +2849,30 @@ async function loadData() {
   const base = dataBase();
   const json = (url) => fetch(bust(url), { cache: "no-store" })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
-  const [queue, llm, reference, previews, tests] = await Promise.allSettled([
+  const [queue, llm, reference, previews, tests, weights] = await Promise.allSettled([
     json(`${base}/_pending/pending.json`),
     json(`${base}/llm.json`),
     json(`${base}/reference-models.json`),
     json(`${base}/_pending/previews.json`),
     json(`${base}/_tests/report.json`),
+    json(`${base}/weights-overrides.json`),
   ]);
+
+  /* Absent before the first override is set: that is an empty file, not an
+     error worth a banner. */
+  if (weights.status === "fulfilled" && weights.value && typeof weights.value === "object"
+      && !Array.isArray(weights.value)) {
+    state.weights = {
+      map: Object.fromEntries(Object.entries(weights.value)
+        .filter(([name, status]) => typeof name === "string" && WEIGHTS.includes(status))),
+      error: "",
+    };
+  } else {
+    state.weights = {
+      map: {},
+      error: weights.status === "fulfilled" ? "not a JSON object" : String(weights.reason.message),
+    };
+  }
 
   if (queue.status === "fulfilled") {
     state.questions = queue.value.questions || [];
@@ -3585,7 +3700,21 @@ function renderQuestion(question) {
     /* Back because something new matched: what is listed is what is left. */
     chips.append(chip("ruled out", `${question.ruled_out} earlier`, { prose: true }));
   }
+  if (question.universe === "models") {
+    chips.append(weightsChip(question.subject, question.weights || null, question.weights_from || null));
+  }
   card.append(chips);
+  if (question.universe === "models") {
+    const shown = effectiveWeights(question.subject, question.weights || null, question.weights_from || null);
+    if (shown.status === "closed") {
+      card.append(el("div", { className: "note-text" }, shown.from === "batch" || shown.from === "override"
+        ? "Overridden to closed: the next run records this name as __closed_weights__ without asking."
+        : "Sources call it closed, yet it is asked -- it resembles a tracked model, or closed names were rechecked. Map it, park it, or set it closed."));
+    } else if (shown.status === "upcoming") {
+      card.append(el("div", { className: "note-text" },
+        "Weights announced but not out yet: worth tracking once they land -- \"New model…\" adds it now."));
+    }
+  }
   if (question.note) card.append(el("div", { className: "note-text" }, question.note));
   const context = renderQuestionContext(question);
   if (context) card.append(context);
@@ -3620,7 +3749,7 @@ function renderQuestion(question) {
       const release = newQuestionFor(slug);
       const how = answerOf(release)?.kind === "reference-add" ? "as a reference model"
         : answerOf(release)?.kind === "model-add" ? "as an open model"
-          : isClosedNew(release) ? "as a reference model" : "as an open model";
+          : newWeights(release) === "closed" ? "as a reference model" : "as an open model";
       options.append(option(slug,
         `${why}, new on Artificial Analysis: adds it ${how} and maps this name to it, in one batch`, {
           pressed,
@@ -4138,9 +4267,15 @@ const ignoreRecord = (question) => ({ kind: "new-model", subject: question.subje
    asks for when AA called the release closed. */
 const openAddRecord = (question) => (isClosedNew(question)
   ? openRecord(question) : { kind: "model-add", name: question.subject });
-/* What AA's verdict suggests: open releases as open rows, closed ones carried
-   for reference. */
-const suggestedAdd = (question) => (isClosedNew(question)
+/* A release's weight status: an override first, then what the queue says
+   (AA's verdict lifted by the other boards), then AA's verdict alone. */
+const newWeights = (question) => effectiveWeights(question.subject,
+  question.weights || (isClosedNew(question) ? "closed" : "open"),
+  question.weights_from || "source").status || (isClosedNew(question) ? "closed" : "open");
+
+/* What the weights suggest: open and upcoming releases as open rows, closed
+   ones carried for reference. */
+const suggestedAdd = (question) => (newWeights(question) === "closed"
   ? referenceRecord(question) : openAddRecord(question));
 
 /* Whether a board's name reads as a release's slug, and how, or null. Only
@@ -4228,14 +4363,14 @@ function renderNewBulk(questions) {
     }
     render();
   };
-  const closed = questions.filter(isClosedNew).length;
+  const tally = Object.fromEntries(WEIGHTS.map((w) => [w, questions.filter((q) => newWeights(q) === w).length]));
   return el("div", { className: "toolbar" }, [
-    el("span", { className: "count grow" }, closed
-      ? `${questions.length - closed} open, ${closed} closed`
+    el("span", { className: "count grow" }, tally.closed || tally.upcoming
+      ? WEIGHTS.filter((w) => tally[w]).map((w) => `${tally[w]} ${w}`).join(", ")
       : `${questions.length} open-weight`),
     el("button", {
       type: "button", className: "btn ghost tiny", disabled: !open.length,
-      title: "Open releases as open models, closed ones as reference models",
+      title: "Open and upcoming releases as open models, closed ones as reference models",
       onclick: () => all(suggestedAdd),
     }, `Add all ${open.length}`),
     el("button", {
@@ -4252,13 +4387,17 @@ function renderNewBulk(questions) {
 
 function renderNewQuestion(question) {
   const chosen = answerOf(question);
-  const closed = isClosedNew(question);
+  const aaClosed = isClosedNew(question);
+  const weights = newWeights(question);
+  const closed = weights === "closed";
   const card = el("div", { className: `card${chosen ? " answered" : ""}` });
   card.append(cardHead(question));
   const chips = el("div", { className: "chips" }, [
     chip("source", "new on Artificial Analysis", { prose: true }),
-    chip("weights", closed ? "closed" : "open"),
+    weightsChip(question.subject,
+      question.weights || (aaClosed ? "closed" : "open"), question.weights_from || "source"),
   ]);
+  if (aaClosed && !closed) chips.append(chip("AA says", "closed", { prose: true }));
   if (question.note) chips.append(chip("", question.note, { prose: true }));
   card.append(chips);
 
@@ -4269,8 +4408,10 @@ function renderNewQuestion(question) {
   const asOpen = chosen?.kind === "model-add";
   const asReference = chosen?.kind === "reference-add";
   const ignoring = chosen?.kind === "new-model";
-  const openOption = option("Add as open model", closed
-    ? "AA calls it closed, but its weights are coming: add it like any open release"
+  const openOption = option("Add as open model", aaClosed
+    ? (weights === "closed"
+      ? "AA calls it closed, but its weights are coming: add it like any open release"
+      : `AA calls it closed, but it reads ${weights}: add it like any open release`)
     : "adds the entry; scores land on the next refresh", {
     pressed: asOpen,
     className: closed ? "" : "exact",
@@ -5245,7 +5386,53 @@ function renderReference() {
 
   box.append(renderReferenceAdd());
   box.append(...state.reference.slugs.map(renderReferenceCard));
+  box.append(renderWeightsOverrides());
   return box;
+}
+
+/* Every weights override, and a way to add one for a name no card shows --
+   a release a lab announced before any board lists it, or a board's name the
+   last run skipped as closed. Shown on this tab because both are about which
+   models are open. */
+function renderWeightsOverrides() {
+  const card = el("div", { className: "card" });
+  card.append(el("div", { className: "subject" }, "Weights overrides"));
+  card.append(el("p", { className: "note-text" },
+    "What a person says about a model's weights beats every source. Upcoming keeps a "
+    + "release a source still calls closed in front of you (and takes back a name an "
+    + "earlier run skipped as __closed_weights__); closed lets the mapping runs skip a "
+    + "name nothing labels. Matched by name across every board's spelling."));
+  if (state.weights.error && !state.weights.error.includes("404")) {
+    card.append(el("div", { className: "note bad" }, `Could not read weights-overrides.json (${state.weights.error}).`));
+  }
+  const names = new Map();
+  for (const name of Object.keys(state.weights.map || {})) names.set(weightsKey(name), name);
+  for (const record of state.answers.values()) {
+    if (record?.kind === "weights-override" && !names.has(weightsKey(record.name))) {
+      names.set(weightsKey(record.name), record.name);
+    }
+  }
+  const list = el("div", { className: "chips" });
+  for (const name of [...names.values()].sort((a, b) => a.localeCompare(b))) {
+    list.append(el("span", { className: "chip" }, [el("span", { className: "mono" }, name)]),
+      weightsChip(name, null, "override"));
+  }
+  if (!names.size) list.append(el("span", { className: "note-text" }, "None yet."));
+  card.append(list);
+
+  const input = noAuto(el("input", { type: "text", placeholder: "Model name, as any board spells it" }));
+  const pick = el("select", {}, WEIGHTS.map((w) => el("option", { value: w }, w)));
+  pick.value = "upcoming";
+  const add = el("button", {
+    type: "button", className: "btn ghost tiny",
+    onclick: () => {
+      const name = input.value.trim();
+      if (!weightsKey(name)) return;
+      setWeights(name, pick.value);
+    },
+  }, "Set");
+  card.append(el("div", { className: "toolbar" }, [el("div", { className: "grow" }, input), pick, add]));
+  return card;
 }
 
 /* Carry more. Each slug has to be one AA publishes -- answer.py checks the
@@ -5561,10 +5748,13 @@ function renderModels() {
 function renderAddBox() {
   const busy = state.newModels.some((d) => !d.question && (d.name.trim() || Object.keys(d.fields).length))
     || flyingCreates().length > 0;
-  const box = el("details", { className: "add-box", open: state.addOpen || busy });
+  /* Folded the way a card's mappings are: a quiet dashed box, not a heading. */
+  const box = el("details", { className: "add-box provenance mappings", open: state.addOpen || busy });
   box.ontoggle = () => { state.addOpen = box.open; };
-  box.append(el("summary", { className: "section-title", style: "cursor:pointer" },
-    "Add a model -- by hand, or one Artificial Analysis lists"));
+  box.append(el("summary", {}, [
+    "add a model",
+    el("span", { className: "map-sum" }, "by hand, or one Artificial Analysis lists"),
+  ]));
   box.append(renderAddModels());
   return box;
 }
@@ -5878,8 +6068,11 @@ function fillModelCard(card, model, { key, rename, existing, columns }) {
   /* Folded: a hundred-odd boxes are most of the card's height, and most
      sittings open a card for its fields or its mappings. Unfolded by itself
      when the draft already changes a score. */
-  const scoreFold = el("details", { className: "score-fold" }, [
-    el("summary", {}, `scores -- ${columns.length - missing} of ${columns.length}, ${missing} missing`),
+  const scoreFold = el("details", { className: "score-fold provenance mappings" }, [
+    el("summary", {}, [
+      "scores",
+      el("span", { className: "map-sum" }, `${columns.length - missing} of ${columns.length}, ${missing} missing`),
+    ]),
     scores,
   ]);
   scoreFold.open = state.scoresOpen.has(model.name) || Object.keys(draft.scores).length > 0;
@@ -6355,6 +6548,16 @@ function ruledRow(rid, entry, name, isAa, redraw) {
   const sent = isSent(RULE_EDIT_KEY(rid, entry.subject));
   if (isAa) {
     row.append(el("label", {}, `AA slugs ruled out for ${name}`));
+    /* Folded to a count: the list can run to dozens of slugs, and it is only
+       ever opened to take one back. Open by itself while one is being taken
+       back in this batch. */
+    const pending = entry.options.filter((slug) => ruleOp(rid, name, slug) === "remove").length;
+    const fold = el("details", { className: "ruled-fold" });
+    fold.open = pending > 0 || state.ruledOpen.has(`${rid}  ${name}`);
+    fold.ontoggle = () => (fold.open ? state.ruledOpen.add(`${rid}  ${name}`)
+      : state.ruledOpen.delete(`${rid}  ${name}`));
+    fold.append(el("summary", {}, `${entry.options.length} slug${entry.options.length === 1 ? "" : "s"}`
+      + (pending ? ` · ${pending} offered again in this batch` : " · edit")));
     const chips = el("div", { className: "seg" });
     for (const slug of entry.options) {
       const op = ruleOp(rid, name, slug);
@@ -6364,7 +6567,9 @@ function ruledRow(rid, entry, name, isAa, redraw) {
       button.setAttribute("aria-pressed", String(op === "remove"));
       chips.append(button);
     }
-    row.append(chips);
+    fold.append(chips);
+    row.append(fold);
+    row.classList.toggle("changed", pending > 0);
     return row;
   }
   const op = ruleOp(rid, entry.subject, name);
@@ -8152,7 +8357,7 @@ window.addEventListener("popstate", () => showTab((location.hash || "#queue").sl
 const measureHeader = () => {
   const root = document.documentElement.style;
   root.setProperty("--header-h", `${document.querySelector("header").offsetHeight}px`);
-  /* Hidden while a keyboard is up, when the CSS zeroes --bar-h itself. */
+  /* The bar is always shown; its height pads the page so nothing ends under it. */
   const bar = document.querySelector(".bar").offsetHeight;
   if (bar) root.setProperty("--bar-measured", `${bar}px`);
 };

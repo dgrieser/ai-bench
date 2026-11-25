@@ -80,6 +80,7 @@ from dataclasses import dataclass
 from typing import Callable
 
 import _fetch_warnings
+from _openness import CLOSED, OPEN, UPCOMING, is_upcoming_text, merge, open_from_status
 from _fetch_checks import check_fractions, check_percentages, require_columns, require_rows
 from _revisions import KNOWN_REVISIONS, known_revision_key, revision_key, subset_base
 
@@ -284,12 +285,25 @@ def read_csv(
     return rows
 
 
-def open_weights(accessibility: str) -> bool | None:
-    """Epoch's accessibility label as an open-weights verdict, None when unset."""
-    label = accessibility.strip().lower()
+def weights_status(accessibility: str) -> str | None:
+    """Epoch's accessibility label as a weight status, None when unset.
+
+    "Open weights (...)" is open, a label announcing weights to come is
+    upcoming, and every other label ("API access", "Hosted access (no API)",
+    "Unreleased") is closed.
+    """
+    label = accessibility.strip()
     if not label:
         return None
-    return label.startswith("open weights")
+    if is_upcoming_text(label):
+        return UPCOMING
+    return OPEN if label.lower().startswith("open weights") else CLOSED
+
+
+def open_weights(accessibility: str) -> bool | None:
+    """Epoch's accessibility label as an open-weights verdict, None when unset
+    (or when the weights are only announced)."""
+    return open_from_status(weights_status(accessibility))
 
 
 def load_models(archive: zipfile.ZipFile) -> dict[str, dict[str, object]]:
@@ -301,9 +315,11 @@ def load_models(archive: zipfile.ZipFile) -> dict[str, dict[str, object]]:
         group = (row.get("model_group") or "").strip()
         if not version or not group:
             continue
+        status = weights_status(row.get("accessibility") or "")
         models[version] = {
             "model": group,
-            "open_weights": open_weights(row.get("accessibility") or ""),
+            "open_weights": open_from_status(status),
+            "weights": status,
         }
     require_rows(list(models), f"{DATA_URL}:{METADATA_FILE}", what="model metadata rows")
     return models
@@ -506,6 +522,7 @@ def read_benchmark(
                 "model": model["model"] if model else version,
                 "version": version,
                 "open_weights": model["open_weights"] if model else None,
+                "weights": model["weights"] if model else None,
                 "score": round(value if bench.percent or bench.bounds else value * 100, 2),
                 "source": page_url(page),
             }
@@ -558,7 +575,7 @@ def report_superseded(archive: zipfile.ZipFile, pages: list[str]) -> list[str]:
 def get_scores(pages: list[str] | None = None, archive: zipfile.ZipFile | None = None,
                fetch_page=None, fetch_json=None) -> list[dict]:
     """Return a list of dicts: benchmark, key, revision, model, version,
-    open_weights, score, source.
+    open_weights, weights, score, source.
 
     ``model`` is Epoch's model group (what the mapping is keyed by), ``version``
     the configuration the row measured, ``score`` a percentage, ``source`` the
@@ -581,7 +598,8 @@ def get_scores(pages: list[str] | None = None, archive: zipfile.ZipFile | None =
 
 def get_catalogue(archive: zipfile.ZipFile | None = None) -> list[dict]:
     """Every model group scored in a file this script reads, with Epoch's
-    open-weights verdict (True when any of its configurations is open)."""
+    open-weights verdict (True when any of its configurations is open) and
+    weight status (the most open of its configurations')."""
     archive = archive or fetch_archive()
     models = load_models(archive)
     verdicts: dict[str, set[bool]] = {}
@@ -590,14 +608,17 @@ def get_catalogue(archive: zipfile.ZipFile | None = None) -> list[dict]:
             version = (row.get(VERSION_COLUMN) or "").strip()
             if not version or not (row.get(bench.column) or "").strip():
                 continue
-            model = models.get(version) or {"model": version, "open_weights": None}
+            model = models.get(version) or {"model": version, "weights": None}
             seen = verdicts.setdefault(str(model["model"]), set())
-            if model["open_weights"] is not None:
-                seen.add(bool(model["open_weights"]))
-    return [
-        {"model": name, "open_weights": True if True in seen else False if seen else None}
-        for name, seen in sorted(verdicts.items())
-    ]
+            if model.get("weights") is not None:
+                seen.add(model["weights"])
+    catalogue = []
+    for name, seen in sorted(verdicts.items()):
+        status = merge(*seen)
+        catalogue.append(
+            {"model": name, "open_weights": open_from_status(status), "weights": status}
+        )
+    return catalogue
 
 
 def parse_args() -> argparse.Namespace:

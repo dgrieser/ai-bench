@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
+from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE, reopened
 from _prompts import freeze_decisions
 from fetch_vals import model_label as vals_model_label
 import _source_pages
@@ -85,7 +85,7 @@ def load_reviewed_vals_names(
     return {
         name
         for name, value in _load_raw_mapping(path).items()
-        if value != PENDING and (include_closed or value != CLOSED_WEIGHTS)
+        if value != PENDING and (value != CLOSED_WEIGHTS or (include_closed and not reopened(name)))
     }
 
 

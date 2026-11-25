@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 import _matching
+import _openness
 import _prompts
 import _rejections
 import propose
@@ -34,6 +35,9 @@ MAX_CANDIDATES = 5
 
 # How many of the source's other names the admin page lists under a question.
 MAX_SIBLINGS = 8
+
+# check_new.py's kinds: an Artificial Analysis release, open or closed.
+NEW_MODEL_KINDS = ("new-model", "new-closed-model")
 
 KIND_LABELS = {
     "new-model": "new model",
@@ -179,6 +183,19 @@ def render_json(
                 ],
             }
         )
+        if (route is not None and route.universe == propose.MODELS) or (
+            entry.get("kind") in NEW_MODEL_KINDS
+        ):
+            # What is known about the subject's weights -- a person's override,
+            # the asking source's own label, or the pooled index -- for the
+            # admin page's "weights" chip and its override control. Only when
+            # something is known: every other line of the file stays as it was.
+            status, origin = _openness.describe(
+                subject, weights=entry.get("weights"), offline=True
+            )
+            if status:
+                questions[-1]["weights"] = status
+                questions[-1]["weights_from"] = origin
         if entry.get("source_url"):
             # Where the subject was read, for the admin page's link. Only when
             # the asking script knew: an older report has none, and the page

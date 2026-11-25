@@ -25,6 +25,14 @@ They are queued under their own kind, new-closed-model, so nothing that adds a
 queued open model (propose.py, the admin page's "Add all") can ever add one of
 these as an open-weight row. --open-only leaves them out altogether.
 
+AA calls a release closed until its weights are on Hugging Face, even when the
+lab has announced them. So each release also gets a weight status (see
+_openness.py): a person's override in weights-overrides.json first, else the
+most open of AA's verdict and the pooled index of the other boards. A closed
+release that reads "upcoming" (or "open") that way is offered the other way
+round -- [o] add as open is the suggestion -- and the queue carries the status,
+so the admin page suggests the open add too.
+
 With no tty (e.g. inside a batch script), it offers nothing and only prints the
 candidates. Under --collect-prompts each candidate is queued for review instead
 of being offered, and nothing is dismissed.
@@ -46,6 +54,7 @@ import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
+import _openness
 import _prompts
 from _artificialanalysis_mapping import mapped_aa_slugs
 from _new_models import apply_decisions, dismiss, load_decisions, load_dismissed
@@ -108,6 +117,29 @@ def split_tagged(tagged: list[dict]) -> list[dict]:
     return models
 
 
+def weights_of(m: dict) -> str:
+    """A release's weight status: an override, else AA and the other boards.
+
+    AA's own verdict is the floor -- the most open verdict wins, so another
+    board that already lists the weights (or an announcement read as
+    "upcoming") lifts a release AA still calls closed.
+    """
+    aa = _openness.CLOSED if m.get("_closed") else _openness.OPEN
+    names = [n for n in (m.get("slug"), m.get("name")) if isinstance(n, str) and n]
+    for name in names:
+        override = _openness.override_for(name)
+        if override:
+            return override
+    if aa == _openness.OPEN:
+        return aa
+    try:
+        index = _openness.status_index()
+    except Exception:  # noqa: BLE001 - the index is a hint; AA's verdict stands
+        index = {}
+    pooled = [index.get(_openness.normalize(name)) for name in names]
+    return _openness.merge(aa, *pooled) or aa
+
+
 def creator_name(m: dict) -> str:
     c = m.get("model_creator")
     if isinstance(c, dict):
@@ -149,12 +181,15 @@ def prompt_choice(model: dict) -> str:
     """
     slug = model["slug"]
     closed = model.get("_closed", False)
+    weights = model.get("_weights") or (_openness.CLOSED if closed else _openness.OPEN)
     if _prompts.collecting():
         note = " - ".join(
             part
             for part in (
                 f"released {model.get('release_date') or '?'}",
                 creator_name(model),
+                (f"weights {weights} per other sources, AA says closed"
+                 if closed and weights != _openness.CLOSED else ""),
                 model.get("url") or "",
             )
             if part
@@ -170,10 +205,16 @@ def prompt_choice(model: dict) -> str:
             note=note,
             command="./check_new.py",
             source_url=model.get("url") or None,
+            weights=weights,
         )
         return "defer"
 
-    if closed:
+    if closed and weights != _openness.CLOSED:
+        ask = (
+            f"AA calls '{slug}' closed, other sources say {weights}: "
+            "[o] add as open (weights coming)  [r] reference  [n] never ask again  [q] quit: "
+        )
+    elif closed:
         ask = (
             f"Closed '{slug}': carry as reference?  [r] reference  "
             "[o] add as open (weights coming)  [n] never ask again  [q] quit: "
@@ -265,6 +306,8 @@ def main() -> int:
         models = split_tagged(fetch_aa_models(cutoff, "tag"))
 
     new = [m for m in models if m.get("slug") and m["slug"] not in known]
+    for m in new:
+        m["_weights"] = weights_of(m)
     # Open releases first: they are what llm.json is for.
     new.sort(key=lambda m: m.get("release_date") or "", reverse=True)
     new.sort(key=lambda m: m.get("_closed", False))
@@ -275,11 +318,11 @@ def main() -> int:
         return 0
 
     print(f"{len(new)} new {kind} on AA since {cutoff.isoformat()} (not in llm.json):\n")
-    print(f"  {'RELEASED':10s}  {'WEIGHTS':7s}  {'SLUG':32s}  {'CREATOR':22s}  URL")
+    print(f"  {'RELEASED':10s}  {'WEIGHTS':8s}  {'SLUG':32s}  {'CREATOR':22s}  URL")
     for m in new:
         print(
             f"  {m.get('release_date') or '?':10s}  "
-            f"{'closed' if m.get('_closed') else 'open':7s}  {m['slug']:32s}  "
+            f"{m['_weights']:8s}  {m['slug']:32s}  "
             f"{creator_name(m):22s}  {m.get('url') or ''}"
         )
 

@@ -33,6 +33,8 @@ on:
       - "*mapping*.json"
       # Candidates ruled out by hand ("none of these"; see _rejections.py).
       - "rejected-candidates.json"
+      # Weight statuses set by hand (open / upcoming / closed; see _openness.py).
+      - "weights-overrides.json"
       - "llm.json"
       # A merged proposal PR may carry nothing but a flipped new-model decision;
       # that run is the one that has to act on it.

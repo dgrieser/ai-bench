@@ -51,6 +51,7 @@ import _rename
 import derive_indexes
 import edit
 import propose
+import _openness
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE
 from _scores import editable_benchmarks
 from fill_source_urls import canonical
@@ -155,6 +156,15 @@ MAX_REJECTION_ITEMS = 40
 # "if_previous": [...] | null}; an empty list removes them.
 MODEL_HINTS = "model-hints"
 MAX_HINT = 160
+# A person's word on a model's weights (see _openness.py): {"kind":
+# "weights-override", "name", "weights": "open" | "upcoming" | "closed" | null,
+# "if_previous": the override the page showed, or null}. Written to
+# weights-overrides.json, where it beats every source: "upcoming" keeps a
+# release AA still calls closed in front of a person, "closed" lets the mapping
+# updaters skip a name no source labels, and null hands the name back to the
+# sources. Any name, queued or not -- it answers no question, it corrects the
+# verdict the next run asks them with.
+WEIGHTS_OVERRIDE = "weights-override"
 KINDS = frozenset(
     {
         MAPPING,
@@ -176,6 +186,7 @@ KINDS = frozenset(
         MAPPING_EDIT,
         REJECTION_EDIT,
         MODEL_HINTS,
+        WEIGHTS_OVERRIDE,
     }
 )
 
@@ -300,6 +311,10 @@ class Answer:
             if not self.value:
                 return f"model {self.subject!r}: no \"not this\" hints"
             return f"model {self.subject!r}: not this -- {'; '.join(self.value)}"
+        if self.kind == WEIGHTS_OVERRIDE:
+            if self.value is None:
+                return f"weights of {self.subject!r}: back to the sources"
+            return f"weights of {self.subject!r}: {self.value} (override)"
         if self.kind == REJECTION_EDIT:
             parts = []
             if self.value["add"]:
@@ -727,6 +742,8 @@ def _validate_one(
         return _validate_mapping_edit(index, record, universes, created, doc)
     if kind == MODEL_HINTS:
         return _validate_model_hints(index, record, model_names, doc or {})
+    if kind == WEIGHTS_OVERRIDE:
+        return _validate_weights_override(index, record)
     if kind == REJECTION_EDIT:
         return _validate_rejection_edit(index, record, universes)
     if kind == AA_IGNORE:
@@ -1076,6 +1093,35 @@ def _validate_model_hints(
                   fields={"if_previous": as_list(record.get("if_previous")) or []})
 
 
+def _validate_weights_override(index: int, record: dict[str, Any]) -> Answer:
+    """One model's weight status set by hand, or handed back to the sources."""
+    name = _subject_of(record, "name")
+    if len(name) > MAX_SUBJECT or any(ord(ch) < 32 for ch in name):
+        raise AnswerError(f"a model name is one line of at most {MAX_SUBJECT} characters")
+    if not _openness.normalize(name):
+        raise AnswerError(f"{name!r} has no letters or digits to match a model by")
+    if "weights" not in record:
+        raise AnswerError(
+            f"'weights' is required: one of {', '.join(_openness.STATUSES)}, or null to clear"
+        )
+    weights = record.get("weights")
+    if weights is not None and weights not in _openness.STATUSES:
+        raise AnswerError(
+            f"'weights' must be one of {', '.join(_openness.STATUSES)}, or null; got {weights!r}"
+        )
+    if "if_previous" not in record:
+        raise AnswerError("'if_previous' is required: the override the page showed (null for none)")
+    current = _openness.override_for(name)
+    if record.get("if_previous") != current:
+        raise AnswerError(
+            f"stale: {name!r}'s weights override is now {current!r}, not "
+            f"{record.get('if_previous')!r}; re-read the page"
+        )
+    if weights == current:
+        raise AnswerError(f"{name!r} already has exactly this override")
+    return Answer(index=index, kind=WEIGHTS_OVERRIDE, subject=name, value=weights)
+
+
 def _mapping_edit_failures(answers: Sequence[Answer], reported: set[int]) -> list[Failure]:
     """Refuse a mapping-edit that collides with another record of the batch.
 
@@ -1302,7 +1348,10 @@ def _validate_model_add(
     # release (the Models tab's "Add a model" form, when the name it was given
     # is one Artificial Analysis offered). Anything left out add.py fills in
     # from AA, which is the whole point of a model-add.
-    return Answer(index=index, kind=MODEL_ADD, subject=subject, fields=_metadata_fields(record))
+    return Answer(
+        index=index, kind=MODEL_ADD, subject=subject, fields=_metadata_fields(record),
+        value=_openness.UPCOMING if override is True else None,
+    )
 
 
 def _metadata_fields(record: dict[str, Any]) -> dict[str, Any]:
@@ -1952,6 +2001,7 @@ def touchable_paths(answers: Iterable[Answer], llm_path: Path) -> list[Path]:
         _new_models.DECISIONS_FILE,
         _new_models.DISMISSED_FILE,
         _reference.REFERENCE_MODELS,
+        _openness.OVERRIDES_FILE,
     }
     aa_module = importlib.import_module(AA_MODULE)
     for answer in answers:
@@ -2052,6 +2102,10 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
     if answer.kind == MODEL_HINTS:
         return _set_model_hints(answer, llm_path)
 
+    if answer.kind == WEIGHTS_OVERRIDE:
+        _openness.set_override(answer.subject, answer.value)
+        return [f"{_openness.OVERRIDES_FILE.name}: {answer.describe()}"]
+
     if answer.kind == REJECTION_EDIT:
         written = _rejections.edit(
             answer.route, answer.subject,
@@ -2079,7 +2133,14 @@ def _apply_one(answer: Answer, llm_path: Path) -> list[str]:
         # The half that stops check_new.py offering the slug again: without it
         # the model is in llm.json but nothing says the question was answered.
         _new_models.record_proposed(answer.subject)
-        return [f"{llm_path.name}: added {answer.subject!r} (scores land on the next refresh)"]
+        log = [f"{llm_path.name}: added {answer.subject!r} (scores land on the next refresh)"]
+        # Added as open over a closed verdict: the person said its weights are
+        # coming. Kept as an override, so no board's "closed" buries the
+        # model's other names before they are -- one a person already set wins.
+        if answer.value and _openness.override_for(answer.subject) is None:
+            _openness.set_override(answer.subject, answer.value)
+            log.append(f"{_openness.OVERRIDES_FILE.name}: {answer.subject!r} -> {answer.value}")
+        return log
 
     if answer.kind == MODEL_CREATE:
         _add_model(answer.subject, answer.fields, llm_path)
