@@ -1,3 +1,183 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "context": {
+        "known": 68,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SWE-2"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "SWE-1.6"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "SWE-1.7"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "SWE-2 Flash"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierCode model 'SWE-2.1' to llm.json model",
+      "route": "update_frontiercode_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://cognition.com/frontiercode",
+      "subject": "SWE-2.1",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "muse-wonder",
+          "reason": "exact to Muse Wonder, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "muse-wonder-full",
+          "reason": "exact to Muse Wonder, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map FrontierSWE model 'Muse Wonder' to llm.json model",
+      "route": "update_frontierswe_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://www.frontierswe.com/",
+      "subject": "Muse Wonder",
+      "universe": "models"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "nex-n2-5-mini",
+          "reason": "the same name without its first 2 word(s): exact to mini-4-5, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-neon",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-argon",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-carbon",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "gemini-4-hydrogen",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 442,
+        "mapped": {
+          "gemini-4-argon": [
+            "google/gemini-4-argon"
+          ],
+          "gemini-4-carbon": [
+            "google/gemini-4-carbon"
+          ],
+          "gemini-4-hydrogen": [
+            "google/gemini-4-hydrogen"
+          ],
+          "gemini-4-neon": [
+            "google/gemini-4-neon"
+          ],
+          "nex-n2-5-mini": [
+            "nex-agi/nex-n2.5-mini"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "upstage/solar-mini4"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "upstage/solar-pro4"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "upstage/solar-pro-3"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'upstage/solar-mini-4-5' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/upstage/solar-mini-4-5",
+      "subject": "upstage/solar-mini-4-5",
+      "universe": "models"
+    },
+    {
+      "candidates": [],
+      "context": {
+        "known": 442,
+        "mapped": {},
+        "siblings": [
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "upstage/solar-pro-3"
+          },
+          {
+            "mapped_to": [
+              "__closed_weights__"
+            ],
+            "name": "upstage/solar-pro4"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "upstage/solar-mini4"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'upstage/solar-pro-4-contributor' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/upstage/solar-pro-4-contributor",
+      "subject": "upstage/solar-pro-4-contributor",
+      "universe": "models"
+    }
+  ]
 }
