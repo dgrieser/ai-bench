@@ -1,3 +1,18 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'tngtech/deepseek-r1t2-chimera' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/tngtech/deepseek-r1t2-chimera",
+      "subject": "tngtech/deepseek-r1t2-chimera",
+      "universe": "models",
+      "weights": "open",
+      "weights_from": "sources"
+    }
+  ]
 }
