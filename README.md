@@ -3905,6 +3905,13 @@ Four things read the list:
 | `derive_indexes.py` | Nothing, by design: these rows are ranked with every other model. Hiding a row from the table does not take it out of the field the indexes measure against. See below. |
 | `_openness.py` | Never lets a source's (correct) "this model is closed" verdict bury a name belonging to one of these models. Every other closed name is still skipped without prompting. |
 
+`params` is optional on a reference row. Most labs publish no size for a
+closed model, so `null` is the usual value; when one does — a model card's
+total and active counts — enter it as on any other row (`2.8T-A80B`, via
+`./edit.py -m <name> --params …`). `vram` stays empty on every reference row:
+with no weights there is nothing to host, so a VRAM figure would be invented.
+`test_reference.py` holds both rules.
+
 `_reference.py` is the one loader behind all of them, and
 `apply_reference_flags()` is what keeps the `reference` flag in `llm.json` in
 step with the list — `update.py` and `derive_indexes.py` both call it before

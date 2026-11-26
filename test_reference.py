@@ -27,6 +27,7 @@ from pathlib import Path
 import derive_indexes as di
 import _openness
 import _reference
+from _params import normalize_params
 
 HERE = Path(__file__).resolve().parent
 LLM_JSON = HERE / "llm.json"
@@ -249,17 +250,26 @@ class TestLlmJson(unittest.TestCase):
                         value, names, f"{path.name}: {source_name!r} -> {value}"
                     )
 
-    def test_reference_rows_carry_no_weights_figures(self) -> None:
+    def test_reference_rows_carry_no_vram_figures(self) -> None:
         """No published weights, so nothing can be hosted and no VRAM estimate
         can exist -- a number here would be a fabrication, not a gap."""
         for entry in self.doc["models"]:
             if entry.get("reference") is not True:
                 continue
             with self.subTest(model=entry["name"]):
-                self.assertIsNone(entry.get("params"))
                 self.assertEqual(
                     [v for v in (entry.get("vram") or {}).values() if v is not None], []
                 )
+
+    def test_reference_params_are_optional_but_well_formed(self) -> None:
+        """A lab that publishes the size of a closed model (a model card's
+        total and active counts) gets it recorded; most do not, and null is
+        the normal value. When it is there it is spelled like any other row's."""
+        for entry in self.doc["models"]:
+            if entry.get("reference") is not True or entry.get("params") is None:
+                continue
+            with self.subTest(model=entry["name"]):
+                self.assertEqual(normalize_params(entry["params"]), entry["params"])
 
 
 if __name__ == "__main__":
