@@ -1,3 +1,155 @@
 {
-  "questions": []
+  "questions": [
+    {
+      "candidates": [
+        {
+          "confidence": "exact",
+          "option": "inkling-2-mini",
+          "reason": "exact to Inkling 2 Mini, exact match"
+        },
+        {
+          "confidence": "weak",
+          "option": "inkling-2-small",
+          "reason": "exact to Inkling 2 Mini, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-mini-2-0",
+          "reason": "the same name without its first 1 word(s): exact to 2-mini, all components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "a-x-k2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "glm-5-2",
+          "reason": "the same name without its first 1 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "context": {
+        "known": 314,
+        "mapped": {
+          "glm-5-2": [
+            "GLM-5.2"
+          ],
+          "inkling-2-small": [
+            "Inkling 2 Small"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "inkling-2-small"
+            ],
+            "name": "Inkling 2 Small"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map Epoch AI model 'Inkling 2 Mini' to llm.json model",
+      "route": "update_epoch_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://epoch.ai/benchmarks",
+      "subject": "Inkling 2 Mini",
+      "universe": "models",
+      "weights": "open",
+      "weights_from": "sources"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "lingsante-3-1-flash",
+          "reason": "the same name without the vendor prefix: drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-2-air",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash-1019",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "olmo-3-1-32b-instruct",
+          "reason": "the same name without its first 2 word(s): drop suffix to a variant, most components match"
+        }
+      ],
+      "context": {
+        "known": 445,
+        "mapped": {
+          "ling-3-1-flash": [
+            "inclusionai/ling-3.1-flash"
+          ]
+        },
+        "siblings": [
+          {
+            "mapped_to": [
+              "ling-3-1-flash"
+            ],
+            "name": "inclusionai/ling-3.1-flash"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-tiny"
+            ],
+            "name": "inclusionai/ling-3.0-tiny"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-flash"
+            ],
+            "name": "inclusionai/ling-3.0-flash"
+          },
+          {
+            "mapped_to": [
+              "ling-3-2-flash"
+            ],
+            "name": "inclusionai/ling-3.2-flash"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-flash-vl"
+            ],
+            "name": "inclusionai/ling-3.0-flash-vl"
+          },
+          {
+            "mapped_to": [
+              "ling-3-0-flash-fin"
+            ],
+            "name": "inclusionai/ling-3.0-flash-fin"
+          },
+          {
+            "mapped_to": [
+              "__unmappable__"
+            ],
+            "name": "inclusionai/ling-3.0-flash-sante"
+          }
+        ]
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map OpenRouter model 'inclusionai/lingsante-3.1-air-vl' to llm.json model",
+      "route": "update_openrouter_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://openrouter.ai/inclusionai/lingsante-3.1-air-vl",
+      "subject": "inclusionai/lingsante-3.1-air-vl",
+      "universe": "models",
+      "weights": "open",
+      "weights_from": "sources"
+    }
+  ]
 }

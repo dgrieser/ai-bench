@@ -58088,7 +58088,8 @@
         "aa_omniscience_hallucination_1_1": 80.6,
         "aa_omniscience_accuracy_1_1": 15.7,
         "terminal_bench_science_0_1": 0,
-        "frontiercode_2_0": 0
+        "frontiercode_2_0": 0,
+        "aa_strategy_ops_index": 4.8
       },
       "scores_updated": {
         "openbench_index": "2026-11-26",
@@ -58169,7 +58170,8 @@
         "aa_omniscience_hallucination_1_1": "2026-11-17",
         "aa_omniscience_accuracy_1_1": "2026-11-17",
         "terminal_bench_science_0_1": "2026-11-21",
-        "frontiercode_2_0": "2026-11-23"
+        "frontiercode_2_0": "2026-11-23",
+        "aa_strategy_ops_index": "2026-11-26"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -58250,7 +58252,8 @@
         "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/gemma-4-12b",
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/gemma-4-12b",
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gemma-4-12b",
-        "frontiercode_2_0": "https://artificialanalysis.ai/models/gemma-4-12b"
+        "frontiercode_2_0": "https://artificialanalysis.ai/models/gemma-4-12b",
+        "aa_strategy_ops_index": "https://artificialanalysis.ai/models/gemma-4-12b"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -58293,6 +58296,13 @@
           {
             "date": "2026-07-27",
             "score": 31,
+            "source": "https://artificialanalysis.ai/models/gemma-4-12b"
+          }
+        ],
+        "aa_strategy_ops_index": [
+          {
+            "date": "2026-11-26",
+            "score": 4.8,
             "source": "https://artificialanalysis.ai/models/gemma-4-12b"
           }
         ],
