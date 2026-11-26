@@ -1,17 +1,17 @@
 {
  "version": 1,
- "checked_at": "2026-11-25T14:49:53Z",
- "commit": "e2008278323fbdd1037de7d30b945c3be3e9044d",
- "run_url": "https://github.com/dgrieser/ai-bench/actions/runs/45637632886",
+ "checked_at": "2026-11-26T14:13:47Z",
+ "commit": "89336936cdc385882c6587d66e1db3d318219fbe",
+ "run_url": "https://github.com/dgrieser/ai-bench/actions/runs/45836237932",
  "python": "3.13.18",
- "duration_s": 218.6,
+ "duration_s": 214.0,
  "totals": {
-  "files": 66,
+  "files": 67,
   "files_broken": 0,
-  "tests": 1634,
+  "tests": 1656,
   "failed": 1,
   "skipped": 0,
-  "passed": 1633
+  "passed": 1655
  },
  "failures": [
   {
@@ -21,7 +21,7 @@
    "traceback": "Traceback (most recent call last):\n  File \"test_source_versions.py\", line 186, in test_aa_still_runs_the_terminal_bench_revision_its_column_holds\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        newer_than(found, expected), [],\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        f\"{expected} it is read as\",\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\nAssertionError: Lists differ: ['4.1'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'4.1'\n\n- ['4.1']\n+ [] : AA's evaluations page (https://artificialanalysis.ai/evaluations) names Terminal-Bench 4.1, newer than the 4.0 it is read as\n",
    "stdout": "",
    "stderr": "",
-   "duration_s": 0.078,
+   "duration_s": 0.156,
    "doc": "AA feeds terminal_bench_4_0 (107 values, model pages) and\nterminal_bench_4_1 (coding-agents page) under ids that name no minor\nrevision, so a move would land in the old column unannounced. This\nfails as soon as an AA page names a Terminal-Bench newer than the one\nAA_PAGES expects of it, or stops naming that one: check AA's runs,\nthen see this file's docstring for what to change.",
    "line": 175,
    "file": "test_source_versions.py",
@@ -35,7 +35,7 @@
    "traceback": "Traceback (most recent call last):\n  File \"test_source_versions.py\", line 186, in test_aa_still_runs_the_terminal_bench_revision_its_column_holds\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        newer_than(found, expected), [],\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        f\"{expected} it is read as\",\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\nAssertionError: Lists differ: ['4.1'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'4.1'\n\n- ['4.1']\n+ [] : AA's methodology page (https://artificialanalysis.ai/methodology/intelligence-benchmarking) names Terminal-Bench 4.1, newer than the 4.0 it is read as\n",
    "stdout": "",
    "stderr": "",
-   "duration_s": 0.183,
+   "duration_s": 0.368,
    "doc": "AA feeds terminal_bench_4_0 (107 values, model pages) and\nterminal_bench_4_1 (coding-agents page) under ids that name no minor\nrevision, so a move would land in the old column unannounced. This\nfails as soon as an AA page names a Terminal-Bench newer than the one\nAA_PAGES expects of it, or stops naming that one: check AA's runs,\nthen see this file's docstring for what to change.",
    "line": 175,
    "file": "test_source_versions.py",
