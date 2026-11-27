@@ -846,18 +846,41 @@
         "https://arxiv.org/abs/2512.12730"
       ]
     },
-    "vibe_code_bench_1_1": {
-      "name": "Vibe Code Bench 1.1",
-      "short_name": "Vibe 1.1",
+    "vibe_code_bench_1_1_1": {
+      "name": "Vibe Code Bench 1.1.1",
+      "short_name": "Vibe 1.1.1",
       "category": "Software Engineering",
-      "description": "Vals AI's greenfield application benchmark: the model is handed a natural-language specification for a web application and has to build the running product from scratch in an agent harness. Scoring is behavioural — an autonomous browser agent drives the deployed application against the specification's workflows, so a build that does not run scores nothing. The suite is 100 specifications, 50 public and 50 held out, and it is the one coding column here that measures construction rather than maintenance. Revision 1.1 replaced 1.0 at the same URL, so 1.0's numbers are not comparable and are not kept as a column.",
+      "description": "Vals AI's greenfield application benchmark: the model is handed a natural-language specification for a web application and has to build the running product from scratch in an agent harness. Scoring is behavioural — an autonomous browser agent drives the deployed application against the specification's workflows, so a build that does not run scores nothing. The suite is 100 specifications, 50 public and 50 held out, and it is the one coding column here that measures construction rather than maintenance. Revision 1.1.1 (November 2026) superseded 1.1: it upgrades the grader, requires every substep of a workflow to pass rather than crediting partial progress, and fixes ambiguous tests, so the same builds read lower (Fable 5.2: 83.5 against 93.8 on 1.1). The two revisions rank models alike but are not one scale, so 1.1 is kept as a column of its own and a model scored there alone reaches the coding index through a fitted conversion.",
       "settings": [
         "behavioural pass rate",
+        "every substep must pass",
         "100 specs",
         "agentic"
       ],
       "excludes": [
-        "Vibe Code Bench 1.0, which was replaced at the same URL"
+        "Vibe Code Bench 1.1, which has a column of its own",
+        "Vibe Code Bench 1.0, which was replaced at the same URL as 1.1"
+      ],
+      "urls": [
+        "https://www.vals.ai/benchmarks/vibe-code-v1-1-1",
+        "https://dl.acm.org/doi/10.1145/3786335.3813180",
+        "https://www.alphaxiv.org/abs/2603.04601"
+      ]
+    },
+    "vibe_code_bench_1_1": {
+      "name": "Vibe Code Bench 1.1",
+      "short_name": "Vibe 1.1",
+      "category": "Software Engineering",
+      "description": "Vals AI's greenfield application benchmark: the model is handed a natural-language specification for a web application and has to build the running product from scratch in an agent harness. Scoring is behavioural — an autonomous browser agent drives the deployed application against the specification's workflows, so a build that does not run scores nothing. The suite is 100 specifications, 50 public and 50 held out, and it is the one coding column here that measures construction rather than maintenance. Revision 1.1 replaced 1.0 at the same URL, so 1.0's numbers are not comparable and are not kept as a column. 1.1 was itself superseded by 1.1.1 in November 2026 (upgraded grader, every substep must pass, ambiguous tests fixed) and is archived: it is kept for its field, most of which was never re-graded on 1.1.1.",
+      "settings": [
+        "behavioural pass rate",
+        "100 specs",
+        "agentic",
+        "archived"
+      ],
+      "excludes": [
+        "Vibe Code Bench 1.0, which was replaced at the same URL",
+        "Vibe Code Bench 1.1.1, which has a column of its own"
       ],
       "urls": [
         "https://www.vals.ai/benchmarks/vibe-code",
@@ -2944,8 +2967,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 26539,
-        "coding_index": 18606,
+        "openbench_index": 26538,
+        "coding_index": 18605,
         "tooling_index": 28507,
         "knowledge_index": 18826,
         "vision_index": null,
@@ -3559,8 +3582,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 22802,
-        "coding_index": 17766,
+        "openbench_index": 22801,
+        "coding_index": 17764,
         "tooling_index": 27439,
         "knowledge_index": 13598,
         "vision_index": 10215,
@@ -5173,7 +5196,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 30875,
+        "coding_index": 31219,
         "tooling_index": null,
         "knowledge_index": 48393,
         "vision_index": null,
@@ -5768,7 +5791,7 @@
       "index_coverage": {
         "coding_index": {
           "measured": [
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -5781,6 +5804,7 @@
           "of": 21,
           "share": 0.319,
           "converted": [
+            "vibe_code_bench_1_1_1",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1"
           ],
@@ -8068,8 +8092,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44702,
-        "coding_index": 31202,
+        "openbench_index": 44703,
+        "coding_index": 31205,
         "tooling_index": 40786,
         "knowledge_index": 61844,
         "vision_index": 59959,
@@ -13141,7 +13165,7 @@
       "context": "1m",
       "scores": {
         "openbench_index": 33970,
-        "coding_index": 19097,
+        "coding_index": 19096,
         "tooling_index": 27925,
         "knowledge_index": 51486,
         "vision_index": null,
@@ -14310,7 +14334,7 @@
       },
       "scores": {
         "openbench_index": 25152,
-        "coding_index": 21491,
+        "coding_index": 21489,
         "tooling_index": 20539,
         "knowledge_index": 33513,
         "vision_index": null,
@@ -16405,8 +16429,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 29839,
-        "coding_index": 17189,
+        "openbench_index": 29837,
+        "coding_index": 17182,
         "tooling_index": 21921,
         "knowledge_index": 38016,
         "vision_index": 24158,
@@ -17093,7 +17117,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "livecodebench",
             "scicode",
             "ale_bench"
@@ -17101,7 +17125,8 @@
           "of": 21,
           "share": 0.343,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "ale_bench"
@@ -17172,8 +17197,8 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 46809,
-        "coding_index": 29290,
+        "openbench_index": 46807,
+        "coding_index": 29284,
         "tooling_index": 37930,
         "knowledge_index": 60629,
         "vision_index": null,
@@ -17836,7 +17861,7 @@
           "measured": [
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -17849,7 +17874,8 @@
           "of": 21,
           "share": 0.424,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "swe_bench_pro_public",
@@ -19335,8 +19361,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 38147,
-        "coding_index": 23362,
+        "openbench_index": 38144,
+        "coding_index": 23354,
         "tooling_index": 38660,
         "knowledge_index": 50795,
         "vision_index": 40987,
@@ -20163,8 +20189,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 32907,
-        "coding_index": 21833,
+        "openbench_index": 32905,
+        "coding_index": 21825,
         "tooling_index": 29166,
         "knowledge_index": 41688,
         "vision_index": 33786,
@@ -20946,8 +20972,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 25489,
-        "coding_index": 13518,
+        "openbench_index": 25488,
+        "coding_index": 13513,
         "tooling_index": 15750,
         "knowledge_index": 28751,
         "vision_index": 17753,
@@ -22876,8 +22902,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44603,
-        "coding_index": 28076,
+        "openbench_index": 44602,
+        "coding_index": 28073,
         "tooling_index": 42300,
         "knowledge_index": 57259,
         "vision_index": 46385,
@@ -23447,7 +23473,7 @@
           "measured": [
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "livecodebench",
             "scicode",
             "swe_bench_multilingual",
@@ -23457,7 +23483,8 @@
           "of": 21,
           "share": 0.271,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "livecodebench",
@@ -23536,8 +23563,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 62377,
-        "coding_index": 58172,
+        "openbench_index": 62477,
+        "coding_index": 58505,
         "tooling_index": 68247,
         "knowledge_index": 73963,
         "vision_index": null,
@@ -24373,7 +24400,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "livecodebench",
             "scicode",
             "programbench_almost",
@@ -24386,7 +24413,8 @@
           "share": 0.533,
           "converted": [
             "frontiercode_2_0",
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "ale_bench",
@@ -24471,8 +24499,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 51677,
-        "coding_index": 37374,
+        "openbench_index": 51680,
+        "coding_index": 37385,
         "tooling_index": 55865,
         "knowledge_index": 59086,
         "vision_index": null,
@@ -26805,8 +26833,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 37407,
-        "coding_index": 25750,
+        "openbench_index": 37404,
+        "coding_index": 25738,
         "tooling_index": 38240,
         "knowledge_index": 36811,
         "vision_index": 28907,
@@ -27653,7 +27681,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_bench_verified",
             "ale_bench"
@@ -27661,7 +27689,8 @@
           "of": 21,
           "share": 0.329,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "ale_bench"
@@ -29300,8 +29329,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 41783,
-        "coding_index": 25526,
+        "openbench_index": 41779,
+        "coding_index": 25514,
         "tooling_index": 33664,
         "knowledge_index": 54129,
         "vision_index": 27529,
@@ -31140,8 +31169,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 33870,
-        "coding_index": 27988,
+        "openbench_index": 33867,
+        "coding_index": 27979,
         "tooling_index": 31239,
         "knowledge_index": 37888,
         "vision_index": null,
@@ -31885,8 +31914,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 67113,
-        "coding_index": 54180,
+        "openbench_index": 67143,
+        "coding_index": 54279,
         "tooling_index": 65901,
         "knowledge_index": 80291,
         "vision_index": null,
@@ -32892,7 +32921,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -32909,6 +32938,7 @@
           "converted": [
             "frontiercode_2_0",
             "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1"
           ],
@@ -33006,8 +33036,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 62837,
-        "coding_index": 55976,
+        "openbench_index": 62823,
+        "coding_index": 55929,
         "tooling_index": 58878,
         "knowledge_index": 74703,
         "vision_index": 69648,
@@ -34068,7 +34098,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -34082,6 +34112,9 @@
           ],
           "of": 21,
           "share": 0.59,
+          "converted": [
+            "vibe_code_bench_1_1_1"
+          ],
           "second_hand": [
             "swe_bench_pro_public",
             "kernelbench_hard",
@@ -35668,8 +35701,8 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 21918,
-        "coding_index": 15511,
+        "openbench_index": 21917,
+        "coding_index": 15509,
         "tooling_index": 11849,
         "knowledge_index": 23337,
         "vision_index": 19367,
@@ -43778,7 +43811,7 @@
       "context": "200k",
       "scores": {
         "openbench_index": 33734,
-        "coding_index": 22132,
+        "coding_index": 22134,
         "tooling_index": 37258,
         "knowledge_index": 45487,
         "vision_index": null,
@@ -44401,7 +44434,7 @@
         "coding_index": {
           "measured": [
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -44410,6 +44443,9 @@
           ],
           "of": 21,
           "share": 0.205,
+          "converted": [
+            "vibe_code_bench_1_1_1"
+          ],
           "second_hand": [
             "swe_bench_pro_public",
             "scicode",
@@ -55377,7 +55413,7 @@
       "context": "256k",
       "scores": {
         "openbench_index": 25287,
-        "coding_index": 17099,
+        "coding_index": 17098,
         "tooling_index": 22240,
         "knowledge_index": 24654,
         "vision_index": 22853,
@@ -60104,8 +60140,8 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "openbench_index": 29901,
-        "coding_index": 18962,
+        "openbench_index": 29899,
+        "coding_index": 18954,
         "tooling_index": 25065,
         "knowledge_index": 33945,
         "vision_index": 35930,
@@ -60722,7 +60758,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 21828,
+        "coding_index": 21853,
         "tooling_index": 35138,
         "knowledge_index": null,
         "vision_index": null,
@@ -61101,7 +61137,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 35162,
+        "coding_index": 35189,
         "tooling_index": 45689,
         "knowledge_index": null,
         "vision_index": null,
@@ -61480,7 +61516,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 50825,
+        "coding_index": 50841,
         "tooling_index": 54250,
         "knowledge_index": null,
         "vision_index": null,
@@ -61858,8 +61894,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 51333,
-        "coding_index": 31995,
+        "openbench_index": 51330,
+        "coding_index": 31984,
         "tooling_index": 42925,
         "knowledge_index": 69797,
         "vision_index": null,
@@ -62742,7 +62778,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "livecodebench",
             "scicode",
             "swe_bench_multilingual",
@@ -62755,7 +62791,8 @@
           "of": 21,
           "share": 0.671,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "swe_bench_multilingual"
@@ -63336,8 +63373,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 49647,
-        "coding_index": 32177,
+        "openbench_index": 49613,
+        "coding_index": 32063,
         "tooling_index": 45391,
         "knowledge_index": 70877,
         "vision_index": 42169,
@@ -63442,7 +63479,8 @@
         "frontiercode_2_0": 3.9,
         "critpt_2_0": 29.4,
         "critpt_hard_2_0": 18,
-        "terminal_bench_4_1": 0
+        "terminal_bench_4_1": 0,
+        "vibe_code_bench_1_1_1": 12.4
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -63551,7 +63589,8 @@
         "frontiercode_2_0": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-13",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -63660,7 +63699,8 @@
         "frontiercode_2_0": "https://artificialanalysis.ai/models/inkling",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/inkling",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -63800,6 +63840,13 @@
             "date": "2026-09-19",
             "score": 0,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 12.4,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -64308,7 +64355,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "swe_bench_pro_hard_2_0",
             "livecodebench",
@@ -64423,8 +64470,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 65638,
-        "coding_index": 65279,
+        "openbench_index": 65521,
+        "coding_index": 64887,
         "tooling_index": 68869,
         "knowledge_index": 77424,
         "vision_index": null,
@@ -64529,7 +64576,8 @@
         "frontiercode_2_0": 17.1,
         "critpt_hard_2_0": 23.5,
         "terminal_bench_4_1": 6.7,
-        "swe_bench_pro_public": 55.4
+        "swe_bench_pro_public": 55.4,
+        "vibe_code_bench_1_1_1": 64.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -64638,7 +64686,8 @@
         "frontiercode_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-13",
-        "swe_bench_pro_public": "2026-11-27"
+        "swe_bench_pro_public": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -64747,7 +64796,8 @@
         "frontiercode_2_0": "https://artificialanalysis.ai/models/deepseek-v4-pro",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/deepseek-v4-pro",
         "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
-        "swe_bench_pro_public": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro"
+        "swe_bench_pro_public": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -64914,6 +64964,13 @@
             "date": "2026-10-30",
             "score": 61.5,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 64.6,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -65439,7 +65496,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -66551,8 +66608,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 47514,
-        "coding_index": 33182,
+        "openbench_index": 47695,
+        "coding_index": 33784,
         "tooling_index": 39455,
         "knowledge_index": 66602,
         "vision_index": 51320,
@@ -67274,7 +67331,7 @@
         "coding_index": {
           "measured": [
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -67287,6 +67344,7 @@
           "of": 21,
           "share": 0.343,
           "converted": [
+            "vibe_code_bench_1_1_1",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1"
           ],
@@ -67400,8 +67458,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 59172,
-        "coding_index": 43847,
+        "openbench_index": 59167,
+        "coding_index": 43832,
         "tooling_index": 54592,
         "knowledge_index": 78061,
         "vision_index": 70175,
@@ -68176,7 +68234,7 @@
           "measured": [
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -68188,7 +68246,8 @@
           "of": 21,
           "share": 0.4,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "swe_bench_pro_public",
@@ -68302,8 +68361,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 56776,
-        "coding_index": 47754,
+        "openbench_index": 56767,
+        "coding_index": 47724,
         "tooling_index": 57507,
         "knowledge_index": 69851,
         "vision_index": null,
@@ -68911,7 +68970,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "livecodebench",
             "scicode",
             "programbench_almost",
@@ -68922,7 +68981,8 @@
           "share": 0.471,
           "converted": [
             "frontiercode_2_0",
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "ale_bench"
@@ -69007,8 +69067,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 79358,
-        "coding_index": 74117,
+        "openbench_index": 79354,
+        "coding_index": 74105,
         "tooling_index": 79354,
         "knowledge_index": 87491,
         "vision_index": 84012,
@@ -69112,7 +69172,8 @@
         "critpt_hard_2_0": 40.5,
         "terminal_bench_4_1": 23,
         "kernelbench_mega": 12.1,
-        "apex_agents_1_1": 47.8
+        "apex_agents_1_1": 47.8,
+        "vibe_code_bench_1_1_1": 68.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -69220,7 +69281,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-13",
         "kernelbench_mega": "2026-11-27",
-        "apex_agents_1_1": "2026-11-27"
+        "apex_agents_1_1": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -69328,7 +69390,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/kimi-k3",
         "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
         "kernelbench_mega": "https://kernelbench.com",
-        "apex_agents_1_1": "https://epoch.ai/benchmarks/apex-agents"
+        "apex_agents_1_1": "https://epoch.ai/benchmarks/apex-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -69469,6 +69532,13 @@
             "date": "2026-11-27",
             "score": 12.1,
             "source": "https://kernelbench.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 68.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -70082,7 +70152,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "livecodebench",
             "scicode",
@@ -70615,8 +70685,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 46196,
-        "coding_index": 29968,
+        "openbench_index": 46194,
+        "coding_index": 29962,
         "tooling_index": 43308,
         "knowledge_index": 61575,
         "vision_index": 55208,
@@ -71188,7 +71258,7 @@
           "measured": [
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -71198,7 +71268,8 @@
           "of": 21,
           "share": 0.286,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "swe_bench_pro_public",
@@ -71280,8 +71351,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 52390,
-        "coding_index": 33029,
+        "openbench_index": 52387,
+        "coding_index": 33020,
         "tooling_index": 46347,
         "knowledge_index": 71570,
         "vision_index": 66377,
@@ -71917,7 +71988,7 @@
           "measured": [
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -71927,7 +71998,8 @@
           "of": 21,
           "share": 0.286,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "swe_bench_pro_public",
@@ -72008,8 +72080,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 53708,
-        "coding_index": 40499,
+        "openbench_index": 53544,
+        "coding_index": 39950,
         "tooling_index": 53279,
         "knowledge_index": 68864,
         "vision_index": 42487,
@@ -72111,7 +72183,8 @@
         "aa_economics_index": 24.9,
         "terminal_bench_science_0_1": 0,
         "critpt_hard_2_0": 18.5,
-        "terminal_bench_4_1": 0.9
+        "terminal_bench_4_1": 0.9,
+        "vibe_code_bench_1_1_1": 11.1
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -72217,7 +72290,8 @@
         "aa_economics_index": "2026-11-05",
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-13",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -72323,7 +72397,8 @@
         "aa_economics_index": "https://artificialanalysis.ai/models/inkling-small",
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/inkling-small",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/inkling-small",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -72457,6 +72532,13 @@
             "date": "2026-09-19",
             "score": 0.5,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 11.1,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -72930,7 +73012,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -73465,8 +73547,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 76236,
-        "coding_index": 70915,
+        "openbench_index": 76282,
+        "coding_index": 71068,
         "tooling_index": 78025,
         "knowledge_index": 85063,
         "vision_index": 89963,
@@ -74314,7 +74396,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -74328,6 +74410,9 @@
           ],
           "of": 21,
           "share": 0.757,
+          "converted": [
+            "vibe_code_bench_1_1_1"
+          ],
           "second_hand": [
             "swe_bench_pro_public",
             "nl2repo"
@@ -74436,8 +74521,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 43168,
-        "coding_index": 27541,
+        "openbench_index": 43167,
+        "coding_index": 27539,
         "tooling_index": 39609,
         "knowledge_index": 56982,
         "vision_index": null,
@@ -74965,7 +75050,7 @@
           "measured": [
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -74975,7 +75060,8 @@
           "of": 21,
           "share": 0.276,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "swe_bench_pro_public",
@@ -76025,8 +76111,8 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 47965,
-        "coding_index": 34452,
+        "openbench_index": 47961,
+        "coding_index": 34439,
         "tooling_index": 48847,
         "knowledge_index": 52302,
         "vision_index": 48607,
@@ -76866,8 +76952,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 36883,
-        "coding_index": 20600,
+        "openbench_index": 36879,
+        "coding_index": 20588,
         "tooling_index": 33452,
         "knowledge_index": 43925,
         "vision_index": null,
@@ -77544,7 +77630,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_bench_multilingual",
             "programbench_almost",
@@ -77553,7 +77639,8 @@
           "of": 21,
           "share": 0.405,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "swe_bench_multilingual"
@@ -77634,8 +77721,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 78589,
-        "coding_index": 73586,
+        "openbench_index": 78742,
+        "coding_index": 74096,
         "tooling_index": 82564,
         "knowledge_index": 83373,
         "vision_index": null,
@@ -77748,7 +77835,8 @@
         "critpt_hard_2_0": 33.5,
         "terminal_bench_4_1": 40.4,
         "aa_coding_agent_index_2_1": 40.1,
-        "kernelbench_mega": 19.2
+        "kernelbench_mega": 19.2,
+        "vibe_code_bench_1_1_1": 66.3
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -77865,7 +77953,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -77982,7 +78071,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/glm-5-3",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -78198,6 +78288,13 @@
             "date": "2026-10-30",
             "score": 58,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 66.3,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -78850,7 +78947,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "livecodebench",
             "scicode",
@@ -78962,8 +79059,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 62307,
-        "coding_index": 50138,
+        "openbench_index": 62408,
+        "coding_index": 50474,
         "tooling_index": 67808,
         "knowledge_index": 65480,
         "vision_index": 69535,
@@ -79935,7 +80032,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -79946,7 +80043,8 @@
           "of": 21,
           "share": 0.486,
           "converted": [
-            "terminal_bench_4_1"
+            "terminal_bench_4_1",
+            "vibe_code_bench_1_1_1"
           ],
           "second_hand": [
             "deepswe_1_1",
@@ -80556,8 +80654,8 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "openbench_index": 43856,
-        "coding_index": 21675,
+        "openbench_index": 43853,
+        "coding_index": 21666,
         "tooling_index": 36675,
         "knowledge_index": 67562,
         "vision_index": null,
@@ -82334,8 +82432,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 60150,
-        "coding_index": 49240,
+        "openbench_index": 60170,
+        "coding_index": 49307,
         "tooling_index": 72332,
         "knowledge_index": 68694,
         "vision_index": 50052,
@@ -82909,8 +83007,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 74962,
-        "coding_index": 60501,
+        "openbench_index": 74961,
+        "coding_index": 60496,
         "tooling_index": 86573,
         "knowledge_index": 77341,
         "vision_index": null,
@@ -83017,7 +83115,8 @@
         "terminal_bench_science_0_1": 4.8,
         "critpt_hard_2_0": 24.5,
         "terminal_bench_4_1": 42.4,
-        "aa_coding_agent_index_2_1": 39
+        "aa_coding_agent_index_2_1": 39,
+        "vibe_code_bench_1_1_1": 19.4
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -83128,7 +83227,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-24",
-        "aa_coding_agent_index_2_1": "2026-11-24"
+        "aa_coding_agent_index_2_1": "2026-11-24",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -83239,7 +83339,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/glm-5-3-flash",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/glm-5-3-flash",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -83420,6 +83521,13 @@
             "date": "2026-10-30",
             "score": 56.3,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 19.4,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -83977,7 +84085,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "livecodebench",
             "scicode",
@@ -84084,8 +84192,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 69893,
-        "coding_index": 66246,
+        "openbench_index": 69899,
+        "coding_index": 66264,
         "tooling_index": 76596,
         "knowledge_index": 71703,
         "vision_index": 71484,
@@ -84996,8 +85104,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 28357,
-        "coding_index": 15556,
+        "openbench_index": 28355,
+        "coding_index": 15549,
         "tooling_index": 18496,
         "knowledge_index": 31170,
         "vision_index": null,
@@ -85690,8 +85798,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 31922,
-        "coding_index": 15451,
+        "openbench_index": 31920,
+        "coding_index": 15446,
         "tooling_index": 26654,
         "knowledge_index": 37610,
         "vision_index": null,
@@ -86446,8 +86554,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 35830,
-        "coding_index": 17654,
+        "openbench_index": 35829,
+        "coding_index": 17649,
         "tooling_index": 30280,
         "knowledge_index": 44691,
         "vision_index": null,
@@ -87167,8 +87275,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 74068,
-        "coding_index": 73419,
+        "openbench_index": 74430,
+        "coding_index": 74629,
         "tooling_index": 83409,
         "knowledge_index": 79954,
         "vision_index": 69545,
@@ -87265,7 +87373,8 @@
         "cybergym_e2e_aa": 72.5,
         "aa_healthcare_index": 42.9,
         "terminal_bench_4_1": 37.9,
-        "agents_last_exam_1_0": 41
+        "agents_last_exam_1_0": 41,
+        "vibe_code_bench_1_1_1": 68.9
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -87366,7 +87475,8 @@
         "cybergym_e2e_aa": "2026-11-11",
         "aa_healthcare_index": "2026-11-12",
         "terminal_bench_4_1": "2026-11-13",
-        "agents_last_exam_1_0": "2026-11-24"
+        "agents_last_exam_1_0": "2026-11-24",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -87467,7 +87577,8 @@
         "cybergym_e2e_aa": "https://artificialanalysis.ai/evaluations/artificial-analysis-cyber-index",
         "aa_healthcare_index": "https://artificialanalysis.ai/models/tencent-hy4",
         "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
-        "agents_last_exam_1_0": "https://huggingface.co/tencent/Hy4"
+        "agents_last_exam_1_0": "https://huggingface.co/tencent/Hy4",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -87557,6 +87668,13 @@
             "date": "2026-10-30",
             "score": 58.9,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 68.9,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -87951,7 +88069,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "swe_bench_multilingual",
             "programbench_almost",
@@ -88066,8 +88184,8 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 60852,
-        "coding_index": 44484,
+        "openbench_index": 60849,
+        "coding_index": 44475,
         "tooling_index": 62254,
         "knowledge_index": 68108,
         "vision_index": null,
@@ -88799,8 +88917,8 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "openbench_index": 33959,
-        "coding_index": 15920,
+        "openbench_index": 33958,
+        "coding_index": 15918,
         "tooling_index": 33358,
         "knowledge_index": 38386,
         "vision_index": null,
@@ -89383,8 +89501,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 72196,
-        "coding_index": 76500,
+        "openbench_index": 72186,
+        "coding_index": 76467,
         "tooling_index": 78473,
         "knowledge_index": 76596,
         "vision_index": 63450,
@@ -89482,7 +89600,8 @@
         "aa_intelligence_index_4_3": 39.5,
         "terminal_bench_3_0": 30,
         "terminal_bench_science_0_1": 9,
-        "kernelbench_mega": 15.1
+        "kernelbench_mega": 15.1,
+        "vibe_code_bench_1_1_1": 67.4
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -89584,7 +89703,8 @@
         "aa_intelligence_index_4_3": "2026-09-10",
         "terminal_bench_3_0": "2026-10-31",
         "terminal_bench_science_0_1": "2026-11-04",
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -89686,7 +89806,8 @@
         "aa_intelligence_index_4_3": "https://artificialanalysis.ai/models/deepseek-v4-1-flash",
         "terminal_bench_3_0": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/deepseek-v4-1-flash",
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_4_3": [
@@ -89774,6 +89895,13 @@
             "date": "2026-10-30",
             "score": 64,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 67.4,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -90232,7 +90360,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "scicode",
             "swe_atlas_qna_1_1",
@@ -90801,8 +90929,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 87948,
-        "coding_index": 92890,
+        "openbench_index": 87957,
+        "coding_index": 92921,
         "tooling_index": 88805,
         "knowledge_index": 94903,
         "vision_index": null,
@@ -90911,7 +91039,8 @@
         "critpt_hard_2_0": 52.5,
         "terminal_bench_4_1": 58.1,
         "aa_coding_agent_index_2_1": 52.5,
-        "kernelbench_mega": 19.3
+        "kernelbench_mega": 19.3,
+        "vibe_code_bench_1_1_1": 78.7
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -91024,7 +91153,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -91137,7 +91267,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-fable-5-1",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -91321,6 +91452,13 @@
             "date": "2026-11-27",
             "score": 19.3,
             "source": "https://kernelbench.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 78.7,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -91994,7 +92132,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "swe_bench_pro_hard_2_0",
             "livecodebench",
@@ -92107,8 +92245,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 64698,
-        "coding_index": 62711,
+        "openbench_index": 64771,
+        "coding_index": 62955,
         "tooling_index": 67906,
         "knowledge_index": 78139,
         "vision_index": 71674,
@@ -93000,7 +93138,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "scicode",
             "programbench_almost",
@@ -93010,6 +93148,7 @@
           "of": 21,
           "share": 0.476,
           "converted": [
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public"
           ],
           "second_hand": [
@@ -93115,8 +93254,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 74018,
-        "coding_index": 70543,
+        "openbench_index": 74114,
+        "coding_index": 70865,
         "tooling_index": 78411,
         "knowledge_index": 85302,
         "vision_index": 82615,
@@ -94063,7 +94202,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "swe_bench_pro_hard_2_0",
             "livecodebench",
@@ -94075,6 +94214,7 @@
           "of": 21,
           "share": 0.533,
           "converted": [
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public"
           ],
           "second_hand": [
@@ -94187,8 +94327,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 78653,
-        "coding_index": 73577,
+        "openbench_index": 78699,
+        "coding_index": 73730,
         "tooling_index": 83514,
         "knowledge_index": 93218,
         "vision_index": 89775,
@@ -95149,7 +95289,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "swe_bench_pro_hard_2_0",
             "livecodebench",
@@ -95163,6 +95303,7 @@
           "of": 21,
           "share": 0.71,
           "converted": [
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "swe_atlas_qna_1_1"
           ],
@@ -95275,8 +95416,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 89654,
-        "coding_index": 94386,
+        "openbench_index": 89671,
+        "coding_index": 94443,
         "tooling_index": 88214,
         "knowledge_index": 97989,
         "vision_index": 97334,
@@ -95388,7 +95529,8 @@
         "critpt_hard_2_0": 70.5,
         "terminal_bench_4_1": 57.6,
         "aa_coding_agent_index_2_1": 53.1,
-        "swe_marathon_1_2": 58.2
+        "swe_marathon_1_2": 58.2,
+        "vibe_code_bench_1_1_1": 77.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -95504,7 +95646,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "swe_marathon_1_2": "2026-11-27"
+        "swe_marathon_1_2": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -95620,7 +95763,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-astra",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "swe_marathon_1_2": "https://www.swe-marathon.org"
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -95792,6 +95936,13 @@
             "date": "2026-10-22",
             "score": 52.5,
             "source": "https://programbench.com/extended"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 77.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -96440,7 +96591,7 @@
             "swe_marathon_1_2",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "scicode",
             "swe_atlas_qna_1_1",
@@ -97348,8 +97499,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 15446,
-        "coding_index": 11314,
+        "openbench_index": 15444,
+        "coding_index": 11310,
         "tooling_index": 10842,
         "knowledge_index": 14001,
         "vision_index": null,
@@ -97960,8 +98111,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 36412,
-        "coding_index": 18764,
+        "openbench_index": 36410,
+        "coding_index": 18756,
         "tooling_index": 39893,
         "knowledge_index": 40683,
         "vision_index": null,
@@ -98621,8 +98772,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 46622,
-        "coding_index": 29956,
+        "openbench_index": 46619,
+        "coding_index": 29943,
         "tooling_index": 53887,
         "knowledge_index": 47987,
         "vision_index": null,
@@ -99284,8 +99435,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 48628,
-        "coding_index": 27739,
+        "openbench_index": 48624,
+        "coding_index": 27726,
         "tooling_index": 49451,
         "knowledge_index": 59371,
         "vision_index": null,
@@ -99887,8 +100038,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 75020,
-        "coding_index": 68552,
+        "openbench_index": 74622,
+        "coding_index": 67228,
         "tooling_index": 79895,
         "knowledge_index": 83848,
         "vision_index": 70591,
@@ -99988,7 +100139,8 @@
         "frontiercode_2_0": 24,
         "critpt_2_0": 56.9,
         "critpt_hard_2_0": 34,
-        "terminal_bench_4_1": 27
+        "terminal_bench_4_1": 27,
+        "vibe_code_bench_1_1_1": 64.8
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -100092,7 +100244,8 @@
         "frontiercode_2_0": "2026-11-04",
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-13",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -100196,7 +100349,8 @@
         "frontiercode_2_0": "https://artificialanalysis.ai/models/mimo-v2-6-pro",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/mimo-v2-6-pro",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -100298,6 +100452,13 @@
             "date": "2026-09-24",
             "score": 12.5,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 64.8,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -100810,7 +100971,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "programbench_almost",
             "ale_bench"
@@ -100920,8 +101081,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 68488,
-        "coding_index": 66757,
+        "openbench_index": 68178,
+        "coding_index": 65725,
         "tooling_index": 76535,
         "knowledge_index": 70574,
         "vision_index": 49897,
@@ -101015,7 +101176,8 @@
         "terminal_bench_science_0_1": 4.3,
         "frontiercode_2_0": 21.6,
         "critpt_hard_2_0": 29.5,
-        "terminal_bench_4_1": 16.1
+        "terminal_bench_4_1": 16.1,
+        "vibe_code_bench_1_1_1": 56.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -101113,7 +101275,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "frontiercode_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-13",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -101211,7 +101374,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/mimo-v2-6-flash",
         "frontiercode_2_0": "https://artificialanalysis.ai/models/mimo-v2-6-flash",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/mimo-v2-6-flash",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -101316,6 +101480,13 @@
             "date": "2026-09-28",
             "score": 17.5,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 56.6,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -101846,7 +102017,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "programbench_almost",
             "ale_bench"
@@ -101953,8 +102124,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 90605,
-        "coding_index": 97173,
+        "openbench_index": 90602,
+        "coding_index": 97164,
         "tooling_index": 90072,
         "knowledge_index": 97197,
         "vision_index": 97901,
@@ -102065,7 +102236,8 @@
         "terminal_bench_4_1": 64.7,
         "aa_coding_agent_index_2_1": 58.2,
         "swe_marathon_1_2": 73.1,
-        "kernelbench_mega": 35.3
+        "kernelbench_mega": 35.3,
+        "vibe_code_bench_1_1_1": 78.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -102180,7 +102352,8 @@
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
         "swe_marathon_1_2": "2026-11-27",
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -102295,7 +102468,8 @@
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
         "swe_marathon_1_2": "https://www.swe-marathon.org",
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -102457,6 +102631,13 @@
             "date": "2026-11-27",
             "score": 35.3,
             "source": "https://kernelbench.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 78.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -103122,7 +103303,7 @@
             "swe_marathon_1_2",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "scicode",
             "swe_bench_multilingual",
@@ -103246,8 +103427,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 69879,
-        "coding_index": 63136,
+        "openbench_index": 69925,
+        "coding_index": 63289,
         "tooling_index": 69131,
         "knowledge_index": 82526,
         "vision_index": 77006,
@@ -103355,7 +103536,8 @@
         "critpt_2_0": 65.1,
         "critpt_hard_2_0": 42.5,
         "terminal_bench_4_1": 16.7,
-        "aa_coding_agent_index_2_1": 25.9
+        "aa_coding_agent_index_2_1": 25.9,
+        "vibe_code_bench_1_1_1": 65.3
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -103467,7 +103649,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-24",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -103579,7 +103762,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-luna",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -103722,6 +103906,13 @@
             "date": "2026-09-23",
             "score": 8,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 65.3,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -104298,7 +104489,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
@@ -104410,8 +104601,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 83544,
-        "coding_index": 82875,
+        "openbench_index": 83328,
+        "coding_index": 82155,
         "tooling_index": 83530,
         "knowledge_index": 93813,
         "vision_index": 90373,
@@ -104517,7 +104708,8 @@
         "aa_economics_index": 47.7,
         "terminal_bench_science_0_1": 30,
         "critpt_hard_2_0": 66.5,
-        "terminal_bench_4_1": 50.3
+        "terminal_bench_4_1": 50.3,
+        "vibe_code_bench_1_1_1": 71.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -104627,7 +104819,8 @@
         "aa_economics_index": "2026-11-05",
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-13",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -104737,7 +104930,8 @@
         "aa_economics_index": "https://artificialanalysis.ai/models/gpt-6-sol",
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gpt-6-sol",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-sol",
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -104861,6 +105055,13 @@
             "date": "2026-09-23",
             "score": 32.5,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 71.6,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -105357,7 +105558,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "programbench_almost",
             "ale_bench"
@@ -105839,8 +106040,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 69480,
-        "coding_index": 64329,
+        "openbench_index": 69573,
+        "coding_index": 64640,
         "tooling_index": 79747,
         "knowledge_index": 82003,
         "vision_index": 75303,
@@ -105934,7 +106135,8 @@
         "terminal_bench_science_0_1": 3.3,
         "frontiercode_2_0": 20.8,
         "critpt_2_0": 51.4,
-        "critpt_hard_2_0": 32.5
+        "critpt_hard_2_0": 32.5,
+        "vibe_code_bench_1_1_1": 57.3
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -106032,7 +106234,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "frontiercode_2_0": "2026-11-04",
         "critpt_2_0": "2026-11-04",
-        "critpt_hard_2_0": "2026-11-04"
+        "critpt_hard_2_0": "2026-11-04",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -106130,7 +106333,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/minimax-m3-1-flash",
         "frontiercode_2_0": "https://artificialanalysis.ai/models/minimax-m3-1-flash",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
-        "critpt_hard_2_0": "https://artificialanalysis.ai/models/minimax-m3-1-flash"
+        "critpt_hard_2_0": "https://artificialanalysis.ai/models/minimax-m3-1-flash",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -106235,6 +106439,13 @@
             "date": "2026-10-30",
             "score": 61.2,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 57.3,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -106593,7 +106804,7 @@
             "deepswe_1_1",
             "frontiercode_2_0",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "scicode",
             "nl2repo"
@@ -107359,8 +107570,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89770,
-        "coding_index": 92567,
+        "openbench_index": 89776,
+        "coding_index": 92589,
         "tooling_index": 95145,
         "knowledge_index": 93852,
         "vision_index": null,
@@ -107467,7 +107678,8 @@
         "terminal_bench_4_1": 65.7,
         "aa_coding_agent_index_2_1": 56.3,
         "swe_marathon_1_2": 64,
-        "kernelbench_mega": 31.7
+        "kernelbench_mega": 31.7,
+        "vibe_code_bench_1_1_1": 80.9
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -107578,7 +107790,8 @@
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
         "swe_marathon_1_2": "2026-11-27",
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -107689,7 +107902,8 @@
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
         "swe_marathon_1_2": "https://www.swe-marathon.org",
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -107849,6 +108063,13 @@
             "date": "2026-11-27",
             "score": 31.7,
             "source": "https://kernelbench.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 80.9,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -108450,7 +108671,7 @@
             "swe_marathon_1_2",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "swe_bench_pro_hard_2_0",
             "scicode",
@@ -108557,8 +108778,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 86971,
-        "coding_index": 89596,
+        "openbench_index": 86928,
+        "coding_index": 89454,
         "tooling_index": 84240,
         "knowledge_index": 97396,
         "vision_index": 94329,
@@ -108664,7 +108885,8 @@
         "vending_bench_2": 12861,
         "terminal_bench_4_1": 54,
         "aa_coding_agent_index_2_1": 52.2,
-        "swe_marathon_1_2": 57.7
+        "swe_marathon_1_2": 57.7,
+        "vibe_code_bench_1_1_1": 75.1
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -108774,7 +108996,8 @@
         "vending_bench_2": "2026-11-09",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "swe_marathon_1_2": "2026-11-27"
+        "swe_marathon_1_2": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -108884,7 +109107,8 @@
         "vending_bench_2": "https://epoch.ai/benchmarks/vending-bench-2",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "swe_marathon_1_2": "https://www.swe-marathon.org"
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -109020,6 +109244,13 @@
             "date": "2026-10-02",
             "score": 46,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 75.1,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -109597,7 +109828,7 @@
             "frontiercode_2_0",
             "swe_marathon_1_2",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
@@ -110012,8 +110243,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 90442,
-        "coding_index": 88651,
+        "openbench_index": 90325,
+        "coding_index": 88260,
         "tooling_index": 91902,
         "knowledge_index": 94316,
         "vision_index": null,
@@ -110120,7 +110351,8 @@
         "critpt_hard_2_0": 52.5,
         "terminal_bench_4_1": 56.6,
         "aa_coding_agent_index_2_1": 45.5,
-        "swe_marathon_1_2": 49.4
+        "swe_marathon_1_2": 49.4,
+        "vibe_code_bench_1_1_1": 75.4
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -110231,7 +110463,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "swe_marathon_1_2": "2026-11-27"
+        "swe_marathon_1_2": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -110342,7 +110575,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gemini-4-argon",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "swe_marathon_1_2": "https://www.swe-marathon.org"
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -110485,6 +110719,13 @@
             "date": "2026-10-01",
             "score": 41,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 75.4,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -111040,7 +111281,7 @@
             "swe_marathon_1_2",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "scicode",
             "swe_atlas_qna_1_1",
@@ -111134,8 +111375,8 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 74689,
-        "coding_index": 64790,
+        "openbench_index": 74692,
+        "coding_index": 64800,
         "tooling_index": 82677,
         "knowledge_index": 82988,
         "vision_index": null,
@@ -111853,8 +112094,8 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 74381,
-        "coding_index": 61122,
+        "openbench_index": 74420,
+        "coding_index": 61250,
         "tooling_index": 81843,
         "knowledge_index": 85852,
         "vision_index": 60549,
@@ -111953,7 +112194,8 @@
         "critpt_2_0": 54.6,
         "critpt_hard_2_0": 32.5,
         "aa_coding_agent_index_2_1": 35.8,
-        "terminal_bench_4_1": 30.3
+        "terminal_bench_4_1": 30.3,
+        "vibe_code_bench_1_1_1": 56.4
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -112056,7 +112298,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "terminal_bench_4_1": "2026-11-14"
+        "terminal_bench_4_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -112159,7 +112402,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/step-5",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -112283,6 +112527,13 @@
             "date": "2026-10-08",
             "score": null,
             "source": null
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 56.4,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -112728,7 +112979,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_atlas_qna_1_1"
           ],
@@ -113281,8 +113532,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 70303,
-        "coding_index": 61363,
+        "openbench_index": 70121,
+        "coding_index": 60754,
         "tooling_index": 76043,
         "knowledge_index": 74728,
         "vision_index": 60549,
@@ -113386,7 +113637,8 @@
         "critpt_hard_2_0": 27,
         "aa_healthcare_index": 36.7,
         "terminal_bench_4_1": 42.4,
-        "aa_coding_agent_index_2_1": 40.6
+        "aa_coding_agent_index_2_1": 40.6,
+        "vibe_code_bench_1_1_1": 63.7
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -113494,7 +113746,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "aa_healthcare_index": "2026-11-10",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -113602,7 +113855,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/mistral-large-4",
         "aa_healthcare_index": "https://artificialanalysis.ai/models/mistral-large-4",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -113741,6 +113995,13 @@
             "date": "2026-11-03",
             "score": null,
             "source": null
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 63.7,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -114356,7 +114617,7 @@
             "deepswe_1_1",
             "frontiercode_2_0",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
@@ -114463,8 +114724,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 76628,
-        "coding_index": 79232,
+        "openbench_index": 76568,
+        "coding_index": 79033,
         "tooling_index": 73549,
         "knowledge_index": 86469,
         "vision_index": null,
@@ -114569,7 +114830,8 @@
         "critpt_hard_2_0": 43.5,
         "terminal_bench_4_1": 31.8,
         "aa_coding_agent_index_2_1": 29.6,
-        "swe_marathon_1_2": 42.1
+        "swe_marathon_1_2": 42.1,
+        "vibe_code_bench_1_1_1": 76.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -114678,7 +114940,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "swe_marathon_1_2": "2026-11-27"
+        "swe_marathon_1_2": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -114787,7 +115050,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-haiku-5-5",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "swe_marathon_1_2": "https://www.swe-marathon.org"
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -114923,6 +115187,13 @@
             "date": "2026-10-09",
             "score": 29.5,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 76.6,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -115480,7 +115751,7 @@
             "frontiercode_2_0",
             "swe_marathon_1_2",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "swe_bench_pro_hard_2_0",
             "scicode",
@@ -115583,8 +115854,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 85076,
-        "coding_index": 83853,
+        "openbench_index": 85111,
+        "coding_index": 83972,
         "tooling_index": 87456,
         "knowledge_index": 91217,
         "vision_index": null,
@@ -115686,7 +115957,8 @@
         "critpt_hard_2_0": 50.5,
         "terminal_bench_4_1": 47.5,
         "aa_coding_agent_index_2_1": 44.5,
-        "swe_marathon_1_2": 30
+        "swe_marathon_1_2": 30,
+        "vibe_code_bench_1_1_1": 67.1
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -115792,7 +116064,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "swe_marathon_1_2": "2026-11-27"
+        "swe_marathon_1_2": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -115898,7 +116171,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/muse-wonder",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "swe_marathon_1_2": "https://www.swe-marathon.org"
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -116027,6 +116301,13 @@
             "date": "2026-11-25",
             "score": 40.2,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 67.1,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -116485,7 +116766,7 @@
             "frontiercode_2_0",
             "swe_marathon_1_2",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "scicode",
             "swe_atlas_qna_1_1",
@@ -116567,8 +116848,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 88739,
-        "coding_index": 87073,
+        "openbench_index": 88543,
+        "coding_index": 86417,
         "tooling_index": 91219,
         "knowledge_index": 93502,
         "vision_index": null,
@@ -116661,7 +116942,8 @@
         "critpt_2_0": 75.1,
         "critpt_hard_2_0": 56.5,
         "aa_coding_agent_index_2_1": 54.5,
-        "terminal_bench_4_1": 59.6
+        "terminal_bench_4_1": 59.6,
+        "vibe_code_bench_1_1_1": 68.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -116758,7 +117040,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "aa_coding_agent_index_2_1": "2026-11-14",
-        "terminal_bench_4_1": "2026-11-14"
+        "terminal_bench_4_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -116855,7 +117138,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/muse-wonder-full",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -116977,6 +117261,13 @@
             "date": "2026-10-22",
             "score": 60,
             "source": "https://programbench.com/extended"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 68.6,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -117267,7 +117558,7 @@
             "deepswe_1_1",
             "frontiercode_2_0",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "programbench_almost"
           ],
@@ -117332,8 +117623,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 81905,
-        "coding_index": 78656,
+        "openbench_index": 81872,
+        "coding_index": 78544,
         "tooling_index": 82264,
         "knowledge_index": 83789,
         "vision_index": null,
@@ -117442,7 +117733,8 @@
         "critpt_hard_2_0": 33.5,
         "ale_bench": 1546,
         "terminal_bench_4_1": 32.3,
-        "aa_coding_agent_index_2_1": 41.6
+        "aa_coding_agent_index_2_1": 41.6,
+        "vibe_code_bench_1_1_1": 69.1
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -117555,7 +117847,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "ale_bench": "2026-11-09",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -117668,7 +117961,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/grok-4-7",
         "ale_bench": "https://epoch.ai/benchmarks/ale-bench",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -117826,6 +118120,13 @@
             "date": "2026-10-28",
             "score": 21.5,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 69.1,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -118352,7 +118653,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
@@ -118776,8 +119077,8 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 52035,
-        "coding_index": 35045,
+        "openbench_index": 52030,
+        "coding_index": 35029,
         "tooling_index": 51585,
         "knowledge_index": 69186,
         "vision_index": null,
@@ -118874,7 +119175,8 @@
         "critpt_2_0": 36.9,
         "critpt_hard_2_0": 13.5,
         "terminal_bench_4_1": 0.3,
-        "swe_bench_pro_public": 51.8
+        "swe_bench_pro_public": 51.8,
+        "vibe_code_bench_1_1_1": 3
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -118975,7 +119277,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-13",
-        "swe_bench_pro_public": "2026-11-27"
+        "swe_bench_pro_public": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -119076,7 +119379,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl",
         "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
-        "swe_bench_pro_public": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16"
+        "swe_bench_pro_public": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -119152,6 +119456,13 @@
             "date": "2026-11-04",
             "score": 25.5,
             "source": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 3,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -119564,7 +119875,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "scicode",
             "swe_bench_multilingual",
@@ -119645,8 +119956,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 70963,
-        "coding_index": 56136,
+        "openbench_index": 70534,
+        "coding_index": 54706,
         "tooling_index": 70085,
         "knowledge_index": 84133,
         "vision_index": 85034,
@@ -119743,7 +120054,8 @@
         "terminal_bench_science_0_1": 1.9,
         "frontiercode_2_0": 7.6,
         "critpt_2_0": 52.6,
-        "critpt_hard_2_0": 29.5
+        "critpt_hard_2_0": 29.5,
+        "vibe_code_bench_1_1_1": 50.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -119844,7 +120156,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "frontiercode_2_0": "2026-11-04",
         "critpt_2_0": "2026-11-04",
-        "critpt_hard_2_0": "2026-11-04"
+        "critpt_hard_2_0": "2026-11-04",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -119945,7 +120258,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/muse-spark-open",
         "frontiercode_2_0": "https://artificialanalysis.ai/models/muse-spark-open",
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
-        "critpt_hard_2_0": "https://artificialanalysis.ai/models/muse-spark-open"
+        "critpt_hard_2_0": "https://artificialanalysis.ai/models/muse-spark-open",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -120038,6 +120352,13 @@
             "date": "2026-11-04",
             "score": 27.6,
             "source": "https://artificialanalysis.ai/models/muse-spark-open"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 50.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -120369,7 +120690,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "scicode",
             "swe_atlas_qna_1_1",
@@ -120475,8 +120796,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 62285,
-        "coding_index": 49433,
+        "openbench_index": 62215,
+        "coding_index": 49198,
         "tooling_index": 65637,
         "knowledge_index": 76487,
         "vision_index": null,
@@ -120579,7 +120900,8 @@
         "critpt_hard_2_0": 26.5,
         "ale_bench": 1098,
         "terminal_bench_4_1": 4,
-        "aa_coding_agent_index_2_1": 15.5
+        "aa_coding_agent_index_2_1": 15.5,
+        "vibe_code_bench_1_1_1": 51.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -120686,7 +121008,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "ale_bench": "2026-11-09",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -120793,7 +121116,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/reflection-beam",
         "ale_bench": "https://epoch.ai/benchmarks/ale-bench",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -120900,6 +121224,13 @@
             "date": "2026-11-04",
             "score": 24.3,
             "source": "https://artificialanalysis.ai/models/reflection-beam"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 51.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -121377,7 +121708,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "scicode",
             "swe_bench_multilingual",
@@ -121478,8 +121809,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 78385,
-        "coding_index": 79720,
+        "openbench_index": 78317,
+        "coding_index": 79491,
         "tooling_index": 83796,
         "knowledge_index": 81821,
         "vision_index": 72286,
@@ -121587,7 +121918,8 @@
         "critpt_hard_2_0": 25,
         "agents_last_exam_1_1": 36.1,
         "terminal_bench_4_1": 28.3,
-        "aa_coding_agent_index_2_1": 36.8
+        "aa_coding_agent_index_2_1": 36.8,
+        "vibe_code_bench_1_1_1": 74.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -121699,7 +122031,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "agents_last_exam_1_1": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -121811,7 +122144,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017",
         "agents_last_exam_1_1": "https://agents-last-exam.org/leaderboard",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -121959,6 +122293,13 @@
             "date": "2026-10-30",
             "score": 68.2,
             "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 74.6,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -122403,7 +122744,7 @@
             "deepswe_1_1",
             "frontiercode_2_0",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "programbench_almost",
             "kernelbench_hard",
@@ -123875,8 +124216,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 72047,
-        "coding_index": 57753,
+        "openbench_index": 72056,
+        "coding_index": 57782,
         "tooling_index": 81821,
         "knowledge_index": 82499,
         "vision_index": null,
@@ -124428,8 +124769,8 @@
         "url": "https://www.moonshot.ai/"
       },
       "scores": {
-        "openbench_index": 87691,
-        "coding_index": 82780,
+        "openbench_index": 87780,
+        "coding_index": 83075,
         "tooling_index": 95084,
         "knowledge_index": 90823,
         "vision_index": 92476,
@@ -124537,7 +124878,8 @@
         "arena_text": 1483,
         "arena_text_non_english": 1467,
         "terminal_bench_4_1": 67.2,
-        "aa_coding_agent_index_2_1": 48.6
+        "aa_coding_agent_index_2_1": 48.6,
+        "vibe_code_bench_1_1_1": 71.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -124649,7 +124991,8 @@
         "arena_text": "2026-11-23",
         "arena_text_non_english": "2026-11-23",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -124761,7 +125104,8 @@
         "arena_text": "https://arena.ai/leaderboard/text",
         "arena_text_non_english": "https://arena.ai/leaderboard/text",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -124892,6 +125236,13 @@
             "date": "2026-10-23",
             "score": 31.5,
             "source": "https://www.kimi.ai/blog/kimi-k3-1-pro"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 71.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -125397,7 +125748,7 @@
             "deepswe_1_1",
             "frontiercode_2_0",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
@@ -125515,8 +125866,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 83490,
-        "coding_index": 79529,
+        "openbench_index": 83933,
+        "coding_index": 81007,
         "tooling_index": 83467,
         "knowledge_index": 94537,
         "vision_index": 93350,
@@ -125615,7 +125966,8 @@
         "terminal_bench_4_1": 50.5,
         "aa_coding_agent_index_2_1": 48.7,
         "arena_text": 1474,
-        "arena_text_non_english": 1461
+        "arena_text_non_english": 1461,
+        "vibe_code_bench_1_1_1": 75.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -125718,7 +126070,8 @@
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
         "arena_text": "2026-11-20",
-        "arena_text_non_english": "2026-11-20"
+        "arena_text_non_english": "2026-11-20",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -125821,7 +126174,8 @@
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
         "arena_text": "https://arena.ai/leaderboard/text",
-        "arena_text_non_english": "https://arena.ai/leaderboard/text"
+        "arena_text_non_english": "https://arena.ai/leaderboard/text",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -125946,6 +126300,13 @@
             "date": "2026-11-04",
             "score": 36,
             "source": "https://artificialanalysis.ai/models/gpt-6-1-terra"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 75.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -126348,7 +126709,7 @@
           "measured": [
             "frontiercode_2_0",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
@@ -126677,8 +127038,8 @@
         "url": "https://huggingface.co/Nanbeige"
       },
       "scores": {
-        "openbench_index": 67576,
-        "coding_index": 57069,
+        "openbench_index": 67579,
+        "coding_index": 57079,
         "tooling_index": 73906,
         "knowledge_index": 68245,
         "vision_index": null,
@@ -127268,8 +127629,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 92494,
-        "coding_index": 92076,
+        "openbench_index": 92491,
+        "coding_index": 92066,
         "tooling_index": 96860,
         "knowledge_index": 97764,
         "vision_index": null,
@@ -127377,7 +127738,8 @@
         "aa_coding_agent_index_2_1": 55.5,
         "ale_bench": 2375,
         "swe_marathon_1_2": 56.5,
-        "kernelbench_mega": 24.7
+        "kernelbench_mega": 24.7,
+        "vibe_code_bench_1_1_1": 75.8
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -127489,7 +127851,8 @@
         "aa_coding_agent_index_2_1": "2026-11-14",
         "ale_bench": "2026-11-18",
         "swe_marathon_1_2": "2026-11-27",
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -127601,7 +127964,8 @@
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
         "ale_bench": "https://epoch.ai/benchmarks/ale-bench",
         "swe_marathon_1_2": "https://www.swe-marathon.org",
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -127716,6 +128080,13 @@
             "date": "2026-11-27",
             "score": 24.7,
             "source": "https://kernelbench.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 75.8,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -128132,7 +128503,7 @@
             "frontiercode_2_0",
             "swe_marathon_1_2",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "scicode",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
@@ -129750,8 +130121,8 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
-        "openbench_index": 34902,
-        "coding_index": 15473,
+        "openbench_index": 34900,
+        "coding_index": 15467,
         "tooling_index": 34938,
         "knowledge_index": 46455,
         "vision_index": null,
@@ -131011,8 +131382,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 75852,
-        "coding_index": 73383,
+        "openbench_index": 75940,
+        "coding_index": 73676,
         "tooling_index": 73902,
         "knowledge_index": 85665,
         "vision_index": 86599,
@@ -131137,7 +131508,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": 13
+        "terminal_bench_4_1": 13,
+        "vibe_code_bench_1_1_1": 66.8
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -131266,7 +131638,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": "2026-11-13"
+        "terminal_bench_4_1": "2026-11-13",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -131395,7 +131768,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1"
+        "terminal_bench_4_1": "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -131478,6 +131852,13 @@
             "date": "2026-11-06",
             "score": 12,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 66.8,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -131844,7 +132225,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "scicode",
             "swe_atlas_qna_1_1",
@@ -131931,8 +132312,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 93904,
-        "coding_index": 98575,
+        "openbench_index": 93906,
+        "coding_index": 98582,
         "tooling_index": 95867,
         "knowledge_index": 99765,
         "vision_index": null,
@@ -132060,7 +132441,8 @@
         "terminal_bench_4_1": 64.1,
         "aa_coding_agent_index_2_1": 58.5,
         "swe_marathon_1_2": 75,
-        "kernelbench_mega": 31
+        "kernelbench_mega": 31,
+        "vibe_code_bench_1_1_1": 83.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -132192,7 +132574,8 @@
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
         "swe_marathon_1_2": "2026-11-27",
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -132324,7 +132707,8 @@
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
         "swe_marathon_1_2": "https://www.swe-marathon.org",
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -132426,6 +132810,13 @@
             "date": "2026-11-27",
             "score": 31,
             "source": "https://kernelbench.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 83.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -132816,7 +133207,7 @@
             "frontiercode_2_0",
             "swe_marathon_1_2",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_public",
             "scicode",
             "swe_bench_multilingual",
@@ -132905,8 +133296,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 75297,
-        "coding_index": 70240,
+        "openbench_index": 75002,
+        "coding_index": 69257,
         "tooling_index": 83237,
         "knowledge_index": 84384,
         "vision_index": null,
@@ -133032,7 +133423,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "terminal_bench_4_1": 43.4,
-        "aa_coding_agent_index_2_1": 39.7
+        "aa_coding_agent_index_2_1": 39.7,
+        "vibe_code_bench_1_1_1": 64
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -133162,7 +133554,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -133292,7 +133685,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -133366,6 +133760,13 @@
             "date": "2026-11-24",
             "score": 27,
             "source": "https://artificialanalysis.ai/models/muse-ember"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 64,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -133570,7 +133971,7 @@
           "measured": [
             "frontiercode_2_0",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
             "swe_atlas_tw_1_1"
@@ -134039,8 +134440,8 @@
         "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
       },
       "scores": {
-        "openbench_index": 75184,
-        "coding_index": 69836,
+        "openbench_index": 75190,
+        "coding_index": 69853,
         "tooling_index": 85298,
         "knowledge_index": 82345,
         "vision_index": null,
@@ -135256,8 +135657,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 89601,
-        "coding_index": 87485,
+        "openbench_index": 89692,
+        "coding_index": 87788,
         "tooling_index": 94012,
         "knowledge_index": 94943,
         "vision_index": null,
@@ -135384,7 +135785,8 @@
         "charxiv_reasoning": null,
         "terminal_bench_4_1": 60.1,
         "aa_coding_agent_index_2_1": 52.3,
-        "swe_marathon_1_2": 47.8
+        "swe_marathon_1_2": 47.8,
+        "vibe_code_bench_1_1_1": 76.2
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -135515,7 +135917,8 @@
         "charxiv_reasoning": null,
         "terminal_bench_4_1": "2026-11-17",
         "aa_coding_agent_index_2_1": "2026-11-17",
-        "swe_marathon_1_2": "2026-11-27"
+        "swe_marathon_1_2": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -135646,7 +136049,8 @@
         "charxiv_reasoning": null,
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "swe_marathon_1_2": "https://www.swe-marathon.org"
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -135727,6 +136131,13 @@
             "date": "2026-11-13",
             "score": 53.1,
             "source": "https://www.frontierswe.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 76.2,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -136026,7 +136437,7 @@
             "frontiercode_2_0",
             "swe_marathon_1_2",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
             "swe_atlas_tw_1_1",
@@ -136102,8 +136513,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 83298,
-        "coding_index": 73373,
+        "openbench_index": 83316,
+        "coding_index": 73436,
         "tooling_index": 92905,
         "knowledge_index": 88689,
         "vision_index": null,
@@ -136230,7 +136641,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "kernelbench_mega": 16.1
+        "kernelbench_mega": 16.1,
+        "vibe_code_bench_1_1_1": 74.1
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -136361,7 +136773,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -136492,7 +136905,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -136566,6 +136980,13 @@
             "date": "2026-11-27",
             "score": 16.1,
             "source": "https://kernelbench.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 74.1,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -136745,7 +137166,7 @@
           "measured": [
             "frontiercode_2_0",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "ale_bench"
           ],
           "of": 21,
@@ -136948,7 +137369,8 @@
         "osworld_2_0_vendor": 68.1,
         "osworld_verified": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "vibe_code_bench_1_1_1": 61.6
       },
       "scores_updated": {
         "openbench_index": null,
@@ -137078,7 +137500,8 @@
         "osworld_2_0_vendor": "2026-11-16",
         "osworld_verified": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": null,
@@ -137208,9 +137631,17 @@
         "osworld_2_0_vendor": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "osworld_verified": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 61.6,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
+          }
+        ],
         "vibe_code_bench_1_1": [
           {
             "date": "2026-11-18",
@@ -137286,8 +137717,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 89683,
-        "coding_index": 88181,
+        "openbench_index": 89765,
+        "coding_index": 88454,
         "tooling_index": 95079,
         "knowledge_index": 99001,
         "vision_index": 99309,
@@ -137415,7 +137846,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "swe_marathon_1_2": 82.5,
-        "kernelbench_mega": 23.5
+        "kernelbench_mega": 23.5,
+        "vibe_code_bench_1_1_1": 78.6
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -137547,7 +137979,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "swe_marathon_1_2": "2026-11-27",
-        "kernelbench_mega": "2026-11-27"
+        "kernelbench_mega": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -137679,7 +138112,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "swe_marathon_1_2": "https://www.swe-marathon.org",
-        "kernelbench_mega": "https://kernelbench.com"
+        "kernelbench_mega": "https://kernelbench.com",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -137767,6 +138201,13 @@
             "date": "2026-11-27",
             "score": 23.5,
             "source": "https://kernelbench.com"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 78.6,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -138103,7 +138544,7 @@
             "frontiercode_2_0",
             "swe_marathon_1_2",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
             "swe_atlas_tw_1_1",
@@ -138196,8 +138637,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 85173,
-        "coding_index": 86651,
+        "openbench_index": 85502,
+        "coding_index": 87748,
         "tooling_index": 88816,
         "knowledge_index": 95204,
         "vision_index": null,
@@ -138324,7 +138765,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "swe_marathon_1_2": 68.8
+        "swe_marathon_1_2": 68.8,
+        "vibe_code_bench_1_1_1": 79.5
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -138455,7 +138897,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "swe_marathon_1_2": "2026-11-27"
+        "swe_marathon_1_2": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -138586,7 +139029,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "swe_marathon_1_2": "https://www.swe-marathon.org"
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -138657,6 +139101,13 @@
             "date": "2026-11-18",
             "score": 44.4,
             "source": "https://artificialanalysis.ai/models/gpt-6-2-sol"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 79.5,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -138950,7 +139401,7 @@
             "frontiercode_2_0",
             "swe_marathon_1_2",
             "terminal_bench_4_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
             "swe_atlas_tw_1_1",
@@ -139028,8 +139479,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 93082,
-        "coding_index": 92312,
+        "openbench_index": 93096,
+        "coding_index": 92361,
         "tooling_index": 97943,
         "knowledge_index": 97422,
         "vision_index": null,
@@ -139870,8 +140321,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 61371,
-        "coding_index": 51574,
+        "openbench_index": 61460,
+        "coding_index": 51868,
         "tooling_index": 65822,
         "knowledge_index": 65460,
         "vision_index": 49552,
@@ -139998,7 +140449,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "apex_agents_1_1": 50.9
+        "apex_agents_1_1": 50.9,
+        "vibe_code_bench_1_1_1": 58
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -140129,7 +140581,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "apex_agents_1_1": "2026-11-27"
+        "apex_agents_1_1": "2026-11-27",
+        "vibe_code_bench_1_1_1": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -140260,7 +140713,8 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
-        "apex_agents_1_1": "https://epoch.ai/benchmarks/apex-agents"
+        "apex_agents_1_1": "https://epoch.ai/benchmarks/apex-agents",
+        "vibe_code_bench_1_1_1": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -140324,6 +140778,13 @@
             "date": "2026-11-20",
             "score": 4,
             "source": "https://www.vals.ai/benchmarks/programbench"
+          }
+        ],
+        "vibe_code_bench_1_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 58,
+            "source": "https://www.vals.ai/benchmarks/vibe-code-v1-1-1"
           }
         ],
         "vibe_code_bench_1_1": [
@@ -140551,7 +141012,7 @@
             "frontiercode_2_0",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
+            "vibe_code_bench_1_1_1",
             "swe_bench_pro_hard_2_0",
             "swe_bench_multilingual",
             "programbench_almost",
@@ -140565,7 +141026,6 @@
           "second_hand": [
             "deepswe_1_1",
             "terminal_bench_2_1",
-            "vibe_code_bench_1_1",
             "swe_bench_pro_hard_2_0",
             "swe_bench_multilingual",
             "swe_bench_verified"
@@ -142615,39 +143075,39 @@
         "gemini-4-argon": 5,
         "claude-sonnet-5-5": 6,
         "gpt-6-2-astra": 7,
-        "gpt-6-astra": 8,
-        "gemini-4-hydrogen": 9,
+        "gemini-4-hydrogen": 8,
+        "gpt-6-astra": 9,
         "muse-wonder-full": 10,
         "claude-fable-5-1": 11,
         "kimi-k3-1-pro": 12,
         "gpt-6-1-sol": 13,
         "gpt-6-2-sol": 14,
         "muse-wonder": 15,
-        "gpt-6-sol": 16,
-        "gpt-6-1-terra": 17,
+        "gpt-6-1-terra": 16,
+        "gpt-6-sol": 17,
         "qwen4-max": 18,
         "grok-4-7": 19,
         "kimi-k3": 20,
-        "gpt-5-6-sol": 21,
-        "glm-5-3": 22,
+        "glm-5-3": 21,
+        "gpt-5-6-sol": 22,
         "deepseek-v4-1-flash-1017": 23,
         "claude-haiku-5-5": 24,
         "qwen3-8-2-4t-a95b": 25,
         "inkling-2-small": 26,
-        "muse-ember": 27,
-        "ernie-5-5-flash-preview": 28,
-        "mimo-v2-6-pro": 29,
-        "glm-5-3-flash": 30,
-        "ling-3-1-flash": 31,
-        "step-5-preview": 32,
-        "hy4": 33,
+        "ernie-5-5-flash-preview": 27,
+        "muse-ember": 28,
+        "glm-5-3-flash": 29,
+        "ling-3-1-flash": 30,
+        "mimo-v2-6-pro": 31,
+        "hy4": 32,
+        "step-5-preview": 33,
         "gpt-5-6-terra": 34,
         "deepseek-v4-1-flash": 35,
         "ling-3-1-flash-1019": 36,
         "muse-spark-open": 37,
         "mistral-large-4": 38,
-        "qwen3-8-flash-next": 39,
-        "gpt-6-luna": 40,
+        "gpt-6-luna": 39,
+        "qwen3-8-flash-next": 40,
         "minimax-m3-1-flash": 41,
         "mimo-v2-6-flash": 42,
         "nanbeige4-3-33b": 43,
@@ -142716,51 +143176,51 @@
         "gemini-4-neon": 6,
         "gemini-4-carbon": 7,
         "gpt-6-1-sol": 8,
-        "gemini-4-argon": 9,
-        "gpt-6-2-astra": 10,
+        "gpt-6-2-astra": 9,
+        "gemini-4-argon": 10,
         "gemini-4-hydrogen": 11,
-        "muse-wonder-full": 12,
-        "gpt-6-2-sol": 13,
+        "gpt-6-2-sol": 12,
+        "muse-wonder-full": 13,
         "muse-wonder": 14,
-        "gpt-6-sol": 15,
-        "kimi-k3-1-pro": 16,
-        "deepseek-v4-1-flash-1017": 17,
-        "gpt-6-1-terra": 18,
+        "kimi-k3-1-pro": 15,
+        "gpt-6-sol": 16,
+        "gpt-6-1-terra": 17,
+        "deepseek-v4-1-flash-1017": 18,
         "claude-haiku-5-5": 19,
         "grok-4-7": 20,
         "deepseek-v4-1-flash": 21,
-        "kimi-k3": 22,
-        "glm-5-3": 23,
-        "gpt-5-6-sol": 24,
-        "hy4": 25,
+        "hy4": 22,
+        "kimi-k3": 23,
+        "glm-5-3": 24,
+        "gpt-5-6-sol": 25,
         "inkling-2-small": 26,
         "qwen4-max": 27,
         "qwen3-8-2-4t-a95b": 28,
         "gpt-5-6-terra": 29,
-        "muse-ember": 30,
-        "ernie-5-5-flash-preview": 31,
+        "ernie-5-5-flash-preview": 30,
+        "muse-ember": 31,
         "mimo-v2-6-pro": 32,
-        "mimo-v2-6-flash": 33,
-        "qwen3-8-flash-next": 34,
+        "qwen3-8-flash-next": 33,
+        "mimo-v2-6-flash": 34,
         "deepseek-v4-pro": 35,
         "ling-3-1-flash": 36,
         "minimax-m3-1-flash": 37,
         "gpt-6-luna": 38,
         "gpt-5-6-luna": 39,
-        "mistral-large-4": 40,
-        "step-5-preview": 41,
+        "step-5-preview": 40,
+        "mistral-large-4": 41,
         "glm-5-3-flash": 42,
         "deepseek-v4-flash": 43,
         "ling-3-1-flash-1019": 44,
         "nanbeige4-3-33b": 45,
-        "muse-spark-open": 46,
-        "minimax-m3": 47,
+        "minimax-m3": 46,
+        "muse-spark-open": 47,
         "glm-5-2": 48,
         "inkling-2-mini": 49,
         "ornith-1-0-397b": 50,
         "qwen3-8-27b": 51,
-        "reflection-beam": 52,
-        "deepseek-v4-flash-vision": 53,
+        "deepseek-v4-flash-vision": 52,
+        "reflection-beam": 53,
         "kimi-k2-7-code": 54,
         "k2-horizon-375b-a23b": 55,
         "kimi-k2-6": 56,
@@ -142773,8 +143233,8 @@
         "mimo-v2-5-pro": 63,
         "inkling": 64,
         "nvidia-nemotron-3-ultra-550b-a55b": 65,
-        "qwen3-5-397b-a17b": 66,
-        "minimax-m2-5": 67,
+        "minimax-m2-5": 66,
+        "qwen3-5-397b-a17b": 67,
         "mimo-v2-5-0424": 68,
         "k2-horizon-7b": 69,
         "minimax-m2-7": 70,
@@ -142788,8 +143248,8 @@
         "gemma-4-31b": 78,
         "qwen3-6-35b-a3b": 79,
         "glm-4-6": 80,
-        "gemma-4-26b-a4b": 81,
-        "ornith-1-0-9b": 82,
+        "ornith-1-0-9b": 81,
+        "gemma-4-26b-a4b": 82,
         "a-x-k2": 83,
         "gpt-oss-20b": 84,
         "nemotron-3-5-lightning": 85,
@@ -143526,16 +143986,16 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "gpt-6-astra",
-        "from": 7,
+        "model": "gemini-4-hydrogen",
+        "from": 10,
         "to": 8,
         "of": 98
       },
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "gemini-4-hydrogen",
-        "from": 10,
+        "model": "gpt-6-astra",
+        "from": 7,
         "to": 9,
         "of": 98
       },
@@ -143588,6 +144048,22 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
+        "model": "gpt-6-1-terra",
+        "from": 17,
+        "to": 16,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "gpt-6-sol",
+        "from": 16,
+        "to": 17,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
         "model": "kimi-k3",
         "from": 21,
         "to": 20,
@@ -143601,9 +144077,23 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
+        "model": "glm-5-3",
+        "from": 22,
+        "to": 21,
+        "of": 98,
+        "open": {
+          "from": 3,
+          "to": 3,
+          "of": 74,
+          "quiet": true
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
         "model": "gpt-5-6-sol",
         "from": 23,
-        "to": 21,
+        "to": 22,
         "of": 98
       },
       {
@@ -143648,17 +144138,9 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "muse-ember",
-        "from": 29,
-        "to": 27,
-        "of": 98
-      },
-      {
-        "date": "2026-11-27",
-        "index": "openbench_index",
         "model": "ernie-5-5-flash-preview",
         "from": null,
-        "to": 28,
+        "to": 27,
         "of": 98,
         "open": {
           "from": null,
@@ -143669,26 +144151,21 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "mimo-v2-6-pro",
-        "from": 25,
-        "to": 29,
-        "of": 98,
-        "open": {
-          "from": 5,
-          "to": 8,
-          "of": 74
-        }
+        "model": "muse-ember",
+        "from": 29,
+        "to": 28,
+        "of": 98
       },
       {
         "date": "2026-11-27",
         "index": "openbench_index",
         "model": "glm-5-3-flash",
         "from": 32,
-        "to": 30,
+        "to": 29,
         "of": 98,
         "open": {
           "from": 10,
-          "to": 9,
+          "to": 8,
           "of": 74
         }
       },
@@ -143697,11 +144174,37 @@
         "index": "openbench_index",
         "model": "ling-3-1-flash",
         "from": 32,
-        "to": 31,
+        "to": 30,
         "of": 98,
         "open": {
           "from": 11,
+          "to": 9,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "mimo-v2-6-pro",
+        "from": 25,
+        "to": 31,
+        "of": 98,
+        "open": {
+          "from": 5,
           "to": 10,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "hy4",
+        "from": 33,
+        "to": 32,
+        "of": 98,
+        "open": {
+          "from": 12,
+          "to": 11,
           "of": 74
         }
       },
@@ -143710,11 +144213,11 @@
         "index": "openbench_index",
         "model": "step-5-preview",
         "from": 26,
-        "to": 32,
+        "to": 33,
         "of": 98,
         "open": {
           "from": 6,
-          "to": 11,
+          "to": 12,
           "of": 74
         }
       },
@@ -143755,10 +144258,16 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "gpt-6-luna",
+        "model": "qwen3-8-flash-next",
         "from": 39,
         "to": 40,
-        "of": 98
+        "of": 98,
+        "open": {
+          "from": 17,
+          "to": 17,
+          "of": 74,
+          "quiet": true
+        }
       },
       {
         "date": "2026-11-27",
@@ -143990,17 +144499,9 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "gemini-4-argon",
-        "from": 10,
-        "to": 9,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
         "model": "gpt-6-2-astra",
         "from": 13,
-        "to": 10,
+        "to": 9,
         "of": 102
       },
       {
@@ -144014,16 +144515,16 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "muse-wonder-full",
-        "from": 7,
+        "model": "gpt-6-2-sol",
+        "from": 17,
         "to": 12,
         "of": 102
       },
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "gpt-6-2-sol",
-        "from": 17,
+        "model": "muse-wonder-full",
+        "from": 7,
         "to": 13,
         "of": 102
       },
@@ -144040,7 +144541,7 @@
         "index": "coding_index",
         "model": "kimi-k3-1-pro",
         "from": 14,
-        "to": 16,
+        "to": 15,
         "of": 102,
         "open": {
           "from": 1,
@@ -144052,9 +144553,25 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
+        "model": "gpt-6-sol",
+        "from": 15,
+        "to": 16,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "gpt-6-1-terra",
+        "from": 20,
+        "to": 17,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
         "model": "deepseek-v4-1-flash-1017",
         "from": 16,
-        "to": 17,
+        "to": 18,
         "of": 102,
         "open": {
           "from": 2,
@@ -144062,14 +144579,6 @@
           "of": 78,
           "quiet": true
         }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "gpt-6-1-terra",
-        "from": 20,
-        "to": 18,
-        "of": 102
       },
       {
         "date": "2026-11-27",
@@ -144082,12 +144591,12 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "kimi-k3",
-        "from": 23,
+        "model": "hy4",
+        "from": 25,
         "to": 22,
         "of": 102,
         "open": {
-          "from": 5,
+          "from": 6,
           "to": 4,
           "of": 78
         }
@@ -144097,13 +144606,21 @@
         "index": "coding_index",
         "model": "glm-5-3",
         "from": 22,
-        "to": 23,
+        "to": 24,
         "of": 102,
         "open": {
           "from": 4,
-          "to": 5,
+          "to": 6,
           "of": 78
         }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "gpt-5-6-sol",
+        "from": 24,
+        "to": 25,
+        "of": 102
       },
       {
         "date": "2026-11-27",
@@ -144144,13 +144661,21 @@
         "index": "coding_index",
         "model": "ernie-5-5-flash-preview",
         "from": null,
-        "to": 31,
+        "to": 30,
         "of": 102,
         "open": {
           "from": null,
           "to": 9,
           "of": 78
         }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "muse-ember",
+        "from": 30,
+        "to": 31,
+        "of": 102
       },
       {
         "date": "2026-11-27",
@@ -144170,23 +144695,10 @@
         "index": "coding_index",
         "model": "mimo-v2-6-flash",
         "from": 32,
-        "to": 33,
-        "of": 102,
-        "open": {
-          "from": 10,
-          "to": 11,
-          "of": 78
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "qwen3-8-flash-next",
-        "from": 33,
         "to": 34,
         "of": 102,
         "open": {
-          "from": 11,
+          "from": 10,
           "to": 12,
           "of": 78
         }
@@ -144236,26 +144748,25 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "mistral-large-4",
-        "from": 38,
+        "model": "step-5-preview",
+        "from": 35,
         "to": 40,
         "of": 102,
         "open": {
-          "from": 16,
+          "from": 13,
           "to": 16,
-          "of": 78,
-          "quiet": true
+          "of": 78
         }
       },
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "step-5-preview",
-        "from": 35,
+        "model": "mistral-large-4",
+        "from": 38,
         "to": 41,
         "of": 102,
         "open": {
-          "from": 13,
+          "from": 16,
           "to": 17,
           "of": 78
         }
@@ -144289,13 +144800,26 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "muse-spark-open",
-        "from": 44,
+        "model": "minimax-m3",
+        "from": 47,
         "to": 46,
         "of": 102,
         "open": {
-          "from": 20,
+          "from": 23,
           "to": 22,
+          "of": 78
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "muse-spark-open",
+        "from": 44,
+        "to": 47,
+        "of": 102,
+        "open": {
+          "from": 20,
+          "to": 23,
           "of": 78
         }
       },
@@ -144328,26 +144852,13 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "reflection-beam",
-        "from": 53,
+        "model": "deepseek-v4-flash-vision",
+        "from": 54,
         "to": 52,
         "of": 102,
         "open": {
-          "from": 29,
-          "to": 28,
-          "of": 78
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "deepseek-v4-flash-vision",
-        "from": 54,
-        "to": 53,
-        "of": 102,
-        "open": {
           "from": 30,
-          "to": 29,
+          "to": 28,
           "of": 78
         }
       },
@@ -144447,10 +144958,23 @@
         "index": "coding_index",
         "model": "minimax-m2-5",
         "from": 70,
-        "to": 67,
+        "to": 66,
         "of": 102,
         "open": {
           "from": 46,
+          "to": 42,
+          "of": 78
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "qwen3-5-397b-a17b",
+        "from": 66,
+        "to": 67,
+        "of": 102,
+        "open": {
+          "from": 42,
           "to": 43,
           "of": 78
         }
@@ -144499,10 +145023,23 @@
         "index": "coding_index",
         "model": "ornith-1-0-9b",
         "from": 89,
-        "to": 82,
+        "to": 81,
         "of": 102,
         "open": {
           "from": 65,
+          "to": 57,
+          "of": 78
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "gemma-4-26b-a4b",
+        "from": 81,
+        "to": 82,
+        "of": 102,
+        "open": {
+          "from": 57,
           "to": 58,
           "of": 78
         }

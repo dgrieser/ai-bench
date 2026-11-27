@@ -122,9 +122,22 @@ BENCHMARKS: dict[str, str] = {
     # Read through TASKS: see below.
     "aime": "aime_2025",
     # Vals' own benchmark rather than a re-run of someone else's, which is what
-    # puts this one board on the benchmark-site rung in _precedence.py while the
-    # rest of the table stays curated -- see VALS_OWN_BENCHMARKS below. Pinned
-    # to its published version through VERSIONS, because the slug carries none.
+    # puts these boards on the benchmark-site rung in _precedence.py while the
+    # rest of the table stays curated -- see VALS_OWN_BENCHMARKS below.
+    #
+    # v1.1.1 (2026-11) is the current revision: it "upgrades the grader,
+    # requires every substep to pass, and fixes ambiguous tests", so it reads
+    # lower than 1.1 for the same build (Fable 5.2: 83.52 against 93.77) and is
+    # a column of its own. Its slug names the revision, but VERSIONS pins it
+    # anyway: a v1.1.2 re-grade is the kind of fix Vals has already shipped in
+    # place once.
+    "vibe-code-v1-1-1": "vibe_code_bench_1_1_1",
+    # v1.1, which 1.1.1 superseded. The page stays up, archived, at the slug
+    # 1.1 always had, and is still read: it scores 134 models against 1.1.1's
+    # 51, most of them never re-graded, and derive_indexes carries those onto
+    # 1.1.1's scale through REVISION_FALLBACKS. ARCHIVED below records that
+    # its banner is expected. Pinned through VERSIONS, because the slug names
+    # no revision.
     "vibe-code": "vibe_code_bench_1_1",
     # Meta's ProgramBench, which Vals re-runs over its own field: 47 rows
     # against the 21 the benchmark's own board publishes, which is the whole
@@ -154,7 +167,17 @@ BENCHMARKS: dict[str, str] = {
 # these at RANK_BENCHMARK_SITE and the rest at RANK_THIRD_PARTY_RUN. Declared here, with
 # the table above, so a board added to BENCHMARKS is classified in the same
 # place it is ingested.
-VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code", "cyber", "cyber-v1"})
+VALS_OWN_BENCHMARKS: frozenset[str] = frozenset(
+    {"vibe-code-v1-1-1", "vibe-code", "cyber", "cyber-v1"}
+)
+
+# Boards read although Vals has archived them in favour of a newer revision at
+# another slug, which BENCHMARKS also reads. The archive banner is expected on
+# these, and test_versions_scale_vals checks that the revision superseding each
+# one is in BENCHMARKS rather than that the page is current. A pinned board
+# that is archived and *not* listed here is a column that silently stopped
+# tracking its benchmark.
+ARCHIVED: frozenset[str] = frozenset({"vibe-code", "cyber-v1"})
 
 # The version a board's column measures, for the boards whose slug does not
 # carry one. Vals stamps a version into every board's metadata but names only
@@ -179,6 +202,7 @@ VALS_OWN_BENCHMARKS: frozenset[str] = frozenset({"vibe-code", "cyber", "cyber-v1
 VERSIONS: dict[str, str] = {
     "terminal-bench-4": "4.0",
     "terminal-bench-science": "0.1",
+    "vibe-code-v1-1-1": "1.1.1",
     "vibe-code": "1.1",
     "cyber": "1.1",
 }
@@ -373,8 +397,8 @@ def board(slug: str) -> tuple[dict[str, Any], dict[str, Any]]:
 
     One `update-all` reads every board twice -- update_vals_mapping.py for the
     model paths, update.py for the scores -- in two processes minutes apart, so
-    only a cache on disk can make them share a fetch. At eleven boards that is
-    eleven requests saved a run, on the same terms artificialanalysis.py's and
+    only a cache on disk can make them share a fetch. At fourteen boards that is
+    fourteen requests saved a run, on the same terms artificialanalysis.py's and
     fetch_llmstats.py's caches already run under: the TTL decides freshness, a
     changed key misses, and every failure is a miss.
 
@@ -408,7 +432,7 @@ def get_scores(slugs: list[str]) -> list[dict]:
     cost_per_test, date (the day the board last moved), rank (within the
     benchmark, 1 = best).
     """
-    # Eleven small pages on one host, independent of one another: read
+    # Fourteen small pages on one host, independent of one another: read
     # together, reported in BENCHMARKS order.
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
         boards = list(pool.map(board, slugs))

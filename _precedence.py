@@ -47,9 +47,9 @@ The rungs, strongest first:
      benchmarks it does not own, which is what keeps it off rung 2 next to the
      boards themselves. Its own benchmarks are the exception, and they are
      ranked as what they are: for a board Vals authored, runs and solely
-     publishes -- ``vibe_code_bench_1_1`` today -- the Vals page *is* the
-     benchmark's leaderboard, so it sits on rung 2 with the other first-party
-     boards. ``fetch_vals.VALS_OWN_BENCHMARKS`` draws the line, and it moves
+     publishes -- ``vibe_code_bench_1_1_1`` and the archived
+     ``vibe_code_bench_1_1`` today -- the Vals page *is* the benchmark's
+     leaderboard, so it sits on rung 2 with the other first-party boards. ``fetch_vals.VALS_OWN_BENCHMARKS`` draws the line, and it moves
      the rank of one board, not of the source.
   4. ``RANK_CURATED`` -- a third party that compiles or vets other people's
      results rather than running them. evals.report keeps only Official and

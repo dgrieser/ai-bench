@@ -527,13 +527,18 @@ class TestValsSuperseded(ScaleTestCase):
         Give it a column (vibe_code_bench_1_1_1, say), add that slug to
         fetch_vals.BENCHMARKS (and VERSIONS if its slug names no revision
         either), and keep the old slug only if its column should keep filling
-        -- as cyber-v1 does for CyberBench 1.0."""
+        -- as cyber-v1 does for CyberBench 1.0 and vibe-code for Vibe Code
+        Bench 1.1. A board kept that way goes in fetch_vals.ARCHIVED: its
+        banner is then expected, and what is checked instead is that the
+        revision superseding it is read too, under the version it is labelled
+        with."""
         for slug, pinned in fetch_vals.VERSIONS.items():
             with self.subTest(slug=slug):
                 url = fetch_vals.benchmark_url(slug)
                 body = self.get(url)
+                archived = slug in fetch_vals.ARCHIVED
                 banner = self._BANNER_RE.search(page_text(body))
-                if banner:
+                if banner and not archived:
                     text = page_text(body)
                     at = text.find(banner.group(0))
                     self.fail(
@@ -554,6 +559,18 @@ class TestValsSuperseded(ScaleTestCase):
                     f"fetch_vals.VERSIONS pins {pinned!r}",
                 )
                 latest = max(versions, key=lambda s: revision_rank(versions[s]))
+                if archived:
+                    self.assertIn(
+                        latest, fetch_vals.BENCHMARKS,
+                        f"{url} is archived in favour of {versions[latest]} at {latest!r}, "
+                        "which fetch_vals.BENCHMARKS does not read",
+                    )
+                    self.assertEqual(
+                        fetch_vals.VERSIONS.get(latest, versions[latest]), versions[latest],
+                        f"{latest!r} is labelled {versions[latest]} but fetch_vals.VERSIONS "
+                        f"pins {fetch_vals.VERSIONS.get(latest)!r}",
+                    )
+                    continue
                 self.assertEqual(
                     latest, slug,
                     f"{url}: the version selector's newest revision is "
