@@ -7,18 +7,21 @@ tasks lifted from *private* production codebases licensed from real companies:
 the code, the tickets and the reference solutions are nowhere on the public
 internet, which is the property the benchmark is built around. Each task ships
 in Harbor format with a verifier injected at grading time, and every model is
-run eight independent times per task, so the published number is a pass@1
-averaged over eight rollouts rather than a single attempt.
+run five independent times per task ("Resolution rate is equivalent to pass@1,
+averaged over five independent runs per task"), so the published number is a
+pass@1 averaged over five rollouts rather than a single attempt. (Through
+November 2026 the page said eight.)
 
-The board is a model *and harness* pairing -- Fable 5.1 under Claude Code,
-GPT-6 Astra under Codex CLI, GLM 5.3 under Claude Code -- because that is how
-the benchmark is run, so every row reports the `harness` it was measured with
-beside the score.
+The board is a model *and harness* pairing -- each model under its own native
+harness -- because that is how the benchmark is run. The table used to name
+that harness in a column of its own; since November 2026 it has none and the
+page only says "native harnesses", so `harness` is None unless a Harness
+column comes back, and is then read from it. Nothing downstream stores it.
 
 There is no API: the site is a Next.js app whose RSC payload carries the
 leaderboard as rendered markup rather than as data (there is no `entries`
 object to read, the way fetch_frontierswe.py reads one), so the table is parsed
-out of the served HTML. The page renders the same eight rows twice -- an <ol>
+out of the served HTML. The page renders the same rows twice -- an <ol>
 for phones and a <table> for everything else -- and this script reads the table
 inside the `leaderboard` container only, so no model is counted twice.
 
@@ -29,10 +32,20 @@ states ("Real-SWE 1.1 Benchmark"), update.py files it under that revision's
 column (_revisions.py), and a page naming no revision is refused rather than
 read into whichever column was current last time.
 
-The 95% confidence interval the page says it shows exists only as the geometry
-of the whisker drawn over each bar, so it is reported as `ci_low`/`ci_high`
-when it can be read and left None when it cannot. It is never the score: the
-score is the percentage the board prints.
+Each score carries an error bar the page states as "one standard error either
+side: 53.5% to 60.1%" (screen-reader text beside the score; the drawn
+`data-error-bar` is the same interval as CSS geometry and is the fallback). It
+is reported as stated, as `se_low`/`se_high` -- one standard error, not a 95%
+confidence interval (the page drew a 95% CI as a `data-confidence-whisker`
+until November 2026). It is not converted (x1.96): llm.json stores no
+intervals, and a converted one would be a number the page never published. It
+is None when it cannot be read, and never the score: the score is the
+percentage the board prints.
+
+The model cell prints a short name and, for some rows, a screen-reader-only
+full name beside it ("Opus 5.5" + "Claude Opus 5.5"); the rank cell likewise
+pairs "=8" with "Tied for 8". Screen-reader-only text is dropped before a cell
+is read, so the name is the one the board shows and a tie stays a tie.
 """
 
 from __future__ import annotations
@@ -74,10 +87,17 @@ _TAG_RE = re.compile(r"<[^>]+>")
 _PERCENT_RE = re.compile(r"(-?[0-9]+(?:\.[0-9]+)?)\s*%")
 # "=5" marks a tie on this board; "5" a clear position.
 _RANK_RE = re.compile(r"^(=)?\s*([0-9]+)$")
-# The whisker drawn over the bar: the 95% interval, as CSS rather than as text.
-_WHISKER_RE = re.compile(
-    r'data-confidence-whisker="true"[^>]*style="([^"]*)"', re.IGNORECASE
+# Screen-reader-only spans: a second copy of a name or rank, and the error bar.
+_SR_ONLY_RE = re.compile(
+    r'<span[^>]*class="[^"]*\bsr-only\b[^"]*"[^>]*>.*?</span>', re.DOTALL | re.IGNORECASE
 )
+# "one standard error either side: 53.5% to 60.1%" -- the interval, as text.
+_SE_TEXT_RE = re.compile(
+    r"one standard error either side:\s*(-?[0-9.]+)\s*%\s*to\s*(-?[0-9.]+)\s*%",
+    re.IGNORECASE,
+)
+# The error bar drawn over the score bar: the same interval, as CSS.
+_ERROR_BAR_RE = re.compile(r'data-error-bar="true"[^>]*style="([^"]*)"', re.IGNORECASE)
 _LEFT_RE = re.compile(r"left:\s*(-?[0-9.]+)%")
 _WIDTH_RE = re.compile(r"width:\s*(-?[0-9.]+)%")
 
@@ -101,7 +121,8 @@ def fetch_html(url: str = URL, retries: int = 3, delay: float = 2.0) -> str:
 
 
 def _text(markup: str) -> str:
-    text = _TAG_RE.sub(" ", html.unescape(markup))
+    """Visible text of a cell: screen-reader-only copies and tags dropped."""
+    text = _TAG_RE.sub(" ", html.unescape(_SR_ONLY_RE.sub(" ", markup)))
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -129,19 +150,22 @@ def select_leaderboard_table(page_html: str) -> str:
     return match.group(1)
 
 
-def _confidence_interval(cell_markup: str) -> tuple[float | None, float | None]:
-    """The 95% interval drawn over one bar, as (low, high) percentage points.
+def _error_bar(cell_markup: str) -> tuple[float | None, float | None]:
+    """One standard error either side of the score, as (low, high) points.
 
-    The bar and the whisker are both laid out against a full-width 0-100 scale
-    -- the top model's 38.75% bar is 38.75% wide -- so the whisker's left edge
-    and width read straight off as the interval's ends. Decoration this is read
-    from, so anything unexpected yields (None, None) rather than an error: a
-    missing interval must never cost the score beside it.
+    Read from the text the page prints for screen readers; failing that, from
+    the drawn `data-error-bar`, which is laid out against the same full-width
+    0-100 scale as the score bar (left edge and width read straight off as the
+    ends). Decoration, so anything unexpected yields (None, None) rather than
+    an error: a missing interval must never cost the score beside it.
     """
-    whisker = _WHISKER_RE.search(cell_markup)
-    if whisker is None:
+    stated = _SE_TEXT_RE.search(_TAG_RE.sub(" ", html.unescape(cell_markup)))
+    if stated is not None:
+        return (round(float(stated.group(1)), 1), round(float(stated.group(2)), 1))
+    bar = _ERROR_BAR_RE.search(cell_markup)
+    if bar is None:
         return (None, None)
-    style = whisker.group(1)
+    style = bar.group(1)
     left, width = _LEFT_RE.search(style), _WIDTH_RE.search(style)
     if left is None or width is None:
         return (None, None)
@@ -204,11 +228,13 @@ def page_revision(page_html: str) -> str:
 
 
 def get_scores() -> list[dict]:
-    """Return a list of dicts: model, harness, score, rank, tied, ci_low,
-    ci_high, revision.
+    """Return a list of dicts: model, harness, score, rank, tied, se_low,
+    se_high, revision.
 
-    `score` is the resolution rate the board prints -- pass@1 over eight
-    independent runs per task, as a percentage. `rank` and `tied` are the
+    `score` is the resolution rate the board prints -- pass@1 averaged over
+    five independent runs per task, as a percentage. `se_low`/`se_high` are
+    the page's one-standard-error bar, as stated. `harness` is None while the
+    table has no Harness column. `rank` and `tied` are the
     board's own position for the row rather than a re-derived one, so two models
     published level stay level here.
     """
@@ -227,7 +253,7 @@ def get_scores() -> list[dict]:
         if percent is None:
             continue
         rank, tied = _rank(row.get("rank", ""))
-        ci_low, ci_high = _confidence_interval(cell)
+        se_low, se_high = _error_bar(cell)
         scores.append(
             {
                 "model": model,
@@ -235,8 +261,8 @@ def get_scores() -> list[dict]:
                 "score": round(float(percent.group(1)), 2),
                 "rank": rank,
                 "tied": tied,
-                "ci_low": ci_low,
-                "ci_high": ci_high,
+                "se_low": se_low,
+                "se_high": se_high,
                 "revision": revision,
             }
         )
@@ -273,11 +299,11 @@ def main() -> int:
             [len("HARNESS"), *(len(e.get("harness") or "") for e in scores)]
         )
         fmt = f"{{:>4}}  {{:<{model_width}}}  {{:>6}}  {{:<{harness_width}}}  {{:<13}}"
-        print(fmt.format("#", "MODEL", "SCORE", "HARNESS", "95% CI"))
+        print(fmt.format("#", "MODEL", "SCORE", "HARNESS", "±1 SE"))
         for entry in scores:
             rank = entry["rank"]
             position = "" if rank is None else f"{'=' if entry['tied'] else ''}{rank}"
-            low, high = entry["ci_low"], entry["ci_high"]
+            low, high = entry["se_low"], entry["se_high"]
             interval = "" if low is None or high is None else f"{low:.1f}-{high:.1f}"
             print(
                 fmt.format(

@@ -557,11 +557,11 @@
       "name": "Real-SWE 1.1",
       "short_name": "RSWE1.1",
       "category": "Software Engineering",
-      "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Release 1.1 (October 2026) expands the benchmark to 25 tasks across TypeScript, Go, Python, Ruby and Java codebases. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time. Scores are the resolution rate — pass@1 averaged over eight independent runs per task — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
+      "description": "Coding agents on private, real-world enterprise codebases: tasks lifted from production repositories licensed from real companies, so neither the code, the ticket nor the reference solution exists on the public internet. Release 1.1 (October 2026) expands the benchmark to 25 tasks across TypeScript, Go, Python, Ruby and Java codebases. Tasks are graded by verifiers built from each repository's own test suite and injected at grading time. Scores are the resolution rate — pass@1 averaged over five independent runs per task, with one standard error either side published per model — for a model run in its native agent harness, so a row measures a model-and-harness pair.",
       "settings": [
         "Resolved %",
         "25 tasks",
-        "pass@1 over 8 runs",
+        "pass@1 over 5 runs",
         "native harness",
         "private repos"
       ],

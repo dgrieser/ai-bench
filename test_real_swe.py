@@ -2,7 +2,7 @@
 """Tests for the Real-SWE leaderboard reader. Run with ./test_real_swe.py
 
 Real-SWE publishes no API: the board is markup on a one-page Next.js site that
-renders the same eight rows twice (an <ol> for phones, a <table> for everything
+renders the same rows twice (an <ol> for phones, a <table> for everything
 else) and carries two further tables further down -- a per-task pass matrix and
 an effort table -- neither of which is a list of models with one score each.
 
@@ -10,8 +10,11 @@ So what these tests pin is everything that could silently read the wrong
 numbers: that the table comes from the leaderboard container rather than from a
 position on the page, that each row is keyed by the table's own header rather
 than by column index, that the phone list never doubles a model, that a tie the
-board prints as "=5" stays a tie, and that the confidence whisker -- which
-exists only as CSS -- can never stand in for, or cost, the score beside it.
+board prints as "=5" stays a tie, that the screen-reader-only copy of a name
+("Opus 5.5" + "Claude Opus 5.5") or rank ("=8" + "Tied for 8") is never read
+into the visible one, and that the one-standard-error bar -- stated as
+screen-reader text and drawn as CSS -- can never stand in for, or cost, the
+score beside it.
 """
 
 from __future__ import annotations
@@ -22,28 +25,53 @@ from unittest import mock
 import fetch_real_swe as rs
 
 
-def bar(score: float, ci: tuple[float, float] | None = (10.0, 20.0)) -> str:
-    """The score cell's innards: the fill bar, optionally with a whisker."""
-    whisker = ""
-    if ci is not None:
-        low, high = ci
-        whisker = (
-            '<div data-confidence-whisker="true" class="absolute" '
+def sr(text: str) -> str:
+    return f'<span class="sr-only">{text}</span>'
+
+
+def bar(
+    score: float,
+    se: tuple[float, float] | None = (10.0, 20.0),
+    stated: bool = True,
+) -> str:
+    """The score cell's innards, in the shape the site serves since November
+    2026: the fill bar, optionally a drawn `data-error-bar`, and the printed
+    percentage followed by the error bar as screen-reader text."""
+    drawn = said = ""
+    if se is not None:
+        low, high = se
+        drawn = (
+            '<div data-error-bar="true" class="absolute" '
             f'style="left:{low}%;width:{round(high - low, 4)}%"></div>'
         )
+        if stated:
+            said = sr(f", <!-- -->one standard error either side: {low}% to {high}%")
     return (
+        '<div aria-hidden="true">'
         f'<div class="h-full" style="width:{score}%;background-color:#d97757"></div>'
-        f"{whisker}"
-        f'<span class="w-14 tabular-nums">{score}%</span>'
+        f"{drawn}</div>"
+        f'<div><span class="percentage">{score:.2f}%{said}</span></div>'
     )
 
 
-def row(rank: str, model: str, harness: str, score: float, **kwargs) -> str:
+def rank_cell(rank: str) -> str:
+    if rank.startswith("="):
+        return f'<span aria-hidden="true">{rank}</span>' + sr(f"Tied for {rank[1:]}")
+    return rank
+
+
+def row(rank: str, model: str, score: float, full_name: str | None = None, **kwargs) -> str:
+    name = model
+    if full_name is not None:
+        name = (
+            f'<span title="{full_name}"><span aria-hidden="true">{model}</span>'
+            f"{sr(full_name)}</span>"
+        )
     return (
         "<tr>"
-        f'<td class="tabular-nums">{rank}</td>'
-        f'<th scope="row"><span><img alt="" src="/logos/anthropic.svg"/>{model}</span></th>'
-        f"<td>{harness}</td>"
+        f'<td class="tabular-nums">{rank_cell(rank)}</td>'
+        f'<th scope="row"><span><img alt="" src="/logos/anthropic.svg"/>'
+        f'<a href="/models/x">{name}</a></span></th>'
         f"<td>{bar(score, **kwargs)}</td>"
         "</tr>"
     )
@@ -51,8 +79,8 @@ def row(rank: str, model: str, harness: str, score: float, **kwargs) -> str:
 
 HEAD = (
     "<thead><tr>"
-    '<th scope="col">#</th><th scope="col">Model</th>'
-    '<th scope="col">Harness</th><th scope="col">Resolution rate</th>'
+    f'<th scope="col"><span aria-hidden="true">#</span>{sr("Rank")}</th>'
+    '<th scope="col">Model</th><th scope="col">Resolution rate</th>'
     "</tr></thead>"
 )
 
@@ -66,15 +94,15 @@ PHONE_LIST = (
 # A page in the shape the site serves: the board first, then an unrelated table
 # whose rows are tasks rather than models.
 PAGE = (
-    "<html><head><title>Real-SWE 1.1 Benchmark — Specific Labs</title></head>"
+    "<html><head><title>Real-SWE 1.1 — by Specific</title></head>"
     "<div><p>prose</p></div>"
     '<div id="leaderboard"><figure aria-label="Model leaderboard">'
     f"{PHONE_LIST}"
     f"<table>{HEAD}<tbody>"
-    + row("1", "Alpha 2", "Claude Code", 38.8, ci=(32.1, 45.4))
-    + row("2", "Beta 1.5", "Codex CLI", 33.8)
-    + row("=3", "Gamma", "Gemini CLI", 23.8, ci=None)
-    + row("=3", "Delta", "Delta Code", 23.8)
+    + row("1", "Alpha 2", 38.8, full_name="Claude Alpha 2", se=(32.1, 45.4))
+    + row("2", "Beta 1.5", 33.8)
+    + row("=3", "Gamma", 23.8, se=None)
+    + row("=3", "Delta", 23.8, se=(20.1, 27.5), stated=False)
     + "</tbody></table></figure></div>"
     '<figure aria-label="Task results"><table><thead><tr>'
     '<th scope="col">Task</th><th scope="col">Alpha 2</th></tr></thead>'
@@ -126,26 +154,30 @@ class TestRows(unittest.TestCase):
     def test_the_vendor_logo_is_not_part_of_the_model_name(self) -> None:
         self.assertEqual(by_model()["Beta 1.5"]["model"], "Beta 1.5")
 
-    def test_every_row_carries_the_harness_it_was_run_under(self) -> None:
-        """A row is a model-and-harness pair, which is how the board is run."""
-        self.assertEqual(
-            {e["model"]: e["harness"] for e in scores()},
-            {
-                "Alpha 2": "Claude Code",
-                "Beta 1.5": "Codex CLI",
-                "Gamma": "Gemini CLI",
-                "Delta": "Delta Code",
-            },
-        )
+    def test_the_screen_reader_full_name_is_not_appended(self) -> None:
+        """The cell prints "Alpha 2" and hides "Claude Alpha 2" for screen
+        readers; reading both gave "Alpha 2 Claude Alpha 2"."""
+        self.assertIn("Alpha 2", by_model())
+        self.assertNotIn("Claude", " ".join(by_model()))
+
+    def test_no_harness_column_means_no_harness(self) -> None:
+        """The table stopped naming the harness; rows say None, not a guess."""
+        self.assertEqual({e["harness"] for e in scores()}, {None})
+
+    def test_a_harness_column_is_read_if_it_returns(self) -> None:
+        page = PAGE.replace(
+            '<th scope="col">Model</th>',
+            '<th scope="col">Model</th><th scope="col">Harness</th>',
+        ).replace("</a></span></th>", "</a></span></th><td>Claude Code</td>")
+        self.assertEqual({e["harness"] for e in scores(page)}, {"Claude Code"})
 
     def test_cells_are_keyed_by_header_not_by_position(self) -> None:
         """A column inserted before the score must not shift what is read."""
         page = PAGE.replace(
-            '<th scope="col">Harness</th>',
-            '<th scope="col">Vendor</th><th scope="col">Harness</th>',
-        ).replace('<td>Claude Code</td>', "<td>Anthropic</td><td>Claude Code</td>")
-        entry = by_model(page)["Alpha 2"]
-        self.assertEqual((entry["score"], entry["harness"]), (38.8, "Claude Code"))
+            '<th scope="col">Model</th>',
+            '<th scope="col">Model</th><th scope="col">Vendor</th>',
+        ).replace("</a></span></th>", "</a></span></th><td>Anthropic 99%</td>")
+        self.assertEqual(by_model(page)["Alpha 2"]["score"], 38.8)
 
     def test_a_published_tie_stays_a_tie(self) -> None:
         gamma, delta = by_model()["Gamma"], by_model()["Delta"]
@@ -156,26 +188,39 @@ class TestRows(unittest.TestCase):
         self.assertEqual((by_model()["Alpha 2"]["rank"], by_model()["Alpha 2"]["tied"]), (1, False))
 
 
-class TestConfidenceInterval(unittest.TestCase):
-    def test_the_whisker_reads_as_the_interval(self) -> None:
+class TestStandardError(unittest.TestCase):
+    def test_the_stated_error_bar_is_read(self) -> None:
         entry = by_model()["Alpha 2"]
-        self.assertEqual((entry["ci_low"], entry["ci_high"]), (32.1, 45.4))
+        self.assertEqual((entry["se_low"], entry["se_high"]), (32.1, 45.4))
+
+    def test_the_drawn_bar_is_the_fallback(self) -> None:
+        entry = by_model()["Delta"]
+        self.assertEqual((entry["se_low"], entry["se_high"]), (20.1, 27.5))
+
+    def test_the_stated_text_wins_over_the_drawing(self) -> None:
+        page = PAGE.replace("left:32.1%", "left:30.0%")
+        entry = by_model(page)["Alpha 2"]
+        self.assertEqual((entry["se_low"], entry["se_high"]), (32.1, 45.4))
 
     def test_the_interval_brackets_the_score(self) -> None:
         entry = by_model()["Alpha 2"]
-        self.assertLessEqual(entry["ci_low"], entry["score"])
-        self.assertGreaterEqual(entry["ci_high"], entry["score"])
+        self.assertLessEqual(entry["se_low"], entry["score"])
+        self.assertGreaterEqual(entry["se_high"], entry["score"])
 
-    def test_a_missing_whisker_costs_nothing_but_the_interval(self) -> None:
+    def test_a_missing_error_bar_costs_nothing_but_the_interval(self) -> None:
         entry = by_model()["Gamma"]
         self.assertEqual(entry["score"], 23.8)
-        self.assertEqual((entry["ci_low"], entry["ci_high"]), (None, None))
+        self.assertEqual((entry["se_low"], entry["se_high"]), (None, None))
 
     def test_the_interval_is_never_read_as_the_score(self) -> None:
-        """The bar's own width is the score's scale; the whisker is only drawn
-        against it. Swapping the two would report a low end as a result."""
-        page = PAGE.replace("left:32.1%", "left:0.0%")
+        """The error bar's ends are percentages too; the score is the first
+        percentage the board prints, never one of them."""
+        page = PAGE.replace("either side: 32.1%", "either side: 0.0%")
         self.assertEqual(by_model(page)["Alpha 2"]["score"], 38.8)
+
+    def test_the_old_confidence_whisker_is_not_read_as_a_standard_error(self) -> None:
+        page = PAGE.replace("data-error-bar", "data-confidence-whisker")
+        self.assertEqual(by_model(page)["Delta"]["se_low"], None)
 
 
 class TestRevision(unittest.TestCase):

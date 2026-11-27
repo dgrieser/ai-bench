@@ -338,10 +338,11 @@ class TestDeepSwe(BoardTestCase):
 
 # ------------------------------------------------------------------- Real-SWE
 
-# What fetch_real_swe's docstring and its "95% CI" column assume the page says.
-# Bump with that docstring (and the whisker/harness parsing) when the page moves.
-REAL_SWE_RUNS_PER_TASK = "eight"
-REAL_SWE_INTERVAL = "95% confidence interval"
+# What fetch_real_swe's docstring and its se_low/se_high fields assume the page
+# says. Bump with that docstring (and the error-bar/harness parsing) when the
+# page moves. Until November 2026 it said eight runs and a 95% CI whisker.
+REAL_SWE_RUNS_PER_TASK = "five"
+REAL_SWE_INTERVAL = "one standard error"
 
 _REAL_SWE_RUNS_RE = re.compile(r"averaged over\s+(\w+)\s+independent runs per task", re.IGNORECASE)
 _REAL_SWE_INTERVALS = {
@@ -365,12 +366,15 @@ class TestRealSwe(BoardTestCase):
         expected = newest(KNOWN_REVISIONS["real_swe"])
         self.assertEqual(found, expected, f"{url} title names Real-SWE {found}; expected {expected}")
 
-    def test_parsed_rows_still_carry_harness_and_interval(self):
-        """fetch_real_swe reads each row's harness and its interval whisker
-        beside the score. Both are decoration, so a markup change empties them
-        without any error -- which is how a methodology change (fewer runs, a
-        different interval) slips past. Fails when no row carries a harness or
-        an interval: re-read the table's columns and the error-bar markup."""
+    def test_parsed_rows_match_the_columns_the_fetcher_assumes(self):
+        """Since November 2026 the table has no Harness column (the page only
+        says "native harnesses", so fetch_real_swe reports harness None), names
+        carry a screen-reader-only full name the fetcher must drop, and each
+        score carries a one-standard-error bar. All of it is decoration, so a
+        markup change empties or garbles it without any error -- which is how
+        a methodology change slips past. Fails when a Harness column returns
+        (read it into `harness` again), when no row has a readable error bar
+        (re-read the error-bar markup), or when a parsed name doubles."""
         url = fetch_real_swe.URL
         html = self.get(url)
         try:
@@ -380,22 +384,34 @@ class TestRealSwe(BoardTestCase):
         self.assertTrue(rows, f"{url}: leaderboard table has no rows")
         header = sorted(rows[0])
         with self.subTest(field="harness"):
-            self.assertTrue(
-                any(fetch_real_swe._text(r.get("harness", "")) for r in rows),
-                f"{url}: no row has a harness; table columns are now {header}",
+            self.assertNotIn(
+                "harness", header,
+                f"{url}: the table has a Harness column again ({header}); "
+                "fetch_real_swe reads it, so update its docstring and this test",
             )
         with self.subTest(field="interval"):
-            intervals = [fetch_real_swe._confidence_interval(r.get("resolution rate", "")) for r in rows]
+            intervals = [fetch_real_swe._error_bar(r.get("resolution rate", "")) for r in rows]
             self.assertTrue(
                 any(low is not None for low, _high in intervals),
-                f"{url}: no row has a readable interval whisker "
-                f"(data-confidence-whisker found {html.count('data-confidence-whisker')} times, "
-                f"data-error-bar {html.count('data-error-bar')} times)",
+                f"{url}: no row has a readable error bar "
+                f"(data-error-bar found {html.count('data-error-bar')} times, "
+                f"data-confidence-whisker {html.count('data-confidence-whisker')} times)",
             )
+        with self.subTest(field="model"):
+            def doubled_name(name: str) -> bool:
+                # "Opus 5.5 Claude Opus 5.5": its first two words recur later.
+                words = name.split()
+                return len(words) >= 4 and any(
+                    words[i:i + 2] == words[:2] for i in range(2, len(words) - 1)
+                )
+            names = [fetch_real_swe._text(r.get("model", "")) for r in rows]
+            doubled = [name for name in names if doubled_name(name)]
+            self.assertFalse(doubled, f"{url}: model names parse doubled: {doubled}")
 
     def test_runs_per_task_and_interval_are_what_the_fetcher_assumes(self):
         """The score is pass@1 averaged over N runs per task, with an interval
-        drawn around it; fetch_real_swe documents eight runs and a 95% CI. A
+        drawn around it; fetch_real_swe documents five runs and one standard
+        error either side. A
         change there is a change of methodology under the same column. Fails
         naming what the page states now: decide whether the column still holds
         one measurement, then update the fetcher's docstring and the constants
