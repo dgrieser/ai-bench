@@ -74190,7 +74190,7 @@
         "ifbench": 71.9,
         "itbench_aa": null,
         "gdpval_aa": 645,
-        "aa_briefcase": 505,
+        "aa_briefcase": 510,
         "browsecomp": 37,
         "cybergym": null,
         "exploitgym": null,
@@ -74280,7 +74280,7 @@
         "ifbench": "2026-09-15",
         "itbench_aa": null,
         "gdpval_aa": "2026-10-28",
-        "aa_briefcase": "2026-10-06",
+        "aa_briefcase": "2026-11-27",
         "browsecomp": "2026-08-13",
         "cybergym": null,
         "exploitgym": null,
@@ -74649,6 +74649,11 @@
           {
             "date": "2026-10-06",
             "score": 505,
+            "source": "https://artificialanalysis.ai/models/nemotron-3-5-lightning"
+          },
+          {
+            "date": "2026-11-27",
+            "score": 510,
             "source": "https://artificialanalysis.ai/models/nemotron-3-5-lightning"
           }
         ],
@@ -128668,9 +128673,9 @@
       "params": "321B",
       "context": null,
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 700,
+        "int8": 350,
+        "int4": 175
       },
       "creator": {
         "name": "Nex-AGI",
@@ -129053,6 +129058,11 @@
             "source": "https://huggingface.co/nex-agi/Nex-N2.6"
           }
         ]
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/nex-agi/Nex-N2.6/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/nex-agi/Nex-N2.6/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/nex-agi/Nex-N2.6/"
       }
     },
     {

@@ -1,194 +1,57 @@
 {
   "questions": [
     {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "aa_strategy_ops_index",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_0",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match, as 'AA-Omniscience v1 Hallucination Rate'"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_1",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match, as 'AA-Omniscience v1.1 Hallucination Rate'"
-        }
-      ],
-      "context": {
-        "known": 1698,
-        "mapped": {
-          "aa_omniscience_hallucination_1_0": [
-            "AA-Omni. Non-Halluc.",
-            "AA-Omniscience Non-Hallucination Rate",
-            "AA-Omniscience non-hallucination (public)"
-          ],
-          "aa_omniscience_hallucination_1_1": [
-            "AA-Omniscience v1.1 non-hallucination rate",
-            "OmniScience — Non-Hallucination"
-          ]
-        },
-        "siblings": []
-      },
+      "candidates": [],
       "default": null,
       "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Overall Non-Repetition Rate ↑' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/nex-agi/Nex-N2.6",
-      "subject": "Overall Non-Repetition Rate ↑",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "aa_strategy_ops_index",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_0",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match, as 'AA-Omniscience v1 Hallucination Rate'"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_1",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match, as 'AA-Omniscience v1.1 Hallucination Rate'"
-        }
-      ],
-      "context": {
-        "known": 1698,
-        "mapped": {
-          "aa_omniscience_hallucination_1_0": [
-            "AA-Omni. Non-Halluc.",
-            "AA-Omniscience Non-Hallucination Rate",
-            "AA-Omniscience non-hallucination (public)"
-          ],
-          "aa_omniscience_hallucination_1_1": [
-            "AA-Omniscience v1.1 non-hallucination rate",
-            "OmniScience — Non-Hallucination"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Valid Tool Selection Rate (Overall) ↑' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/nex-agi/Nex-N2.6",
-      "subject": "Valid Tool Selection Rate (Overall) ↑",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "weak",
-          "option": "aa_strategy_ops_index",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_0",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match, as 'AA-Omniscience v1 Hallucination Rate'"
-        },
-        {
-          "confidence": "weak",
-          "option": "aa_omniscience_hallucination_1_1",
-          "reason": "the same name without its first 3 word(s): exact to rate, substring match, as 'AA-Omniscience v1.1 Hallucination Rate'"
-        }
-      ],
-      "context": {
-        "known": 1698,
-        "mapped": {
-          "aa_omniscience_hallucination_1_0": [
-            "AA-Omni. Non-Halluc.",
-            "AA-Omniscience Non-Hallucination Rate",
-            "AA-Omniscience non-hallucination (public)"
-          ],
-          "aa_omniscience_hallucination_1_1": [
-            "AA-Omniscience v1.1 non-hallucination rate",
-            "OmniScience — Non-Hallucination"
-          ]
-        },
-        "siblings": []
-      },
-      "default": null,
-      "if_previous": null,
-      "note": null,
-      "question": "Map HF label 'Valid Tool Selection Rate (When with Tools) ↑' to llm.json benchmark",
-      "route": "update_huggingface_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://huggingface.co/nex-agi/Nex-N2.6",
-      "subject": "Valid Tool Selection Rate (When with Tools) ↑",
-      "universe": "benchmarks"
-    },
-    {
-      "candidates": [
-        {
-          "confidence": "exact",
-          "option": "nex-n2-6",
-          "reason": "exact to Nex-N2.6, exact match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nex-n2-5-pro",
-          "reason": "exact to Nex-N2.6, most components match"
-        },
-        {
-          "confidence": "weak",
-          "option": "nex-n2-5-mini",
-          "reason": "exact to Nex-N2.6, most components match"
-        }
-      ],
-      "context": {
-        "known": 234,
-        "mapped": {
-          "nex-n2-5-mini": [
-            "nex-agi/Nex-N2.5-mini"
-          ],
-          "nex-n2-5-pro": [
-            "nex-agi/Nex-N2.5-Pro"
-          ]
-        },
-        "siblings": [
-          {
-            "mapped_to": [
-              "nex-n2-5-pro"
-            ],
-            "name": "nex-agi/Nex-N2.5-Pro"
-          },
-          {
-            "mapped_to": [
-              "nex-n2-5-max"
-            ],
-            "name": "nex-agi/Nex-N2.5-max"
-          },
-          {
-            "mapped_to": [
-              "nex-n2-5-mini"
-            ],
-            "name": "nex-agi/Nex-N2.5-mini"
-          }
-        ]
-      },
-      "default": "nex-n2-6",
-      "if_previous": null,
-      "note": null,
-      "question": "Map Spheron path 'nex-agi/Nex-N2.6' to llm.json model",
-      "route": "update_spheron_mapping.py",
-      "route_kind": "mapping",
-      "source_url": "https://www.spheron.network/tools/gpu-recommender/nex-agi/Nex-N2.6/",
-      "subject": "nex-agi/Nex-N2.6",
-      "universe": "models",
+      "note": "released 2026-11-23 - Baidu - https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
+      "question": "Add newly released model 'ernie-5-5-flash' to llm.json?",
+      "route": "check_new.py",
+      "route_kind": "new-model",
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
+      "subject": "ernie-5-5-flash",
+      "universe": null,
       "weights": "open",
-      "weights_from": "sources"
+      "weights_from": "source"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "ernie-5-5-flash",
+          "reason": "exact to ernie-5-5-flash-preview, most components match"
+        },
+        {
+          "confidence": "weak",
+          "option": "ling-3-1-flash-1001",
+          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "lingsante-3-1-flash",
+          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jt-4-1-flash-236b-a21b-0709",
+          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "jt-4-1-flash-236b-a21b-0709-non-reasoning",
+          "reason": "the same name without its first 3 word(s): drop descriptor suffix to a variant, substring match"
+        }
+      ],
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Which Artificial Analysis slug is llm.json model 'ernie-5-5-flash-preview'?",
+      "route": "update_artificialanalysis_mapping.py",
+      "route_kind": "aa-mapping",
+      "ruled_out": 734,
+      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+      "subject": "ernie-5-5-flash-preview",
+      "universe": "aa-slugs"
     }
   ]
 }
