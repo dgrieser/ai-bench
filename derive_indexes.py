@@ -313,7 +313,16 @@ INDEXES: list[IndexDef] = [
             # and 2.8 points to the fifth, half the 5.6 that priced it at 0.75
             # -- and it swaps rungs with ProgramBench, the other construction
             # board, which now has the width and the head this one has lost.
-            ("vibe_code_bench_1_1", 0.5),
+            #
+            # 1.1.1 since 2026-11-27, at 1.1's weight: Vals superseded 1.1 with
+            # it (upgraded grader, every substep must pass, ambiguous tests
+            # fixed) and archived 1.1. 41 models here are scored on it, every
+            # one also on 1.1, which keeps 63; the other 22 reach it through
+            # REVISION_FALLBACKS. The re-grade spread the head back out (83.5
+            # at the top, 4.9 points to the fifth, against 1.1's 2.8), which
+            # argues for more than 0.5, but the weight is left where it was
+            # priced until the head has held up past one board refresh.
+            ("vibe_code_bench_1_1_1", 0.5),
             # 0.3 since 2026-10-03, from 0.4: 55 scored models and not one
             # first-party value -- llm-stats, benchlm and model cards under
             # whatever harness each lab chose, which do not agree with each
@@ -959,6 +968,15 @@ REVISION_FALLBACKS: dict[str, str] = {
     "swe_atlas_qna_1_1": "swe_atlas_qna_1_0",
     "swe_atlas_rf_1_1": "swe_atlas_rf_1_0",
     "swe_atlas_tw_1_1": "swe_atlas_tw_1_0",
+    # Vibe Code Bench: 1.1 onto 1.1.1, the same 100 specifications re-graded
+    # (upgraded grader, every substep must pass, ambiguous tests fixed). At
+    # 2026-11-27 all 41 models on 1.1.1 are on 1.1 too and the two rank them
+    # alike -- Spearman 0.936, Pearson 0.978 (0.932 over Vals' whole 51-row
+    # overlap) -- so a ratio carries the 22 models on 1.1 alone. The ratios
+    # run 0.58-0.91 around a geometric mean of 0.80: the substep rule costs a
+    # weak build proportionally more (Inkling 19.2 -> 12.4) than a strong one
+    # (Fable 5.2 93.8 -> 83.5), so a converted low score reads a little high.
+    "vibe_code_bench_1_1_1": "vibe_code_bench_1_1",
     # Real-SWE needs none: 1.1 already scores three times 1.0's field.
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's

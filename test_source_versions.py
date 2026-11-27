@@ -277,7 +277,8 @@ class TestVals(LiveTestCase):
     def test_every_pinned_board_still_carries_its_pinned_version(self):
         """fetch_vals.VERSIONS pins the boards whose slug names no revision
         (terminal-bench-4 -> 4.0, terminal-bench-science -> 0.1, vibe-code,
-        cyber). The fetcher refuses a mismatch at refresh time, which surfaces
+        cyber) and vibe-code-v1-1-1, which does name one but is pinned against
+        a re-grade in place. The fetcher refuses a mismatch at refresh time, which surfaces
         as a fetcher warning; this puts the same check on the Tests tab. Read
         past the board cache, so it is today's page."""
         for slug, pinned in fetch_vals.VERSIONS.items():

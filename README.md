@@ -475,7 +475,8 @@ current address.
 ./fetch_sec_bench.py                    # SEC-bench Pro, the 183-task 260505 snapshot vendors report
 ./fetch_hle_diamond.py                  # HLE-Diamond, the maintainers' highest-effort, no-tools runs
 ./fetch_vals.py --benchmark swebench    # or pin one board
-./fetch_vals.py --benchmark vibe-code   # Vibe Code Bench 1.1, Vals' own benchmark
+./fetch_vals.py --benchmark vibe-code-v1-1-1  # Vibe Code Bench 1.1.1, Vals' own benchmark
+./fetch_vals.py --benchmark vibe-code   # Vibe Code Bench 1.1, archived since 1.1.1 superseded it
 ./fetch_vals.py --benchmark programbench  # ProgramBench, Vals' wider re-run of it
 
 # Artificial Analysis' own list (update.py drives this; see Artificial Analysis API)
@@ -918,11 +919,11 @@ already has a publisher, so it never leads one: at rank 3 it fills gaps under
 Artificial Analysis and under each benchmark's own board, and displaces the
 compilations (evals.report) and model-card self-reports below it. Its *own* benchmarks are the exception, and
 `fetch_vals.VALS_OWN_BENCHMARKS` names them: for a board Vals authored, runs and
-solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-075) today —
+solely publishes — [Vibe Code Bench](#why-vibe-code-bench-enters-at-075) and CyberBench today —
 the Vals page is the benchmark's leaderboard, so it ranks 2 with the other
 first-party boards. The line is drawn per board, not per source.
 
-Twelve of its boards name a column `llm.json` tracks — the table lives in
+Fourteen of its boards name a column `llm.json` tracks — the table lives in
 `fetch_vals.BENCHMARKS`, and adding an entry there is all it takes to ingest one
 more:
 
@@ -935,7 +936,8 @@ more:
 | `gpqa` | `gpqa_diamond` | |
 | `mmlu_pro` | `mmlu_pro` | |
 | `aime` | `aime_2025` | Read at the `aime_2025` *task*, not the board's "overall" — see below |
-| `vibe-code` | `vibe_code_bench_1_1` | Vals' own benchmark, so it ranks 2 rather than 3; version-pinned, see below |
+| `vibe-code-v1-1-1` | `vibe_code_bench_1_1_1` | Vals' own benchmark, so it ranks 2 rather than 3; the current revision (2026-11), version-pinned, see below |
+| `vibe-code` | `vibe_code_bench_1_1` | The revision 1.1.1 superseded, archived but still read for its wider field (`fetch_vals.ARCHIVED`); version-pinned |
 | `programbench` | `programbench_almost` | Read at the `almost` *task*, not the board's "overall" — see [below](#why-programbench-enters-at-050) |
 
 One board is deliberately **not** read. Vals' "MMMU Pro" (slug `mmmu`) says of
@@ -983,6 +985,17 @@ happened. Writing a future v1.2 into `vibe_code_bench_1_1` would be exactly the
 revision blend the versioned columns exist to prevent, so
 `fetch_vals.VERSIONS` pins the board to `"1.1"` and a mismatch refuses it rather
 than filing new numbers under the old column.
+
+That revision did eventually come, and not in place: Vals published v1.1.1 at
+`vibe-code-v1-1-1` in November 2026 ("upgrades the grader, requires every
+substep to pass, and fixes ambiguous tests") and archived the 1.1 page. The new
+slug feeds `vibe_code_bench_1_1_1`, pinned to `"1.1.1"` all the same, since a
+re-grade of the re-grade is the kind of fix that can land in place. The 1.1
+page is still read: it scores 134 models against 1.1.1's 51 (63 against 41 in
+this file), and `derive_indexes.REVISION_FALLBACKS` carries the models on 1.1
+alone onto 1.1.1's scale (Spearman 0.936 over the 41 on both, factor about
+0.80). `fetch_vals.ARCHIVED` lists it, so the live supersession check expects
+its banner and checks the successor is read instead.
 
 `terminal-bench-4` is pinned for the half of that reason it shares. Its slug
 names the major and stops there, so unlike 2.1 — which tbench.ai gave a page of
@@ -1183,7 +1196,7 @@ the precise to the blunt:
 
 ### Benchmarks that publish more than one revision
 
-Fourteen benchmarks in this table have re-run or re-versioned themselves, and in every case the
+Fifteen benchmarks in this table have re-run or re-versioned themselves, and in every case the
 re-run changed the task set, the verification or the scoring — so a 1.0 number
 and a 1.1 number are two different measurements that happen to share a name.
 Each revision gets its own column, the way `terminal_bench_2_0` and
@@ -1201,6 +1214,7 @@ cannot disagree about which column a row belongs in.
 | **OSWorld 2.0** | `osworld_2_0_2026_06_24`, `osworld_2_0_2026_08_08`, `osworld_2_1`, `osworld_2_0_vendor` | The 108 tasks have been released three times — 2026.06.24 (the paper's), 2026.08.08 and the bug-fix 2.1 the maintainers recommend — each with its own task files, assets and mocked websites, all on one board behind a release picker. Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 on 2.1. A release on the official board gets a dated column: `osworld_2_0_2026_06_24` ("OSW 2.0J") carries seven models, including every open-weight run, and `osworld_2_0_2026_08_08` ("OSW 2.0A") two, both closed; `osworld_2_1` is the bug-fix release, which scores no tracked model yet. The release labels are dates rather than version numbers, so `fetch_osworld.RELEASES` maps them to columns instead of `_revisions.py`; a release it does not list is skipped and reported on stderr with how many models it scores, which is the signal to give it a column. What labs report for themselves goes to `osworld_2_0_vendor` ("OSW 2.0V") instead, following llm-stats, whose OSWorld 2.0 and OSWorld 2.1 (partial) boards are read beside the model cards: those headlines mix binary accuracy with the partial checkpoint score (two to three times higher), and all three releases, full and offline sets, often without saying which, so no dated column could take them. None of these is `osworld_verified`, which is OSWorld 1.0's verified task set on a site of its own. |
 | **SWE Atlas** | `swe_atlas_qna_1_1`, `swe_atlas_rf_1_1`, `swe_atlas_tw_1_1`, `swe_atlas_1_1` (Overall); `swe_atlas_qna_1_0`, `swe_atlas_rf_1_0`, `swe_atlas_tw_1_0`; and AA's `swe_atlas_qna_aa` | Scale's v1.1 (2026-11-06) re-ran every model on the same 284 tasks with a new judge (GPT-6.1 Sol, majority of three), refined criteria and restricted network access, and states the scores are not comparable with v1.0 (Fable 5.1 Q&A: 59.95 on v1.0, 79.03 on v1.1). v1.1 is one page (`/leaderboard/swe-atlas`) with an Overall table and one per track; the v1.0 per-track boards (`/leaderboard/sweatlas-{qna,refactoring,tw}`) stay up as "Legacy" and frozen (newest row 2026-09-09). `fetch_swe_atlas.py` reads both, and takes the current page's revision from the page itself (the board list's `sweatlas_1.1 Overall`), so a v1.2 is reported rather than written into 1.1. Artificial Analysis' SWE-Atlas-QnA-AA is a third judging of the Q&A tasks (its own judge, GPT-6 Luna with 5 votes per criterion, and 127 criteria reworded for its Coding Agent Index v2.0) and has its own column; it used to supply 33 of the 50 unversioned `swe_atlas_qna` values, above Scale. The split moved stored values by source: AA's page → `swe_atlas_qna_aa`, Scale's legacy boards → `_1_0`, and every model-card and llm-stats value → `_1_0`, all of them dated before v1.1 (the llm-stats rows' own notes name v1.0's Claude Opus 4.5 judge; Muse Spark Open's 58, first read 2026-11-14, is its October model card's and 8 points off its v1.1 score). Labels that name no revision (`SWE Atlas - QnA`, `SWE-Atlas-QnA`, llm-stats' `swe_atlas_qna`, …) are now `__unmappable__`. The coding index reads the v1.1 tracks at the weights the unversioned columns had, with each v1.0 track converted onto them by `REVISION_FALLBACKS`; Overall and the AA run are not aggregated, since each would count a track twice. |
 | **Real-SWE** | `real_swe_1_1`, `real_swe_1_0` | 1.1 (October 2026, 25 tasks in five languages) replaced 1.0 (10 tasks) on the same page on 2026-10-15 without keeping 1.0's board, and for two weeks the fetcher wrote 1.1 numbers into the 1.0 column. The page's title names the release, so `fetch_real_swe.py` reads it there and refuses a page naming none; 1.0's column is the values read before the switch. In November 2026 the page restated 1.1 as pass@1 over **five** runs per task (it had said eight) with a **one-standard-error** bar (it had drawn a 95% CI), and dropped its Harness column; the scores did not move, so it stays one column. `fetch_real_swe.py` reports the bar as stated (`se_low`/`se_high`, not converted to a 95% CI; nothing in `llm.json` stores intervals) and `harness` as None. |
+| **Vibe Code Bench** | `vibe_code_bench_1_1_1`, `vibe_code_bench_1_1` | Vals revised 1.0 into 1.1 in place at `vibe-code` (rewritten authentication and payment instructions, new browser-evaluator tools), and 1.0 was never kept. 1.1.1 (2026-11) came at a slug of its own, `vibe-code-v1-1-1`: the same 100 specifications under an upgraded grader that requires every substep of a workflow to pass, with ambiguous tests fixed (Fable 5.2: 93.77 on 1.1, 83.52 on 1.1.1). The 1.1 page stays up, archived, and is still read for its field (134 rows against 51). Both slugs are pinned in `fetch_vals.VERSIONS`. 1.1.1 holds the coding index weight; 1.1 reaches it through `REVISION_FALLBACKS` (Spearman 0.936 over the 41 models on both). |
 | **Agents' Last Exam** | `agents_last_exam_1_1`, `agents_last_exam_1_0` | The site opens on v1.1 (122 tasks), served from `/api/demo/leaderboard/v1.1`; the endpoint the fetcher had always read is v1.0 (152 public tasks), now the legacy board at `/leaderboard/v1`. Both are read; the page's "ALE v1.1" label names the current release, so a v1.2 is fetched and reported. |
 | **SEC-bench Pro** | `sec_bench_pro` (260505), `sec_bench_pro_260617` | Dated snapshots in one data file: 260505 (183 tasks, V8 and SpiderMonkey, the set vendors report) and 260617 (344, the Linux kernel added, what the site root shows). Each is checked against its own task count; a further snapshot is reported, not read. |
 | **Terminal-Bench** | `terminal_bench_4_1`, `terminal_bench_4_0`, `terminal_bench_3_0`, `terminal_bench_2_1`, `terminal_bench_2_0` | One board per release on the same API; 3.0 (74 tasks) sat unread between 2.1 and 4.0, which removed 8 of its tasks and recalibrated every budget. 4.1 (2026-11-03) changed only the verifiers and re-graded 4.0's trials (Spearman 0.998 over the 52 runs on both); Artificial Analysis' Intelligence Index v5.0.2 (2026-11) moved its model pages to 4.1 too, re-grading their 4.0 runs; the pages carry both (`terminalBench40`, `terminalBench41`), so since 2026-11-27 4.1 holds 4.0's index weight and 4.0 reaches the index through `REVISION_FALLBACKS`. AA's Coding Agent Index moved to 4.1 on 2026-11-14 under its unchanged `terminal-bench-v4` id; its runs now feed `terminal_bench_4_1` (outranking tbench.ai's board) behind a check of the page's own label. `test_source_versions.py` fails the day AA's pages, Vals or tbench.ai name a newer revision than the one each is read as. Terminal-Bench-Science (`terminal_bench_science_0_1`) is a separate benchmark on the same API and keeps its version in its column name for the same reason; Vals' board for it (`terminal-bench-science`) names no version in its slug, so `fetch_vals.VERSIONS` pins it to 0.1. |
@@ -1209,11 +1223,11 @@ cannot disagree about which column a row belongs in.
 | **AA Intelligence Index**, **AA-Omniscience**, **AA Coding Agent Index** | `aa_intelligence_index_5_0`, `_4_3`, `_4_2`, `_4_1`, `_4_0`; `aa_omniscience{,_accuracy,_hallucination}_1_1` and `_1_0`; archived `aa_coding_index_4_1`, `_4_0` | Artificial Analysis re-versions its evaluations in place and its records carry no version. The index went v4.0 → v4.1 (2026-06-18) → v4.2 (09-04) → v4.3 (09-08) → v5.0 (10-28) in this table, each time on new components, and Omniscience to v1.1 on 10-27; the last two re-scored only the models AA re-ran, leaving 38 index values on v5.0 beside 133 on v4.x. Every version is now a column of its own, restored by replaying llm.json's git history at the dates the values switched (v4.0 46 models, v4.1 132, v4.2 132, v4.3 169, v5.0 39). AA's Coding Index, which AA stopped serving, comes back the same way (v4.0 49, v4.1 72), and its six domain indexes — Finance & Accounting, Strategy & Ops, Legal, Healthcare & Medical, Engineering, Economics — are columns too (`aa_finance_index` and siblings), unversioned because AA states no version for them. `update.py` writes a versioned AA column only while AA states its version (`AA_VERSION_GATES`: the index from the API envelope, Omniscience, GDPval-AA, AA-LCR, AA-Briefcase, Terminal-Bench-Science, CritPt v2 (`critpt_2_0` and `critpt_hard_2_0`) and FrontierCode 1.1 from their evaluation pages' titles); see [Detecting silent version switches](#detecting-silent-version-switches). The Coding Agent Index starts at v2.1 (`aa_coding_agent_index_2_1`, FrontierCode-AA 2.0 + Terminal-Bench 4.1 + SWE-Atlas-QnA-AA); v2.0 was never stored, and `fetch_aa_coding_agents.py` writes the column only while the coding-agents page names v2.1. |
 
 A benchmark that keeps only its current revision as a column still spells that
-column the same way — `terminal_bench_4_0`, `vibe_code_bench_1_1` — because the
+column the same way — `terminal_bench_4_0`, `cyberbench_1_1` — because the
 name is what stops a later re-run being written into it. Where the revision
 lives at a URL of its own, the scraper's slug check is what catches the swap.
 Where it does not, the version has to be checked in the payload: `vibe-code` is
-one page that Vals revises in place, so
+one page that Vals revised in place, so
 [`fetch_vals.VERSIONS`](#what-vals-ai-contributes) pins it to `"1.1"` and a
 board stamping anything else is refused rather than filed under the old column.
 
@@ -2769,6 +2783,15 @@ member leaves it at 0.011.
 > It trades rungs with [ProgramBench](#why-programbench-enters-at-050), which
 > takes the lead of the construction pair. See [the October
 > re-weighting](#the-october-2026-re-weighting).
+>
+> **Moved to 1.1.1 on 2026-11-27, still at 0.50.** Vals superseded 1.1 with
+> v1.1.1 (upgraded grader, every substep must pass, ambiguous tests fixed) and
+> archived it. `vibe_code_bench_1_1_1` takes the weight: 41 models here, every
+> one also on 1.1, which ranks them alike (Spearman 0.936, Pearson 0.978), so
+> the 22 on 1.1 alone are converted onto it through `REVISION_FALLBACKS` at a
+> fitted factor near 0.80 (per-model ratios 0.58-0.91; weak builds lose
+> proportionally more). The re-grade reopened the head — 83.5 at the top, 4.9
+> points to the fifth — which argues for more than 0.50 once it has held.
 
 **`vibe_code_bench_1_1` is aggregated at 0.75**, level with the SWE Atlas pair
 and a rung under Terminal-Bench 4.0 (0.85). It is the only member that measures

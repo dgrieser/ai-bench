@@ -17,7 +17,8 @@ task override is what stops the pooled number reaching ``aime_2025``.
 ``test_a_revised_board_is_not_read_as_the_pinned_revision``: the slug check above
 only catches a revision that moved to a new URL. ``vibe-code`` was revised in
 place once already, and its column is a revision column, so the version stamped
-in the payload is checked against ``VERSIONS`` too.
+in the payload is checked against ``VERSIONS`` too. Its successor, v1.1.1, came
+at a slug of its own (``vibe-code-v1-1-1``) and is pinned the same way.
 
 ``test_no_two_paths_map_to_one_model``: the mapping is keyed on Vals' own
 ``<provider>/<model>`` paths, and two of those can be two different models
@@ -206,6 +207,27 @@ class TestParseBoard(unittest.TestCase):
         self.assertEqual(metadata["version"], "1.1")
         self.assertEqual(cells["zai/glm-5.3"]["accuracy"], 80.0)
 
+    def test_the_current_revision_is_read_into_its_own_column(self) -> None:
+        # v1.1.1 superseded 1.1 at a slug of its own; the archived 1.1 page is
+        # still read, so the two must land in two columns.
+        self.assertEqual(fv.BENCHMARKS["vibe-code-v1-1-1"], "vibe_code_bench_1_1_1")
+        self.assertEqual(fv.BENCHMARKS["vibe-code"], "vibe_code_bench_1_1")
+        body = page(
+            "vibe-code-v1-1-1", {"overall": {"anthropic/claude-fable-5-2": cell(83.52)}},
+            version="1.1.1",
+        )
+        metadata, cells = fv.parse_board(body, "vibe-code-v1-1-1")
+        self.assertEqual(metadata["version"], "1.1.1")
+        self.assertEqual(cells["anthropic/claude-fable-5-2"]["accuracy"], 83.52)
+
+    def test_a_regraded_current_revision_is_refused(self) -> None:
+        body = page(
+            "vibe-code-v1-1-1", {"overall": {"zai/glm-5.3": cell(66.27)}}, version="1.1.2"
+        )
+        with self.assertRaises(ValueError) as caught:
+            fv.parse_board(body, "vibe-code-v1-1-1")
+        self.assertIn("vibe_code_bench_1_1_1", str(caught.exception))
+
     def test_an_unpinned_board_is_not_version_checked(self) -> None:
         # Every board stamps a version; only the ones whose slug does not carry
         # one are pinned, so a bumped stamp elsewhere must not refuse the board.
@@ -322,6 +344,9 @@ class TestBenchmarkTable(unittest.TestCase):
 
     def test_own_benchmarks_name_a_board_that_is_ingested(self) -> None:
         self.assertLessEqual(fv.VALS_OWN_BENCHMARKS, set(fv.BENCHMARKS))
+
+    def test_archived_boards_name_a_board_that_is_ingested(self) -> None:
+        self.assertLessEqual(fv.ARCHIVED, set(fv.BENCHMARKS))
 
     def test_a_versioned_column_names_the_revision_it_is_pinned_to(self) -> None:
         """vibe_code_bench_1_1 must not be fed by a board pinned to 1.2."""
