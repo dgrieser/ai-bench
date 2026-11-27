@@ -12,7 +12,17 @@
       "hints": [],
       "watch": null,
       "renames": [],
-      "mappings": [],
+      "mappings": [
+        {
+          "route": "update_spheron_mapping.py",
+          "route_kind": "*",
+          "source": "spheron",
+          "subject": "baidu/ERNIE-5.5-Flash-Preview",
+          "preview": true,
+          "suggest": "keep",
+          "why": "the only row this source lists for the model; keep it until the release appears there (the Queue will ask)"
+        }
+      ],
       "scores": [
         {
           "key": "aa_intelligence_index_5_0",
