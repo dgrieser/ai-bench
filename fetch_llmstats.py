@@ -166,6 +166,12 @@ BOARD_FIELDS = {
     # to 1.1 on 2026-09-08 (new judge, re-audited tasks, scores not
     # comparable), and the flat field folds both together. The board is read
     # twice, each row going to the revision apex_revision() gives it.
+    # SWE-bench Pro (the original, not V2): the flat field mixes the public
+    # split -- which most lab notes name -- with reports that name none, and
+    # with Qwen's "refined" public set (problematic tasks corrected), which is
+    # neither. Read off the board so the note can sort them.
+    "swe_bench_pro": "swe-bench-pro",
+    "swe_bench_pro_public": "swe-bench-pro",
     "apex_agents_1_0": "apex-agents",
     "apex_agents_1_1": "apex-agents",
 }
@@ -220,6 +226,8 @@ BOARD_METHOD_FILTERS: dict[str, tuple[str, re.Pattern[str]]] = {
     # out, and Multimodal's public dev split is not the 517-task test set.
     "swe_bench_multilingual": ("drop", re.compile(r"\bOpenHands\b", re.IGNORECASE)),
     "swe_bench_multimodal": ("drop", re.compile(r"\bdev split\b|\bOpenHands\b", re.IGNORECASE)),
+    "swe_bench_pro": ("drop", re.compile(r"\bpublic\b|\brefined\b", re.IGNORECASE)),
+    "swe_bench_pro_public": ("keep", re.compile(r"^(?!.*\brefined\b).*\bpublic\b", re.IGNORECASE | re.DOTALL)),
 }
 
 

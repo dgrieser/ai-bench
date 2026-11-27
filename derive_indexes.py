@@ -312,7 +312,12 @@ INDEXES: list[IndexDef] = [
             # first-party value -- llm-stats, benchlm and model cards under
             # whatever harness each lab chose, which do not agree with each
             # other (a Qwen3.5 at 80.3 above most of the frontier).
-            ("swe_bench_pro", 0.3),
+            # The public split since 2026-11-27: the column now says which
+            # split it holds (Scale's released dataset, ScaleAI/SWE-bench_Pro,
+            # is the 731-task public set), and swe_bench_pro -- reports that
+            # do not say -- is carried onto it through REVISION_FALLBACKS. Most
+            # cards print both labels at one value, so the factor sits near 1.
+            ("swe_bench_pro_public", 0.3),
             # 0.35 since 2026-10-22: SWE-Bench Pro V2's 51-task Hard subset,
             # Scale's own runs under a network-locked protocol. The Full set it
             # is cut from is left out: saturated (99.4, 99.2, 99.1 at the top,
@@ -921,6 +926,9 @@ REVISION_FALLBACKS: dict[str, str] = {
     # judge, re-audited tasks). A model on 1.0 alone -- most of the open
     # models that self-reported before 2026-09-08 -- keeps its evidence.
     "apex_agents_1_1": "apex_agents_1_0",
+    # SWE-bench Pro: reports naming no split onto the public split, which is
+    # almost always what they ran -- not a revision, but the same fill.
+    "swe_bench_pro_public": "swe_bench_pro",
     # Real-SWE needs none: 1.1 already scores three times 1.0's field.
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's

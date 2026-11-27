@@ -614,6 +614,9 @@ class TestLlmStatsResolution(unittest.TestCase):
             {"model_id": "a", "score": 0.2, "analysis_method": "APEX-Agents v1.1"},
             {"model_id": "b", "score": 0.3, "analysis_method": "", "announcement_date": "2026-03-01"},
         ]
+        # SWE-bench Pro's board serves the public split and reports naming no
+        # split: a "public set" row scores the second label.
+        boards["swe-bench-pro"].append({"model_id": "b", "score": 0.4, "analysis_method": "Public set"})
         resolved = self._run(payload, lambda _mid: detail, boards)
         expected = sorted({label for scores in resolved.values() for label in scores})
 
