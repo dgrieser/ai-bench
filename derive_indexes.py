@@ -647,10 +647,11 @@ INDEXES: list[IndexDef] = [
             # wrong one, as the anchor does, on a question set Epoch runs
             # itself; 0.45 with this index, so it is not the anchor again.
             ("simpleqa_verified", 0.4),
-            # Hallucinated tool calls in real agent sessions, first-party from
-            # Agent Arena: the one confident-error measure here that is not a
-            # question-answering run.
-            ("arena_agent_tool_hallucination", 0.3),
+            # Not arena_agent_tool_hallucination (0.3 until 2026-11-27): Arena
+            # retired the Tool Hallucination signal on 2026-11-18 ("frontier
+            # models now rarely call tools that don't exist"), so the column is
+            # frozen, no new model will get a value, and a frozen signal its own
+            # publisher calls saturated is not one to rank on.
             # Deliberately not aggregated, though both are trust-adjacent
             # columns in llm.json: aa_omniscience is a function of the two
             # members above (accuracy netted against confident error) over the

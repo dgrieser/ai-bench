@@ -67,7 +67,7 @@ class ReadsTheVendorSnapshot(unittest.TestCase):
         rows = [r for r in sb.get_scores(fetch=lambda url: PAYLOAD) if r["snapshot"] == "260617"]
         self.assertEqual([(r["key"], r["model"], r["score"], r["rank"]) for r in rows],
                          [("sec_bench_pro_260617", "Kimi K2.5", 2.3, 1)])
-        self.assertEqual(sb.source_url("sec_bench_pro_260617"), "https://sec-bench.github.io/")
+        self.assertEqual(sb.source_url("sec_bench_pro_260617"), "https://sec-bench.github.io/260617/")
 
     def test_a_snapshot_without_a_column_is_reported_not_read(self):
         payload = copy.deepcopy(PAYLOAD)
@@ -92,8 +92,10 @@ class ReadsTheVendorSnapshot(unittest.TestCase):
         with self.assertRaises(ValueError):
             sb.get_scores(fetch=lambda url: payload)
 
-    def test_credited_to_the_snapshot_page(self):
-        self.assertEqual(sb.URL, "https://sec-bench.github.io/260505/")
+    def test_credited_to_the_page_showing_the_snapshot(self):
+        # 260505 is the site's default: the root shows it, /260505/ redirects there.
+        self.assertEqual(sb.URL, "https://sec-bench.github.io/")
+        self.assertEqual(sb.source_url("sec_bench_pro"), "https://sec-bench.github.io/")
 
 
 if __name__ == "__main__":

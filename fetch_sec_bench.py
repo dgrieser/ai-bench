@@ -5,17 +5,17 @@ Fetch SEC-bench Pro scores (snapshots 260505 and 260617) from https://sec-bench.
 SEC-bench Pro republishes itself as dated snapshots, each a different task set:
 
   * ``260505``  183 tasks, V8 and SpiderMonkey.
-  * ``260617``  344 tasks, the same two plus 137 Linux kernel tasks -- the
-                site's current default.
+  * ``260617``  344 tasks, the same two plus 137 Linux kernel tasks,
+                published at ``/260617/``.
 
 Each snapshot is its own column. ``sec_bench_pro`` is **260505**, because that
 is the set the vendors report on --
 OpenAI's system cards say so in as many words, and the DeepSeek and Xiaomi
-cards quote numbers on the same scale -- and the maintainers still publish it
-at ``/260505/``. Their board on the newer snapshot scores the same model up to
+cards quote numbers on the same scale -- and it is the site's current default,
+shown at the site root (``/260505/`` is only a redirect stub to it). Their board on the newer snapshot scores the same model up to
 twelve points higher (GPT-5.5: 46.4 on 260505, 58.4 on 260617), so a row from
 one would not rank against a row from the other. ``sec_bench_pro_260617`` is
-the newer set, credited to the site root, which is where it is published.
+the newer set, credited to its own page, ``/260617/``.
 
 The site is a static build whose pages inline their data; the build's own
 source, ``data/results.json`` in the site repository, carries every snapshot
@@ -52,17 +52,19 @@ KEY = "sec_bench_pro"
 SNAPSHOT = "260505"
 INSTANCES = 183
 SITE_URL = "https://sec-bench.github.io"
-# The snapshot's own page: what a score is credited to and what a reader opens.
-URL = f"{SITE_URL}/{SNAPSHOT}/"
+# The page that shows the snapshot: what a score is credited to and what a
+# reader opens. 260505 is the site's default, so that is the root (/260505/
+# only meta-refreshes there).
+URL = f"{SITE_URL}/"
 
 # Every snapshot llm.json carries a column for: snapshot -> (column, the
 # overall board's task count, the page a score is credited to). 260505 is the
-# set vendors report on; 260617 adds the Linux kernel (344 tasks) and is what
-# the site root shows, having no page of its own. A snapshot the data file
+# set vendors report on and the site root's default; 260617 adds the Linux
+# kernel (344 tasks) and has its own page, /260617/. A snapshot the data file
 # carries beyond these is reported, not read.
 SNAPSHOTS: dict[str, tuple[str, int, str]] = {
     SNAPSHOT: (KEY, INSTANCES, URL),
-    "260617": ("sec_bench_pro_260617", 344, f"{SITE_URL}/"),
+    "260617": ("sec_bench_pro_260617", 344, f"{SITE_URL}/260617/"),
 }
 KEYS = tuple(key for key, _instances, _url in SNAPSHOTS.values())
 

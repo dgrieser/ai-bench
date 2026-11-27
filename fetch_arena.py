@@ -9,7 +9,7 @@ board as a CC BY 4.0 dataset on Hugging Face, ``lmarena-ai/leaderboard-dataset``
 one subset per arena with a ``latest`` split holding the current board. That is
 what this script reads, one parquet file per subset.
 
-Five columns, from four subsets:
+Four columns, from three subsets:
 
   * ``arena_text`` -- the Text arena's ``overall`` category on the
     style-controlled board, the one arena.ai shows by default since May 2025:
@@ -19,11 +19,18 @@ Five columns, from four subsets:
     the votes cast on prompts in any language but English.
   * ``arena_webdev`` -- the Code Arena (``webdev``), where the two models each
     build a web app from the user's request and the user votes on the result.
-  * ``arena_agent`` and ``arena_agent_tool_hallucination`` -- Agent Arena, which
-    scores live agent sessions rather than votes. Its scores are IPS estimates
-    (τ̂), signed effects around the field's average, stored here x100: the
-    aggregate, and the per-signal score for tool calls the model hallucinated,
-    where a higher score means fewer of them.
+  * ``arena_agent`` -- Agent Arena, which scores live agent sessions rather
+    than votes. Its scores are IPS estimates (τ̂), signed effects around the
+    field's average, stored here x100.
+
+``arena_agent_tool_hallucination`` (the ``agent_tool_hallucination`` subset,
+higher = fewer hallucinated tool calls) is no longer read: Arena retired the
+Tool Hallucination signal in its leaderboard changelog entry of 2026-11-18
+(https://arena.ai/blog/leaderboard-changelog/, "We are retiring the Tool
+Hallucination signal, as frontier models now rarely call tools that don't
+exist"). The dataset subset kept publishing afterwards, which is why it is
+dropped here rather than left to fail. Stored values stay, frozen as of that
+date.
 
 Rating boards keep a row only with ``MIN_VOTES`` battles behind it; below that
 the confidence interval is wider than the gaps the column is read for.
@@ -80,7 +87,8 @@ BOARDS: dict[str, Board] = {
     "arena_text_non_english": Board("text_style_control", "non_english", "text", "rating"),
     "arena_webdev": Board("webdev", "overall", "webdev", "rating"),
     "arena_agent": Board("agent", "overall", "agent", "ips"),
-    "arena_agent_tool_hallucination": Board("agent_tool_hallucination", "overall", "agent", "ips"),
+    # Not "arena_agent_tool_hallucination": signal retired 2026-11-18, see the
+    # module docstring. Its stored values are frozen, not re-read.
 }
 
 # The columns each kind of subset has to carry.

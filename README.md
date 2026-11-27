@@ -1559,9 +1559,10 @@ Bedrock, where all three sit under 4%. Everything the llm-stats boards add is
   (`ExploitGym`, `ExploitGym (Pass@1)`) are mapped.
 - **SEC-bench Pro's vendors report the older snapshot.** OpenAI's system cards
   say they ran the May set, and DeepSeek's and Xiaomi's numbers sit on the same
-  scale, so the column is pinned to 260505 and credited to its own page,
-  `sec-bench.github.io/260505/`. The site root is the newer snapshot and is not
-  a source for this column.
+  scale, so the column is pinned to 260505 and credited to the site root,
+  which shows 260505 as its default (`/260505/` only redirects there). The
+  newer snapshot has its own page, `sec-bench.github.io/260617/`, and its own
+  column, `sec_bench_pro_260617`.
 - **A pipeline is not a model.** cybergym.io tags each row `focus: model` or
   `focus: agent`; the column reads only the first. GLM-5.3 is 84.5 in Claude
   Code and 97.2 inside Sangfor's pipeline on the same board.
@@ -1978,8 +1979,9 @@ Knowledge and Trust tables below — and six did not:
   Preference category. Human votes are the one signal the table had none of,
   and that is a reason to show them beside the indexes rather than fold them
   into one: a pairwise preference rating is a different kind of evidence from
-  a task pass rate, and Agent Arena has five months of history. Only its
-  tool-hallucination signal is aggregated, in Trust.
+  a task pass rate, and Agent Arena has five months of history. Its
+  tool-hallucination signal was aggregated in Trust until Arena retired it on
+  2026-11-18; the column is frozen and out of every index.
 - **ARC-AGI-2** is the one abstract-reasoning test available, but the best
   model is at 95% with a 3.8-point head; ARC-AGI-3 is the version to index once
   it covers enough models.
@@ -3714,9 +3716,16 @@ weight **2.35**):
 | AA-LCR | 0.45 | What it uniquely tests is the second failure mode and nothing else here covers it: 100 open-answer questions over real 10k–100k-token documents, each needing facts synthesised from scattered parts of the text rather than looked up — grounding in a supplied source rather than recall from weights. 121 models across 36 creators, all Artificial Analysis runs, and genuinely unsaturated (3.0–82.7, median 50.2). **Discounted hard for redundancy, which is the honest reason it is not higher**: 0.94 with the AA Intelligence Index, 0.91 with GPQA Diamond, 0.90 with the Knowledge index, 0.89 with HLE. On coverage and provenance it would earn 0.7–0.8; as measured it ranks general capability nearly as much as it ranks grounding, and importing that at full weight would turn this column into the sibling of the four it is supposed to be independent of. Its head is also the second-flattest here, 4.7 points between first and fifth. |
 | IFBench | 0.3 | The second reliability axis, and largely its own: **0.37 against the anchor**. It was the group's most independent pair until Accuracy landed at 0.02 against the same column. It is also the only member here graded without a model in the loop — 58 output constraints held out from the small set models have overfit to, each checked by a **verification function**, so a response either satisfies the constraint or does not and there is no judge to charm. That matters more than usual in a column about trustworthiness. 118 models across 37 creators. Discounted for two things: **the weakest provenance in the group** — 95 Artificial Analysis runs, 12 from evals.report and 9 Hugging Face card self-reports, three harnesses inside one comparison-ranked column — and the flattest head anywhere here, 3.1 points between first and fifth, consistent with AA having retired it from Intelligence Index v4.1 for saturation. It is also carried at 0.20 in the [Tooling index](#tooling-index), where the same score is priced as agent competence rather than as reliability. |
 | SimpleQA Verified | 0.4 | Added 2026-10-30. Short factual questions graded correct, incorrect or not attempted, so declining beats guessing wrong — the anchor's logic on a second, independently run question set (Epoch's own harness, 32 models). 0.70 with the index: close enough to be measuring the same thing, far enough to be a second opinion on it. |
-| Arena Agent: Tool Hallucination | 0.3 | Added 2026-10-30. Hallucinated tool calls in real users' agent sessions, Agent Arena's own signal: the one confident-error measure here that is not a question-answering run. 40 models. Signed effects around the field's average, which the pairwise fit reads like any other score. |
 
 ### What the Trust index leaves out
+
+- **Arena Agent: Tool Hallucination** (`arena_agent_tool_hallucination`) — a
+  member at 0.3 from 2026-10-30 until 2026-11-27. Arena retired the signal in
+  its [leaderboard changelog](https://arena.ai/blog/leaderboard-changelog/)
+  entry of 2026-11-18 ("frontier models now rarely call tools that don't
+  exist"), so fetch_arena.py no longer reads it and the column's values are
+  frozen as of that date: no new model gets one, and its own publisher calls
+  it saturated.
 
 - **AA-Omniscience Index** (`aa_omniscience_1_0`, `_1_1`) — the obvious candidate, and left
   out precisely because it is too close to the members. It *is* accuracy netted
