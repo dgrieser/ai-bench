@@ -21,10 +21,12 @@ changes the task set, the verification or the scoring, so a 1.0 number and a
     /v1 "preserved as published". The revisions do not even share a metric: V2
     scores 34 tasks as a mean@5 percentage, V1 ranked 17 tasks by average rank
     and by dominance, a pairwise win rate.
-  * **SWE-Marathon** -- swe-marathon.org ships a "v1.0 Archive" board beside
-    the "v1.1 Current" one; 1.1 updated all 20 tasks with tighter verification
-    and closed-internet execution, and its leader sits 21 points above the
-    archive's.
+  * **SWE-Marathon** -- swe-marathon.org ships a "v1.2 Current" board beside
+    two archives, v1.1 and v1.0. 1.1 updated all 20 tasks with tighter
+    verification and closed-internet execution, and its leader sits 21 points
+    above 1.0's; 1.2 hardened them again (pass bars raised near the oracle, two
+    tasks swapped for one new one and one held out) and averages per-task pass
+    rates, and the 9 models on both rank -0.35 Spearman against 1.1.
   * **SWE Atlas** -- Scale's v1.1 (2026-11-06) re-ran the same 284 tasks with
     a new judge and refined criteria on one page (Overall plus a table per
     track) and keeps the v1.0 per-track boards as "Legacy"; Fable 5.1 reads
@@ -74,7 +76,7 @@ KNOWN_REVISIONS: dict[str, tuple[str, ...]] = {
     # October 2026, without keeping 1.0's board; 1.0's column holds the values
     # read before the switch.
     "real_swe": ("1.0", "1.1"),
-    "swe_marathon": ("1.0", "1.1"),
+    "swe_marathon": ("1.0", "1.1", "1.2"),
     # SWE Atlas v1.1 (2026-11-06) re-ran every model on the same 284 tasks
     # with a new judge (GPT-6.1 Sol), refined criteria and restricted network,
     # and Scale says the scores are not comparable with v1.0, whose per-track

@@ -24,7 +24,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **SWE Atlas** | Research | JSON API |
 | **MCP-Atlas (Scale Labs)** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **SWE-Bench Pro V2 (Scale Labs)** | Research (benchmark's own leaderboard: Full and Hard) | RSC flight payload, two variant tables on one page |
-| **SWE Marathon** | Research | JS bundle (leaderboard literal + trial log) |
+| **SWE Marathon** | Research | JS bundle (published leaderboard + trial log + archive literal) |
 | **OSWorld** | Research (benchmark's own leaderboards) | Results workbook (Verified) + the JSON the OSWorld 2.0 board renders from |
 | **Spheron** | Infrastructure | JSON API |
 | **LLMStats** | Community Aggregator | JSON API |
@@ -445,8 +445,8 @@ current address.
 ./fetch_osworld.py --board v2           # or one board (verified, v2)
 ./fetch_spheron.py
 ./fetch_swe_atlas.py
-./fetch_swe_marathon.py                 # both published boards, 1.0 and 1.1
-./fetch_swe_marathon.py --revision 1.1  # or pin one
+./fetch_swe_marathon.py                 # every published board: 1.0, 1.1 and 1.2
+./fetch_swe_marathon.py --revision 1.2  # or pin one
 ./fetch_mcp_atlas.py                    # MCP-Atlas, from Scale's own leaderboard
 ./fetch_swe_bench_pro_v2.py             # SWE-Bench Pro V2 Full and Hard, from Scale's own leaderboard
 ./fetch_swe_bench_pro_v2.py --variant hard  # or one table (full, hard)
@@ -1196,7 +1196,7 @@ cannot disagree about which column a row belongs in.
 | **DeepSWE** | `deepswe_1_1`, `deepswe_1_0` | Datacurve serves one JSON artifact per revision and toggles between them. The re-run moved DeepSeek V4 Pro from 7.5 to 62.8, and 1.0 is the only revision that ever scored the dozen models retired before it. |
 | **FrontierCode** | `frontiercode_2_0`, `frontiercode_1_1`, `frontiercode_1_0`, `frontiercode_extended_1_1` | 2.0 (2026-10-27) rebuilt the suite as 132 tasks on one board, with no Main/Extended split, and is served from a file of its own (`/data/frontier-code-2.0/data.json`) that `fetch_frontiercode.py` finds where the page does, in its JavaScript — so a 2.1 is reported, not missed. Artificial Analysis runs 2.0 too, on its own implementation, and its model pages' `frontierCode20` lands in `frontiercode_2_0` above Cognition's number (AA outranks the board, as on Terminal-Bench 4.0): the two agree within a point for most of the head (Opus 5.5 46.4 vs 45.5, GPT-6 Astra 42.4 vs 42.8) and differ by up to nine for a few (DeepSeek V4.1 Flash 1017 28.5 vs 19.3). AA's 1.1 run (`frontierCode`, the 100-task Main set) lands in `frontiercode_1_1` the same way, gated on the "FrontierCode 1.1" its evaluation page's title states; Extended stays Cognition's alone, since AA does not run it. Before it, Cognition's shared payload carried a block per revision, the later one covering only the models it re-ran: GLM 5.2 scores 19.2 at 1.0 and 24.5 at 1.1. It also splits a second way — see [the task subsets](#frontiercodes-second-split-main-and-extended) below; `frontiercode_extended_1_1` is the column the coding index reads. |
 | **FrontierSWE** | `frontierswe_2_0`, `frontierswe_1_0` | The re-run was numbered V2, and the two do not share a metric: V2 scores 34 tasks as a mean@5 percentage on the root page, V1 ranked 17 tasks by average per-task rank and by dominance — a win rate against a random opponent on a random task — and is kept at `/v1` "preserved as published". The 1.0 column stores that dominance as a percentage, the board's only higher-is-better 0-100 quantity. |
-| **SWE-Marathon** | `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. |
+| **SWE-Marathon** | `swe_marathon_1_2`, `swe_marathon_1_1`, `swe_marathon_1_0` | 1.1 updated all 20 tasks with tighter verification and closed-internet execution. The site states it reuses no 1.0 score for the updated tasks, and its leader sits 21 points above the archive's. 1.2 (November 2026, now the current board; 1.1 is archived) hardened every task again — pass bars raised to sit near the oracle (parameter-golf's val_bpb cap 0.983 → 0.840, trimul-cuda's latency bar 10,400 → 7,600 µs) — replaced slack-clone and stripe-clone with mattermost-clone and one held-out task (19 shown, 20 scored), and scores a model as the mean of its per-task pass rates instead of a share of pooled trials. The 9 models on both 1.1 and 1.2 rank −0.35 Spearman between them. |
 | **SWE-Bench Pro** | `swe_bench_pro_2_0`, `swe_bench_pro_hard_2_0`, `swe_bench_pro_public`, and the unversioned `swe_bench_pro` | Scale's V2 (2026-09-22, co-developed with Reflection) is a refreshed public split, not a re-run: 642 of v1's 731 public tasks, the other 89 dropped as invalid, every instruction, verifier and image rebuilt, and a network-locked protocol in which the sandbox reaches the model endpoint and nothing else. The scales do not meet: V2's board runs 87-99 for current models where Scale's v1 public board tops out at 61.5, so a V2 number filed under `swe_bench_pro` would lead that column by ten points (Flint's 89.7 briefly did). `fetch_swe_bench_pro_v2.py` reads Scale's V2 board, whose page carries the Full set and a 51-task Hard subset as two variant tables; each gets a column, Hard spelled with a subset base as FrontierCode's Extended is. Since 2026-11-27 the original release is split by what a report says it ran: `swe_bench_pro_public` holds the 731-task public split — a card's structured result naming Scale's dataset (`ScaleAI/SWE-bench_Pro`, which *is* the public split), a label saying “public”, or an llm-stats note saying so — and `swe_bench_pro` keeps the reports that name no split. Most cards print both at one value, so `REVISION_FALLBACKS` carries the unnamed ones onto the public split's scale with a factor near 1, and the index reads the public split. Qwen's “refined” public set (Qwen 3.6) is neither and is excluded per card, as is a V2 number filed under the v1 dataset id (DaisyRose-27B). Scale's legacy v1 board (public and the 276-instance commercial set) is not read. Only a label that says V2 reaches the new columns (`SWE-bench Pro v2`, `SWE-Bench Pro V2 Hard`, …), the rule BFCL v4 and Toolathlon-Verified already follow. Hard is in the coding index at 0.35 and Full is not — see [why](#why-swe-bench-pro-v2-hard-enters-at-035). |
 | **OSWorld 2.0** | `osworld_2_0_2026_06_24`, `osworld_2_0_2026_08_08`, `osworld_2_1`, `osworld_2_0_vendor` | The 108 tasks have been released three times — 2026.06.24 (the paper's), 2026.08.08 and the bug-fix 2.1 the maintainers recommend — each with its own task files, assets and mocked websites, all on one board behind a release picker. Claude Opus 5 at max effort reads 31.4 on 2026.08.08 and 44.3 on 2.1. A release on the official board gets a dated column: `osworld_2_0_2026_06_24` ("OSW 2.0J") carries seven models, including every open-weight run, and `osworld_2_0_2026_08_08` ("OSW 2.0A") two, both closed; `osworld_2_1` is the bug-fix release, which scores no tracked model yet. The release labels are dates rather than version numbers, so `fetch_osworld.RELEASES` maps them to columns instead of `_revisions.py`; a release it does not list is skipped and reported on stderr with how many models it scores, which is the signal to give it a column. What labs report for themselves goes to `osworld_2_0_vendor` ("OSW 2.0V") instead, following llm-stats, whose OSWorld 2.0 and OSWorld 2.1 (partial) boards are read beside the model cards: those headlines mix binary accuracy with the partial checkpoint score (two to three times higher), and all three releases, full and offline sets, often without saying which, so no dated column could take them. None of these is `osworld_verified`, which is OSWorld 1.0's verified task set on a site of its own. |
 | **SWE Atlas** | `swe_atlas_qna_1_1`, `swe_atlas_rf_1_1`, `swe_atlas_tw_1_1`, `swe_atlas_1_1` (Overall); `swe_atlas_qna_1_0`, `swe_atlas_rf_1_0`, `swe_atlas_tw_1_0`; and AA's `swe_atlas_qna_aa` | Scale's v1.1 (2026-11-06) re-ran every model on the same 284 tasks with a new judge (GPT-6.1 Sol, majority of three), refined criteria and restricted network access, and states the scores are not comparable with v1.0 (Fable 5.1 Q&A: 59.95 on v1.0, 79.03 on v1.1). v1.1 is one page (`/leaderboard/swe-atlas`) with an Overall table and one per track; the v1.0 per-track boards (`/leaderboard/sweatlas-{qna,refactoring,tw}`) stay up as "Legacy" and frozen (newest row 2026-09-09). `fetch_swe_atlas.py` reads both, and takes the current page's revision from the page itself (the board list's `sweatlas_1.1 Overall`), so a v1.2 is reported rather than written into 1.1. Artificial Analysis' SWE-Atlas-QnA-AA is a third judging of the Q&A tasks (its own judge, GPT-6 Luna with 5 votes per criterion, and 127 criteria reworded for its Coding Agent Index v2.0) and has its own column; it used to supply 33 of the 50 unversioned `swe_atlas_qna` values, above Scale. The split moved stored values by source: AA's page → `swe_atlas_qna_aa`, Scale's legacy boards → `_1_0`, and every model-card and llm-stats value → `_1_0`, all of them dated before v1.1 (the llm-stats rows' own notes name v1.0's Claude Opus 4.5 judge; Muse Spark Open's 58, first read 2026-11-14, is its October model card's and 8 points off its v1.1 score). Labels that name no revision (`SWE Atlas - QnA`, `SWE-Atlas-QnA`, llm-stats' `swe_atlas_qna`, …) are now `__unmappable__`. The coding index reads the v1.1 tracks at the weights the unversioned columns had, with each v1.0 track converted onto them by `REVISION_FALLBACKS`; Overall and the AA run are not aggregated, since each would count a track twice. |
@@ -1267,6 +1267,7 @@ rather than a second index member — **once there is enough overlap to fit one*
 | --- | --- | --- | --- |
 | `deepswe_1_1` | `deepswe_1_0` | fitted | **Not converted.** Two models sit on both boards, and they disagree: GLM 5.2 reads ×1.06 on 1.1, DeepSeek V4 Pro ×7.6. The constant this used to carry (÷ 1.069) was fitted once and no longer matches either. |
 | `frontiercode_extended_1_1` | `frontiercode_1_0` | fitted | **Not converted.** Two models on both boards (GLM 5.2 19.2 → 40.1, Kimi K2.7 22.0 → 45.4). The conversion crosses a revision *and* a subset — the column the index reads is Extended while the archived column is 1.0 Main — which is one gap more than the others cross. `frontiercode_1_1` needs no entry: a fallback only ever fills a hole in a column the index reads, and Main is not one. |
+| `swe_marathon_1_2` | — | none | **Deliberately not converted.** 1.2 is not 1.1's task set re-verified: hardened pass bars, two tasks swapped out, one held out, and a per-task-mean score. Its 9 shared models rank −0.35 Spearman against 1.1 and their ratios run ×0.57 to ×1.58, so a fitted factor would be noise. The 1.1-only models (Kimi K3, GLM 5.3, …) lose their SWE-Marathon evidence; none of them drops below the evidence bar for it. |
 | `frontierswe_2_0` | — | none | there is no scale to convert from: 1.0 published a pairwise win rate over a 17-model field, not a task percentage, so a factor fitted on the models on both boards would be fitting the two *metrics* to each other rather than a revision's drift. A model on 1.0 alone simply supports no comparison there. |
 
 The factor is **fitted from `llm.json` on every run** — the geometric mean of
@@ -1283,8 +1284,9 @@ archived score carried onto the current scale and joins that revision's
 population, so it is ranked against today's field like everyone else instead of
 sitting the benchmark out. A model published on both keeps the current board's
 own number — the conversion only ever fills a hole, it never displaces a
-measurement. `swe_marathon` needs no entry: both models on its archive alone
-scored 0.0, which converts to 0.0 either way. Below the bar, or where there is no
+measurement. `swe_marathon_1_1` needed no entry onto 1.0: both models on that
+archive alone scored 0.0, which converts to 0.0 either way; `swe_marathon_1_2`
+has none onto 1.1 for the reason in the table. Below the bar, or where there is no
 shared scale to convert along — `frontierswe`, whose two boards report different
 quantities — the hole stays open and the model is simply not compared there: a
 factor that has not earned its keep would be inventing a number, which is worse
@@ -1313,11 +1315,17 @@ already get, applied consistently:
   payload shape is read only for the revision that publishes it (V2 nests its
   views under a score mode, V1 does not), so a site restructure raises instead
   of moving one board's numbers into the other's column.
-- `fetch_swe_marathon.py` reads both boards the bundle ships. Only the archive
-  is stored as a leaderboard; the current board exists solely as the per-task
-  trial log the page aggregates in the browser, so the scraper reproduces that
-  aggregation (pass@1 is the share of a configuration's trials scoring a full
-  reward).
+- `fetch_swe_marathon.py` reads all three boards the bundle ships, each the way
+  it is stored. 1.2 ships its leaderboard ready-made (`{version:"v1.2",…,
+  leaderboard:[…pass1…]}`) and that published `pass1` is read as is — its trial
+  log covers only the 19 tasks the site shows, so it cannot reproduce the
+  number. 1.1 exists solely as the per-task trial log the page aggregates in the
+  browser, so the scraper reproduces that aggregation (pass@1 is the share of a
+  configuration's trials scoring a full reward). 1.0 is the stored archive
+  literal. Which board is current is read from the bundle (the old
+  `label:"v1.0 Archive"` literals, the per-version `status`, or the
+  `"Current"`/`"Archive"` badge ternary 1.2 introduced), so a 1.3 is reported
+  rather than misfiled.
 - evals.report's `frontiercode` table is ingested into `frontiercode_1_1`,
   because every row in it matches Cognition's 1.1 block — the Main one; it
   publishes no Extended board, so it feeds nothing else. Its `swe-marathon`
@@ -1342,7 +1350,8 @@ already get, applied consistently:
   `deepswe_1_1` values the page wrote before v2.1 stay as measured.
 - In `huggingface-benchmark-name-mapping.json`, `DeepSWE (v1.1)` and
   `Agentic coding DeepSWE 1.1` map onto `deepswe_1_1` and a bare `DeepSWE` is
-  unmapped; `SWE-Marathon (v1.1)` maps onto `swe_marathon_1_1`. llm-stats'
+  unmapped; `SWE-Marathon (v1.1)` maps onto `swe_marathon_1_1` and
+  `SWE-Marathon (v1.2)` onto `swe_marathon_1_2`. llm-stats'
   `swe_marathon` column is unmapped for the same reason. Both FrontierSWE names
   there stay unmapped: a bare `FrontierSWE` names no revision, and
   `FrontierSWE (Dominance)` names 1.0's *metric* without saying whether the

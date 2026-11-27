@@ -957,6 +957,26 @@
         "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/"
       ]
     },
+    "swe_marathon_1_2": {
+      "name": "SWE-Marathon 1.2",
+      "short_name": "SWE-M 1.2",
+      "category": "Software Engineering",
+      "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite. Revision 1.2 is the current board: the tasks are hardened variants of 1.1's, with pass bars raised to sit near the oracle (parameter-golf's val_bpb cap from 0.983 to 0.840, trimul-cuda's latency bar from 10,400 to 7,600 µs), slack-clone and stripe-clone replaced by mattermost-clone and one task held out (19 shown, 20 scored), up to 8 trials per task, and a model's score is the mean of its per-task pass rates rather than a share of pooled trials. Not comparable with 1.1: the 9 models on both boards rank −0.35 Spearman between them.",
+      "settings": [
+        "20 tasks, 1 held out",
+        "agentic",
+        "mean of per-task pass rates"
+      ],
+      "excludes": [
+        "SWE-Marathon 1.1",
+        "SWE-Marathon 1.0",
+        "a bare “SWE-Marathon” naming no revision"
+      ],
+      "urls": [
+        "https://www.swe-marathon.org/",
+        "https://arxiv.org/abs/2606.07682"
+      ]
+    },
     "swe_bench_pro_public": {
       "name": "SWE-bench Pro (public split)",
       "short_name": "SWEPro pub",
@@ -984,13 +1004,14 @@
       "name": "SWE-Marathon 1.1",
       "short_name": "SWE-M 1.1",
       "category": "Software Engineering",
-      "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task. Revision 1.1 is the current board: all 20 tasks updated, with tighter verification and closed-internet execution. The site reuses no 1.0 score for the updated tasks, so the two are not comparable.",
+      "description": "Ultra-long-horizon agentic software engineering: 20 multi-hour tasks (library reproductions, full-stack product clones, ML engineering), each with an executable environment, a human-written reference solution and a multi-layer verification suite; logged attempts average 27.2M tokens per task. Revision 1.1 updated all 20 of 1.0's tasks, with tighter verification and closed-internet execution; the site reuses no 1.0 score for the updated tasks, so the two are not comparable. Archived since 1.2 (November 2026) hardened the tasks and changed the scoring; kept as its own column, and still the only SWE-Marathon board for the models 1.2 has not run.",
       "settings": [
         "20 multi-hour tasks",
         "agentic",
         "no internet"
       ],
       "excludes": [
+        "SWE-Marathon 1.2",
         "SWE-Marathon 1.0",
         "a bare “SWE-Marathon” naming no revision"
       ],
@@ -1009,6 +1030,7 @@
         "agentic"
       ],
       "excludes": [
+        "SWE-Marathon 1.2",
         "SWE-Marathon 1.1",
         "a bare “SWE-Marathon” naming no revision"
       ],
@@ -2922,8 +2944,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 26529,
-        "coding_index": 18580,
+        "openbench_index": 26531,
+        "coding_index": 18586,
         "tooling_index": 28507,
         "knowledge_index": 18826,
         "vision_index": null,
@@ -3537,8 +3559,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 22790,
-        "coding_index": 17739,
+        "openbench_index": 22792,
+        "coding_index": 17744,
         "tooling_index": 27439,
         "knowledge_index": 13598,
         "vision_index": 10215,
@@ -5151,7 +5173,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 30866,
+        "coding_index": 30878,
         "tooling_index": null,
         "knowledge_index": 48393,
         "vision_index": null,
@@ -6258,8 +6280,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 24196,
-        "coding_index": 19907,
+        "openbench_index": 24199,
+        "coding_index": 19914,
         "tooling_index": 23428,
         "knowledge_index": 29905,
         "vision_index": null,
@@ -8046,8 +8068,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44700,
-        "coding_index": 31190,
+        "openbench_index": 44704,
+        "coding_index": 31205,
         "tooling_index": 40786,
         "knowledge_index": 61844,
         "vision_index": 59959,
@@ -13118,8 +13140,8 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 33963,
-        "coding_index": 19073,
+        "openbench_index": 33965,
+        "coding_index": 19079,
         "tooling_index": 27925,
         "knowledge_index": 51486,
         "vision_index": null,
@@ -14287,8 +14309,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 25142,
-        "coding_index": 21470,
+        "openbench_index": 25144,
+        "coding_index": 21477,
         "tooling_index": 20539,
         "knowledge_index": 33513,
         "vision_index": null,
@@ -14920,7 +14942,7 @@
       },
       "scores": {
         "openbench_index": 29731,
-        "coding_index": 17430,
+        "coding_index": 17433,
         "tooling_index": 24606,
         "knowledge_index": 45725,
         "vision_index": null,
@@ -16383,8 +16405,8 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 29834,
-        "coding_index": 17171,
+        "openbench_index": 29836,
+        "coding_index": 17176,
         "tooling_index": 21921,
         "knowledge_index": 38016,
         "vision_index": 24158,
@@ -17150,8 +17172,8 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 46808,
-        "coding_index": 29276,
+        "openbench_index": 46813,
+        "coding_index": 29291,
         "tooling_index": 37930,
         "knowledge_index": 60629,
         "vision_index": null,
@@ -19313,8 +19335,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 38143,
-        "coding_index": 23348,
+        "openbench_index": 38145,
+        "coding_index": 23356,
         "tooling_index": 38660,
         "knowledge_index": 50795,
         "vision_index": 40987,
@@ -20141,8 +20163,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 32902,
-        "coding_index": 21817,
+        "openbench_index": 32904,
+        "coding_index": 21824,
         "tooling_index": 29166,
         "knowledge_index": 41688,
         "vision_index": 33786,
@@ -20925,7 +20947,7 @@
       },
       "scores": {
         "openbench_index": 25482,
-        "coding_index": 13492,
+        "coding_index": 13495,
         "tooling_index": 15750,
         "knowledge_index": 28751,
         "vision_index": 17753,
@@ -22173,8 +22195,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 39751,
-        "coding_index": 23219,
+        "openbench_index": 39754,
+        "coding_index": 23227,
         "tooling_index": 35923,
         "knowledge_index": 53582,
         "vision_index": 47535,
@@ -22854,8 +22876,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44601,
-        "coding_index": 28063,
+        "openbench_index": 44604,
+        "coding_index": 28075,
         "tooling_index": 42300,
         "knowledge_index": 57259,
         "vision_index": 46385,
@@ -23514,8 +23536,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 62373,
-        "coding_index": 58156,
+        "openbench_index": 62378,
+        "coding_index": 58172,
         "tooling_index": 68247,
         "knowledge_index": 73963,
         "vision_index": null,
@@ -24449,8 +24471,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 51676,
-        "coding_index": 37363,
+        "openbench_index": 51682,
+        "coding_index": 37385,
         "tooling_index": 55865,
         "knowledge_index": 59086,
         "vision_index": null,
@@ -26783,8 +26805,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 37404,
-        "coding_index": 25737,
+        "openbench_index": 37407,
+        "coding_index": 25747,
         "tooling_index": 38240,
         "knowledge_index": 36811,
         "vision_index": 28907,
@@ -29278,8 +29300,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 41780,
-        "coding_index": 25511,
+        "openbench_index": 41783,
+        "coding_index": 25520,
         "tooling_index": 33664,
         "knowledge_index": 54129,
         "vision_index": 27529,
@@ -31118,8 +31140,8 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 33865,
-        "coding_index": 27976,
+        "openbench_index": 33869,
+        "coding_index": 27987,
         "tooling_index": 31239,
         "knowledge_index": 37888,
         "vision_index": null,
@@ -31863,8 +31885,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 67102,
-        "coding_index": 54133,
+        "openbench_index": 67114,
+        "coding_index": 54174,
         "tooling_index": 65901,
         "knowledge_index": 80291,
         "vision_index": null,
@@ -32868,7 +32890,6 @@
           "measured": [
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -32884,7 +32905,7 @@
             "nl2repo"
           ],
           "of": 21,
-          "share": 0.71,
+          "share": 0.662,
           "converted": [
             "frontiercode_2_0",
             "terminal_bench_4_1",
@@ -32985,8 +33006,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 62836,
-        "coding_index": 55967,
+        "openbench_index": 62838,
+        "coding_index": 55973,
         "tooling_index": 58878,
         "knowledge_index": 74703,
         "vision_index": 69648,
@@ -35647,8 +35668,8 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 21907,
-        "coding_index": 15481,
+        "openbench_index": 21908,
+        "coding_index": 15485,
         "tooling_index": 11849,
         "knowledge_index": 23337,
         "vision_index": 19367,
@@ -43756,8 +43777,8 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 33725,
-        "coding_index": 22111,
+        "openbench_index": 33727,
+        "coding_index": 22119,
         "tooling_index": 37258,
         "knowledge_index": 45487,
         "vision_index": null,
@@ -55355,8 +55376,8 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 25278,
-        "coding_index": 17073,
+        "openbench_index": 25279,
+        "coding_index": 17077,
         "tooling_index": 22240,
         "knowledge_index": 24654,
         "vision_index": 22853,
@@ -60083,8 +60104,8 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "openbench_index": 29895,
-        "coding_index": 18941,
+        "openbench_index": 29896,
+        "coding_index": 18946,
         "tooling_index": 25065,
         "knowledge_index": 33945,
         "vision_index": 35930,
@@ -60701,7 +60722,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 21809,
+        "coding_index": 21815,
         "tooling_index": 35138,
         "knowledge_index": null,
         "vision_index": null,
@@ -61080,7 +61101,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 35157,
+        "coding_index": 35173,
         "tooling_index": 45689,
         "knowledge_index": null,
         "vision_index": null,
@@ -61459,7 +61480,7 @@
       },
       "scores": {
         "openbench_index": null,
-        "coding_index": 50827,
+        "coding_index": 50852,
         "tooling_index": 54250,
         "knowledge_index": null,
         "vision_index": null,
@@ -61837,8 +61858,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 51334,
-        "coding_index": 31988,
+        "openbench_index": 51336,
+        "coding_index": 31995,
         "tooling_index": 42925,
         "knowledge_index": 69797,
         "vision_index": null,
@@ -63315,8 +63336,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 49650,
-        "coding_index": 32180,
+        "openbench_index": 49649,
+        "coding_index": 32178,
         "tooling_index": 45391,
         "knowledge_index": 70877,
         "vision_index": 42169,
@@ -64402,8 +64423,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 65350,
-        "coding_index": 64317,
+        "openbench_index": 65637,
+        "coding_index": 65272,
         "tooling_index": 68869,
         "knowledge_index": 77424,
         "vision_index": null,
@@ -65416,7 +65437,6 @@
           "measured": [
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -65432,7 +65452,7 @@
             "nl2repo"
           ],
           "of": 21,
-          "share": 0.71,
+          "share": 0.662,
           "converted": [
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1"
@@ -65544,8 +65564,8 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 41575,
-        "coding_index": 26631,
+        "openbench_index": 41579,
+        "coding_index": 26642,
         "tooling_index": 35890,
         "knowledge_index": 59943,
         "vision_index": null,
@@ -66531,8 +66551,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 47513,
-        "coding_index": 33172,
+        "openbench_index": 47518,
+        "coding_index": 33187,
         "tooling_index": 39455,
         "knowledge_index": 66602,
         "vision_index": 51320,
@@ -67380,8 +67400,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 59165,
-        "coding_index": 43814,
+        "openbench_index": 59177,
+        "coding_index": 43854,
         "tooling_index": 54592,
         "knowledge_index": 78061,
         "vision_index": 70175,
@@ -68282,8 +68302,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 56764,
-        "coding_index": 47709,
+        "openbench_index": 56778,
+        "coding_index": 47758,
         "tooling_index": 57507,
         "knowledge_index": 69851,
         "vision_index": null,
@@ -68987,8 +69007,8 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 79915,
-        "coding_index": 75959,
+        "openbench_index": 79358,
+        "coding_index": 74103,
         "tooling_index": 79354,
         "knowledge_index": 87491,
         "vision_index": 84012,
@@ -70060,7 +70080,6 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -70076,7 +70095,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.919,
+          "share": 0.871,
           "second_hand": [
             "ale_bench"
           ]
@@ -70596,8 +70615,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 46194,
-        "coding_index": 29956,
+        "openbench_index": 46198,
+        "coding_index": 29969,
         "tooling_index": 43308,
         "knowledge_index": 61575,
         "vision_index": 55208,
@@ -71261,8 +71280,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 52390,
-        "coding_index": 33018,
+        "openbench_index": 52395,
+        "coding_index": 33035,
         "tooling_index": 46347,
         "knowledge_index": 71570,
         "vision_index": 66377,
@@ -71989,8 +72008,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 53702,
-        "coding_index": 40473,
+        "openbench_index": 53711,
+        "coding_index": 40504,
         "tooling_index": 53279,
         "knowledge_index": 68864,
         "vision_index": 42487,
@@ -73446,8 +73465,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 76268,
-        "coding_index": 71014,
+        "openbench_index": 76235,
+        "coding_index": 70905,
         "tooling_index": 78025,
         "knowledge_index": 85063,
         "vision_index": 89963,
@@ -74417,8 +74436,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 43166,
-        "coding_index": 27528,
+        "openbench_index": 43170,
+        "coding_index": 27540,
         "tooling_index": 39609,
         "knowledge_index": 56982,
         "vision_index": null,
@@ -76006,8 +76025,8 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 47963,
-        "coding_index": 34441,
+        "openbench_index": 47969,
+        "coding_index": 34459,
         "tooling_index": 48847,
         "knowledge_index": 52302,
         "vision_index": 48607,
@@ -76847,8 +76866,8 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 36880,
-        "coding_index": 20586,
+        "openbench_index": 36881,
+        "coding_index": 20592,
         "tooling_index": 33452,
         "knowledge_index": 43925,
         "vision_index": null,
@@ -77615,8 +77634,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 78775,
-        "coding_index": 74194,
+        "openbench_index": 78588,
+        "coding_index": 73571,
         "tooling_index": 82564,
         "knowledge_index": 83373,
         "vision_index": null,
@@ -78829,7 +78848,6 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -78846,7 +78864,7 @@
             "nl2repo"
           ],
           "of": 21,
-          "share": 0.943,
+          "share": 0.895,
           "second_hand": [
             "ale_bench",
             "nl2repo"
@@ -78944,8 +78962,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 62295,
-        "coding_index": 50089,
+        "openbench_index": 62310,
+        "coding_index": 50141,
         "tooling_index": 67808,
         "knowledge_index": 65480,
         "vision_index": 69535,
@@ -80538,8 +80556,8 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "openbench_index": 43853,
-        "coding_index": 21657,
+        "openbench_index": 43855,
+        "coding_index": 21664,
         "tooling_index": 36675,
         "knowledge_index": 67562,
         "vision_index": null,
@@ -82316,8 +82334,8 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 60188,
-        "coding_index": 49364,
+        "openbench_index": 60158,
+        "coding_index": 49262,
         "tooling_index": 72332,
         "knowledge_index": 68694,
         "vision_index": 50052,
@@ -82891,8 +82909,8 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 75229,
-        "coding_index": 61380,
+        "openbench_index": 74962,
+        "coding_index": 60489,
         "tooling_index": 86573,
         "knowledge_index": 77341,
         "vision_index": null,
@@ -83957,7 +83975,6 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -83974,7 +83991,7 @@
             "nl2repo"
           ],
           "of": 21,
-          "share": 0.843,
+          "share": 0.795,
           "converted": [
             "swe_bench_pro_public"
           ],
@@ -84067,8 +84084,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 69882,
-        "coding_index": 66203,
+        "openbench_index": 69901,
+        "coding_index": 66264,
         "tooling_index": 76596,
         "knowledge_index": 71703,
         "vision_index": 71484,
@@ -84979,8 +84996,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 28350,
-        "coding_index": 15531,
+        "openbench_index": 28352,
+        "coding_index": 15535,
         "tooling_index": 18496,
         "knowledge_index": 31170,
         "vision_index": null,
@@ -85673,8 +85690,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 31917,
-        "coding_index": 15431,
+        "openbench_index": 31918,
+        "coding_index": 15435,
         "tooling_index": 26654,
         "knowledge_index": 37610,
         "vision_index": null,
@@ -86429,8 +86446,8 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 35826,
-        "coding_index": 17635,
+        "openbench_index": 35827,
+        "coding_index": 17640,
         "tooling_index": 30280,
         "knowledge_index": 44691,
         "vision_index": null,
@@ -87150,8 +87167,8 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 74088,
-        "coding_index": 73476,
+        "openbench_index": 74074,
+        "coding_index": 73427,
         "tooling_index": 83409,
         "knowledge_index": 79954,
         "vision_index": 69545,
@@ -88049,8 +88066,8 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 60850,
-        "coding_index": 44465,
+        "openbench_index": 60860,
+        "coding_index": 44497,
         "tooling_index": 62254,
         "knowledge_index": 68108,
         "vision_index": null,
@@ -88782,8 +88799,8 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "openbench_index": 33951,
-        "coding_index": 15891,
+        "openbench_index": 33952,
+        "coding_index": 15895,
         "tooling_index": 33358,
         "knowledge_index": 38386,
         "vision_index": null,
@@ -89366,8 +89383,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 72220,
-        "coding_index": 76575,
+        "openbench_index": 72194,
+        "coding_index": 76491,
         "tooling_index": 78473,
         "knowledge_index": 76596,
         "vision_index": 63450,
@@ -90784,8 +90801,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 87871,
-        "coding_index": 92623,
+        "openbench_index": 87950,
+        "coding_index": 92887,
         "tooling_index": 88805,
         "knowledge_index": 94903,
         "vision_index": null,
@@ -91975,7 +91992,6 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -91991,7 +92007,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.929,
+          "share": 0.881,
           "converted": [
             "swe_bench_pro_public"
           ],
@@ -92091,8 +92107,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 64611,
-        "coding_index": 62418,
+        "openbench_index": 64700,
+        "coding_index": 62716,
         "tooling_index": 67906,
         "knowledge_index": 78139,
         "vision_index": 71674,
@@ -92982,7 +92998,6 @@
           "measured": [
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -92993,7 +93008,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.524,
+          "share": 0.476,
           "converted": [
             "swe_bench_pro_public"
           ],
@@ -93100,8 +93115,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 73923,
-        "coding_index": 70220,
+        "openbench_index": 74021,
+        "coding_index": 70547,
         "tooling_index": 78411,
         "knowledge_index": 85302,
         "vision_index": 82615,
@@ -94046,7 +94061,6 @@
           "measured": [
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -94059,7 +94073,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.581,
+          "share": 0.533,
           "converted": [
             "swe_bench_pro_public"
           ],
@@ -94173,8 +94187,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 78848,
-        "coding_index": 74218,
+        "openbench_index": 78654,
+        "coding_index": 73571,
         "tooling_index": 83514,
         "knowledge_index": 93218,
         "vision_index": 89775,
@@ -95133,7 +95147,6 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -95148,7 +95161,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.757,
+          "share": 0.71,
           "converted": [
             "swe_bench_pro_public",
             "swe_atlas_qna_1_1"
@@ -95262,8 +95275,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 89441,
-        "coding_index": 93668,
+        "openbench_index": 89656,
+        "coding_index": 94385,
         "tooling_index": 88214,
         "knowledge_index": 97989,
         "vision_index": 97334,
@@ -95374,7 +95387,8 @@
         "critpt_2_0": 83.1,
         "critpt_hard_2_0": 70.5,
         "terminal_bench_4_1": 57.6,
-        "aa_coding_agent_index_2_1": 53.1
+        "aa_coding_agent_index_2_1": 53.1,
+        "swe_marathon_1_2": 58.2
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -95489,7 +95503,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "swe_marathon_1_2": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -95604,7 +95619,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-astra",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -95804,6 +95820,13 @@
             "date": "2026-10-22",
             "score": 96.9,
             "source": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 58.2,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -96414,7 +96437,7 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -97325,8 +97348,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 15434,
-        "coding_index": 11286,
+        "openbench_index": 15435,
+        "coding_index": 11289,
         "tooling_index": 10842,
         "knowledge_index": 14001,
         "vision_index": null,
@@ -97937,8 +97960,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 36406,
-        "coding_index": 18743,
+        "openbench_index": 36408,
+        "coding_index": 18748,
         "tooling_index": 39893,
         "knowledge_index": 40683,
         "vision_index": null,
@@ -98598,8 +98621,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 46620,
-        "coding_index": 29945,
+        "openbench_index": 46624,
+        "coding_index": 29958,
         "tooling_index": 53887,
         "knowledge_index": 47987,
         "vision_index": null,
@@ -99261,8 +99284,8 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 48627,
-        "coding_index": 27727,
+        "openbench_index": 48631,
+        "coding_index": 27738,
         "tooling_index": 49451,
         "knowledge_index": 59371,
         "vision_index": null,
@@ -99864,8 +99887,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 75009,
-        "coding_index": 68509,
+        "openbench_index": 75026,
+        "coding_index": 68564,
         "tooling_index": 79895,
         "knowledge_index": 83848,
         "vision_index": 70591,
@@ -100897,8 +100920,8 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 68476,
-        "coding_index": 66712,
+        "openbench_index": 68492,
+        "coding_index": 66768,
         "tooling_index": 76535,
         "knowledge_index": 70574,
         "vision_index": 49897,
@@ -101930,8 +101953,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 90388,
-        "coding_index": 96440,
+        "openbench_index": 90608,
+        "coding_index": 97174,
         "tooling_index": 90072,
         "knowledge_index": 97197,
         "vision_index": 97901,
@@ -102041,6 +102064,7 @@
         "critpt_hard_2_0": 68,
         "terminal_bench_4_1": 64.7,
         "aa_coding_agent_index_2_1": 58.2,
+        "swe_marathon_1_2": 73.1,
         "kernelbench_mega": 35.3
       },
       "scores_updated": {
@@ -102155,6 +102179,7 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
+        "swe_marathon_1_2": "2026-11-27",
         "kernelbench_mega": "2026-11-27"
       },
       "scores_source": {
@@ -102269,6 +102294,7 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-opus-5-5",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
         "kernelbench_mega": "https://kernelbench.com"
       },
       "scores_history": {
@@ -102452,6 +102478,13 @@
             "date": "2026-09-22",
             "score": 89.9,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 73.1,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -103086,7 +103119,7 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -103213,8 +103246,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 69912,
-        "coding_index": 63238,
+        "openbench_index": 69879,
+        "coding_index": 63128,
         "tooling_index": 69131,
         "knowledge_index": 82526,
         "vision_index": 77006,
@@ -104263,7 +104296,6 @@
             "real_swe_1_1",
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -104275,7 +104307,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.729,
+          "share": 0.681,
           "second_hand": [
             "ale_bench"
           ]
@@ -104378,8 +104410,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 83470,
-        "coding_index": 82619,
+        "openbench_index": 83552,
+        "coding_index": 82894,
         "tooling_index": 83530,
         "knowledge_index": 93813,
         "vision_index": 90373,
@@ -105323,7 +105355,6 @@
           "measured": [
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -105332,7 +105363,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.486,
+          "share": 0.438,
           "second_hand": [
             "ale_bench"
           ]
@@ -105808,8 +105839,8 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 69485,
-        "coding_index": 64341,
+        "openbench_index": 69487,
+        "coding_index": 64349,
         "tooling_index": 79747,
         "knowledge_index": 82003,
         "vision_index": 75303,
@@ -107328,8 +107359,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89685,
-        "coding_index": 92276,
+        "openbench_index": 89771,
+        "coding_index": 92563,
         "tooling_index": 95145,
         "knowledge_index": 93852,
         "vision_index": null,
@@ -107435,6 +107466,7 @@
         "critpt_hard_2_0": 59,
         "terminal_bench_4_1": 65.7,
         "aa_coding_agent_index_2_1": 56.3,
+        "swe_marathon_1_2": 64,
         "kernelbench_mega": 31.7
       },
       "scores_updated": {
@@ -107545,6 +107577,7 @@
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
+        "swe_marathon_1_2": "2026-11-27",
         "kernelbench_mega": "2026-11-27"
       },
       "scores_source": {
@@ -107655,6 +107688,7 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
         "kernelbench_mega": "https://kernelbench.com"
       },
       "scores_history": {
@@ -107850,6 +107884,13 @@
             "date": "2026-09-29",
             "score": 81.3,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 64,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -108406,7 +108447,7 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -108516,8 +108557,8 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 86574,
-        "coding_index": 88263,
+        "openbench_index": 86974,
+        "coding_index": 89597,
         "tooling_index": 84240,
         "knowledge_index": 97396,
         "vision_index": 94329,
@@ -108622,7 +108663,8 @@
         "critpt_hard_2_0": 69.5,
         "vending_bench_2": 12861,
         "terminal_bench_4_1": 54,
-        "aa_coding_agent_index_2_1": 52.2
+        "aa_coding_agent_index_2_1": 52.2,
+        "swe_marathon_1_2": 57.7
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -108731,7 +108773,8 @@
         "critpt_hard_2_0": "2026-11-04",
         "vending_bench_2": "2026-11-09",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "swe_marathon_1_2": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -108840,7 +108883,8 @@
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gpt-6-1-sol",
         "vending_bench_2": "https://epoch.ai/benchmarks/vending-bench-2",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -108997,6 +109041,13 @@
             "date": "2026-10-22",
             "score": 96.1,
             "source": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 57.7,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -109544,7 +109595,7 @@
             "real_swe_1_1",
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "scicode",
@@ -109961,8 +110012,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 90435,
-        "coding_index": 88616,
+        "openbench_index": 90444,
+        "coding_index": 88646,
         "tooling_index": 91902,
         "knowledge_index": 94316,
         "vision_index": null,
@@ -110068,7 +110119,8 @@
         "terminal_bench_science_0_1": 52.9,
         "critpt_hard_2_0": 52.5,
         "terminal_bench_4_1": 56.6,
-        "aa_coding_agent_index_2_1": 45.5
+        "aa_coding_agent_index_2_1": 45.5,
+        "swe_marathon_1_2": 49.4
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -110178,7 +110230,8 @@
         "terminal_bench_science_0_1": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "swe_marathon_1_2": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -110288,7 +110341,8 @@
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/gemini-4-argon",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/gemini-4-argon",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -110459,6 +110513,13 @@
             "date": "2026-10-22",
             "score": 99.2,
             "source": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 49.4,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -110976,7 +111037,7 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -111073,8 +111134,8 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 74684,
-        "coding_index": 64759,
+        "openbench_index": 74698,
+        "coding_index": 64806,
         "tooling_index": 82677,
         "knowledge_index": 82988,
         "vision_index": null,
@@ -111792,8 +111853,8 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 74374,
-        "coding_index": 61086,
+        "openbench_index": 74389,
+        "coding_index": 61137,
         "tooling_index": 81843,
         "knowledge_index": 85852,
         "vision_index": 60549,
@@ -113220,8 +113281,8 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 70302,
-        "coding_index": 61353,
+        "openbench_index": 70307,
+        "coding_index": 61368,
         "tooling_index": 76043,
         "knowledge_index": 74728,
         "vision_index": 60549,
@@ -114402,8 +114463,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 77160,
-        "coding_index": 80997,
+        "openbench_index": 76628,
+        "coding_index": 79223,
         "tooling_index": 73549,
         "knowledge_index": 86469,
         "vision_index": null,
@@ -114507,7 +114568,8 @@
         "critpt_2_0": 64,
         "critpt_hard_2_0": 43.5,
         "terminal_bench_4_1": 31.8,
-        "aa_coding_agent_index_2_1": 29.6
+        "aa_coding_agent_index_2_1": 29.6,
+        "swe_marathon_1_2": 42.1
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -114615,7 +114677,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "swe_marathon_1_2": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -114723,7 +114786,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/claude-haiku-5-5",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -114894,6 +114958,13 @@
             "date": "2026-10-08",
             "score": 64.8,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 42.1,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -115407,7 +115478,7 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "swe_bench_pro_public",
@@ -115512,8 +115583,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 85750,
-        "coding_index": 86090,
+        "openbench_index": 85079,
+        "coding_index": 83851,
         "tooling_index": 87456,
         "knowledge_index": 91217,
         "vision_index": null,
@@ -115614,7 +115685,8 @@
         "critpt_2_0": 71.1,
         "critpt_hard_2_0": 50.5,
         "terminal_bench_4_1": 47.5,
-        "aa_coding_agent_index_2_1": 44.5
+        "aa_coding_agent_index_2_1": 44.5,
+        "swe_marathon_1_2": 30
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -115719,7 +115791,8 @@
         "critpt_2_0": "2026-11-04",
         "critpt_hard_2_0": "2026-11-04",
         "terminal_bench_4_1": "2026-11-14",
-        "aa_coding_agent_index_2_1": "2026-11-14"
+        "aa_coding_agent_index_2_1": "2026-11-14",
+        "swe_marathon_1_2": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -115824,7 +115897,8 @@
         "critpt_2_0": "https://artificialanalysis.ai/evaluations/critpt-v2",
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/muse-wonder",
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -115974,6 +116048,13 @@
             "date": "2026-10-22",
             "score": 96.7,
             "source": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 30,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -116402,7 +116483,7 @@
             "deepswe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "swe_bench_pro_hard_2_0",
@@ -116486,8 +116567,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 89463,
-        "coding_index": 89473,
+        "openbench_index": 88752,
+        "coding_index": 87101,
         "tooling_index": 91219,
         "knowledge_index": 93502,
         "vision_index": null,
@@ -117185,14 +117266,13 @@
           "measured": [
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "scicode",
             "programbench_almost"
           ],
           "of": 21,
-          "share": 0.424
+          "share": 0.376
         },
         "tooling_index": {
           "measured": [
@@ -117252,8 +117332,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 82272,
-        "coding_index": 79868,
+        "openbench_index": 81906,
+        "coding_index": 78650,
         "tooling_index": 82264,
         "knowledge_index": 83789,
         "vision_index": null,
@@ -118270,7 +118350,6 @@
             "real_swe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -118282,7 +118361,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.781,
+          "share": 0.733,
           "second_hand": [
             "frontierswe_2_0",
             "ale_bench"
@@ -118697,8 +118776,8 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 52033,
-        "coding_index": 35035,
+        "openbench_index": 52037,
+        "coding_index": 35048,
         "tooling_index": 51585,
         "knowledge_index": 69186,
         "vision_index": null,
@@ -119566,8 +119645,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 70963,
-        "coding_index": 56124,
+        "openbench_index": 70966,
+        "coding_index": 56136,
         "tooling_index": 70085,
         "knowledge_index": 84133,
         "vision_index": 85034,
@@ -120396,8 +120475,8 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 62278,
-        "coding_index": 49403,
+        "openbench_index": 62287,
+        "coding_index": 49433,
         "tooling_index": 65637,
         "knowledge_index": 76487,
         "vision_index": null,
@@ -121399,8 +121478,8 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 78330,
-        "coding_index": 79529,
+        "openbench_index": 78392,
+        "coding_index": 79734,
         "tooling_index": 83796,
         "knowledge_index": 81821,
         "vision_index": 72286,
@@ -122323,7 +122402,6 @@
           "measured": [
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "scicode",
@@ -122333,10 +122411,9 @@
             "nl2repo"
           ],
           "of": 21,
-          "share": 0.524,
+          "share": 0.476,
           "second_hand": [
             "deepswe_1_1",
-            "swe_marathon_1_1",
             "programbench_almost",
             "ale_bench",
             "nl2repo"
@@ -123798,8 +123875,8 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 72047,
-        "coding_index": 57741,
+        "openbench_index": 72062,
+        "coding_index": 57791,
         "tooling_index": 81821,
         "knowledge_index": 82499,
         "vision_index": null,
@@ -124351,8 +124428,8 @@
         "url": "https://www.moonshot.ai/"
       },
       "scores": {
-        "openbench_index": 88067,
-        "coding_index": 84022,
+        "openbench_index": 87694,
+        "coding_index": 82780,
         "tooling_index": 95084,
         "knowledge_index": 90823,
         "vision_index": 92476,
@@ -125319,7 +125396,6 @@
             "real_swe_1_1",
             "deepswe_1_1",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "scicode",
@@ -125330,10 +125406,9 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.705,
+          "share": 0.657,
           "second_hand": [
             "deepswe_1_1",
-            "swe_marathon_1_1",
             "programbench_almost",
             "ale_bench"
           ]
@@ -125440,8 +125515,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 83458,
-        "coding_index": 79406,
+        "openbench_index": 83500,
+        "coding_index": 79546,
         "tooling_index": 83467,
         "knowledge_index": 94537,
         "vision_index": 93350,
@@ -126602,8 +126677,8 @@
         "url": "https://huggingface.co/Nanbeige"
       },
       "scores": {
-        "openbench_index": 67570,
-        "coding_index": 57029,
+        "openbench_index": 67586,
+        "coding_index": 57081,
         "tooling_index": 73906,
         "knowledge_index": 68245,
         "vision_index": null,
@@ -127193,8 +127268,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 92926,
-        "coding_index": 93498,
+        "openbench_index": 92500,
+        "coding_index": 92080,
         "tooling_index": 96860,
         "knowledge_index": 97764,
         "vision_index": null,
@@ -127301,6 +127376,7 @@
         "terminal_bench_4_1": 64.7,
         "aa_coding_agent_index_2_1": 55.5,
         "ale_bench": 2375,
+        "swe_marathon_1_2": 56.5,
         "kernelbench_mega": 24.7
       },
       "scores_updated": {
@@ -127412,6 +127488,7 @@
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
         "ale_bench": "2026-11-18",
+        "swe_marathon_1_2": "2026-11-27",
         "kernelbench_mega": "2026-11-27"
       },
       "scores_source": {
@@ -127523,6 +127600,7 @@
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
         "ale_bench": "https://epoch.ai/benchmarks/ale-bench",
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
         "kernelbench_mega": "https://kernelbench.com"
       },
       "scores_history": {
@@ -127652,6 +127730,13 @@
             "date": "2026-11-18",
             "score": 2375,
             "source": "https://epoch.ai/benchmarks/ale-bench"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 56.5,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -128045,7 +128130,7 @@
             "real_swe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "scicode",
@@ -129665,8 +129750,8 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
-        "openbench_index": 34895,
-        "coding_index": 15451,
+        "openbench_index": 34897,
+        "coding_index": 15455,
         "tooling_index": 34938,
         "knowledge_index": 46455,
         "vision_index": null,
@@ -130926,8 +131011,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 75899,
-        "coding_index": 73522,
+        "openbench_index": 75855,
+        "coding_index": 73375,
         "tooling_index": 73902,
         "knowledge_index": 85665,
         "vision_index": 86599,
@@ -131757,7 +131842,6 @@
             "real_swe_1_1",
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
             "terminal_bench_4_1",
             "terminal_bench_2_1",
             "vibe_code_bench_1_1",
@@ -131770,7 +131854,7 @@
             "swe_bench_verified"
           ],
           "of": 21,
-          "share": 0.786,
+          "share": 0.738,
           "second_hand": [
             "swe_bench_verified"
           ]
@@ -131847,8 +131931,8 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 93894,
-        "coding_index": 98526,
+        "openbench_index": 93910,
+        "coding_index": 98578,
         "tooling_index": 95867,
         "knowledge_index": 99765,
         "vision_index": null,
@@ -131975,6 +132059,7 @@
         "charxiv_reasoning": null,
         "terminal_bench_4_1": 64.1,
         "aa_coding_agent_index_2_1": 58.5,
+        "swe_marathon_1_2": 75,
         "kernelbench_mega": 31
       },
       "scores_updated": {
@@ -132106,6 +132191,7 @@
         "charxiv_reasoning": null,
         "terminal_bench_4_1": "2026-11-14",
         "aa_coding_agent_index_2_1": "2026-11-14",
+        "swe_marathon_1_2": "2026-11-27",
         "kernelbench_mega": "2026-11-27"
       },
       "scores_source": {
@@ -132237,6 +132323,7 @@
         "charxiv_reasoning": null,
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
         "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
         "kernelbench_mega": "https://kernelbench.com"
       },
       "scores_history": {
@@ -132360,6 +132447,13 @@
             "date": "2026-11-09",
             "score": 93,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 75,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_atlas_1_1": [
@@ -132720,6 +132814,7 @@
           "measured": [
             "frontierswe_2_0",
             "frontiercode_2_0",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "swe_bench_pro_public",
@@ -132732,7 +132827,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.671,
+          "share": 0.719,
           "converted": [
             "swe_bench_pro_public"
           ],
@@ -132810,8 +132905,8 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 75302,
-        "coding_index": 70240,
+        "openbench_index": 75309,
+        "coding_index": 70261,
         "tooling_index": 83237,
         "knowledge_index": 84384,
         "vision_index": null,
@@ -133944,8 +134039,8 @@
         "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
       },
       "scores": {
-        "openbench_index": 75175,
-        "coding_index": 69791,
+        "openbench_index": 75198,
+        "coding_index": 69865,
         "tooling_index": 85298,
         "knowledge_index": 82345,
         "vision_index": null,
@@ -135161,8 +135256,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 90037,
-        "coding_index": 88916,
+        "openbench_index": 89611,
+        "coding_index": 87496,
         "tooling_index": 94012,
         "knowledge_index": 94943,
         "vision_index": null,
@@ -135288,7 +135383,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "terminal_bench_4_1": 60.1,
-        "aa_coding_agent_index_2_1": 52.3
+        "aa_coding_agent_index_2_1": 52.3,
+        "swe_marathon_1_2": 47.8
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -135418,7 +135514,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "terminal_bench_4_1": "2026-11-17",
-        "aa_coding_agent_index_2_1": "2026-11-17"
+        "aa_coding_agent_index_2_1": "2026-11-17",
+        "swe_marathon_1_2": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -135548,7 +135645,8 @@
         "mathvista_mini": null,
         "charxiv_reasoning": null,
         "terminal_bench_4_1": "https://artificialanalysis.ai/agents/coding-agents",
-        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents"
+        "aa_coding_agent_index_2_1": "https://artificialanalysis.ai/agents/coding-agents",
+        "swe_marathon_1_2": "https://www.swe-marathon.org"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -135643,6 +135741,13 @@
             "date": "2026-11-18",
             "score": 1826,
             "source": "https://epoch.ai/benchmarks/ale-bench"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 47.8,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_marathon_1_1": [
@@ -135919,7 +136024,7 @@
           "measured": [
             "frontierswe_2_0",
             "frontiercode_2_0",
-            "swe_marathon_1_1",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "swe_atlas_qna_1_1",
@@ -135997,8 +136102,8 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 83255,
-        "coding_index": 73211,
+        "openbench_index": 83318,
+        "coding_index": 73418,
         "tooling_index": 92905,
         "knowledge_index": 88689,
         "vision_index": null,
@@ -137181,8 +137286,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 88084,
-        "coding_index": 82830,
+        "openbench_index": 89695,
+        "coding_index": 88199,
         "tooling_index": 95079,
         "knowledge_index": 99001,
         "vision_index": 99309,
@@ -137309,6 +137414,7 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
+        "swe_marathon_1_2": 82.5,
         "kernelbench_mega": 23.5
       },
       "scores_updated": {
@@ -137440,6 +137546,7 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
+        "swe_marathon_1_2": "2026-11-27",
         "kernelbench_mega": "2026-11-27"
       },
       "scores_source": {
@@ -137571,6 +137678,7 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
         "kernelbench_mega": "https://kernelbench.com"
       },
       "scores_history": {
@@ -137673,6 +137781,13 @@
             "date": "2026-11-25",
             "score": 3017,
             "source": "https://epoch.ai/benchmarks/ale-bench"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 82.5,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_atlas_1_1": [
@@ -137986,6 +138101,7 @@
         "coding_index": {
           "measured": [
             "frontiercode_2_0",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "swe_atlas_qna_1_1",
@@ -137994,7 +138110,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.41,
+          "share": 0.457,
           "second_hand": [
             "ale_bench"
           ]
@@ -138080,8 +138196,8 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 84014,
-        "coding_index": 82762,
+        "openbench_index": 85186,
+        "coding_index": 86669,
         "tooling_index": 88816,
         "knowledge_index": 95204,
         "vision_index": null,
@@ -138207,7 +138323,8 @@
         "osworld_2_0_vendor": null,
         "osworld_verified": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "swe_marathon_1_2": 68.8
       },
       "scores_updated": {
         "openbench_index": "2026-11-27",
@@ -138337,7 +138454,8 @@
         "osworld_2_0_vendor": null,
         "osworld_verified": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "swe_marathon_1_2": "2026-11-27"
       },
       "scores_source": {
         "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
@@ -138467,7 +138585,8 @@
         "osworld_2_0_vendor": null,
         "osworld_verified": null,
         "mathvista_mini": null,
-        "charxiv_reasoning": null
+        "charxiv_reasoning": null,
+        "swe_marathon_1_2": "https://www.swe-marathon.org"
       },
       "scores_history": {
         "aa_intelligence_index_5_0": [
@@ -138552,6 +138671,13 @@
             "date": "2026-11-25",
             "score": 3036,
             "source": "https://epoch.ai/benchmarks/ale-bench"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 68.8,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_atlas_1_1": [
@@ -138822,6 +138948,7 @@
         "coding_index": {
           "measured": [
             "frontiercode_2_0",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "vibe_code_bench_1_1",
             "swe_atlas_qna_1_1",
@@ -138830,7 +138957,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.41,
+          "share": 0.457,
           "second_hand": [
             "ale_bench"
           ]
@@ -138901,8 +139028,8 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 93109,
-        "coding_index": 92382,
+        "openbench_index": 93093,
+        "coding_index": 92327,
         "tooling_index": 97943,
         "knowledge_index": 97422,
         "vision_index": null,
@@ -139029,6 +139156,7 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
+        "swe_marathon_1_2": 58.1,
         "kernelbench_mega": 36.7
       },
       "scores_updated": {
@@ -139160,6 +139288,7 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
+        "swe_marathon_1_2": "2026-11-27",
         "kernelbench_mega": "2026-11-27"
       },
       "scores_source": {
@@ -139291,6 +139420,7 @@
         "osworld_verified": null,
         "mathvista_mini": null,
         "charxiv_reasoning": null,
+        "swe_marathon_1_2": "https://www.swe-marathon.org",
         "kernelbench_mega": "https://kernelbench.com"
       },
       "scores_history": {
@@ -139386,6 +139516,13 @@
             "date": "2026-11-27",
             "score": 2572,
             "source": "https://epoch.ai/benchmarks/ale-bench"
+          }
+        ],
+        "swe_marathon_1_2": [
+          {
+            "date": "2026-11-27",
+            "score": 58.1,
+            "source": "https://www.swe-marathon.org"
           }
         ],
         "swe_atlas_1_1": [
@@ -139658,6 +139795,7 @@
           "measured": [
             "frontierswe_2_0",
             "frontiercode_2_0",
+            "swe_marathon_1_2",
             "terminal_bench_4_1",
             "swe_atlas_qna_1_1",
             "swe_atlas_rf_1_1",
@@ -139665,7 +139803,7 @@
             "ale_bench"
           ],
           "of": 21,
-          "share": 0.448,
+          "share": 0.495,
           "second_hand": [
             "ale_bench"
           ]
@@ -139732,8 +139870,8 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 61362,
-        "coding_index": 51531,
+        "openbench_index": 61377,
+        "coding_index": 51580,
         "tooling_index": 65822,
         "knowledge_index": 65460,
         "vision_index": 49552,
@@ -141584,8 +141722,6 @@
         "swe_bench_pro_hard_2_0": null,
         "swe_bench_pro_2_0": null,
         "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -141705,8 +141841,6 @@
         "swe_bench_pro_hard_2_0": null,
         "swe_bench_pro_2_0": null,
         "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -141826,8 +141960,6 @@
         "swe_bench_pro_hard_2_0": null,
         "swe_bench_pro_2_0": null,
         "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -142008,8 +142140,6 @@
         "swe_bench_pro_hard_2_0": null,
         "swe_bench_pro_2_0": null,
         "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -142129,8 +142259,6 @@
         "swe_bench_pro_hard_2_0": null,
         "swe_bench_pro_2_0": null,
         "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -142250,8 +142378,6 @@
         "swe_bench_pro_hard_2_0": null,
         "swe_bench_pro_2_0": null,
         "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
@@ -142485,18 +142611,18 @@
         "claude-fable-5-2": 1,
         "gemini-4-neon": 2,
         "gemini-4-carbon": 3,
-        "gemini-4-argon": 4,
-        "claude-opus-5-5": 5,
-        "gemini-4-hydrogen": 6,
-        "claude-sonnet-5-5": 7,
-        "muse-wonder-full": 8,
-        "gpt-6-astra": 9,
-        "gpt-6-2-astra": 10,
-        "kimi-k3-1-pro": 11,
-        "claude-fable-5-1": 12,
+        "claude-opus-5-5": 4,
+        "gemini-4-argon": 5,
+        "claude-sonnet-5-5": 6,
+        "gpt-6-2-astra": 7,
+        "gpt-6-astra": 8,
+        "gemini-4-hydrogen": 9,
+        "muse-wonder-full": 10,
+        "claude-fable-5-1": 11,
+        "kimi-k3-1-pro": 12,
         "gpt-6-1-sol": 13,
-        "muse-wonder": 14,
-        "gpt-6-2-sol": 15,
+        "gpt-6-2-sol": 14,
+        "muse-wonder": 15,
         "gpt-6-sol": 16,
         "gpt-6-1-terra": 17,
         "qwen4-max": 18,
@@ -142509,9 +142635,9 @@
         "qwen3-8-2-4t-a95b": 25,
         "inkling-2-small": 26,
         "muse-ember": 27,
-        "glm-5-3-flash": 28,
-        "ernie-5-5-flash-preview": 29,
-        "mimo-v2-6-pro": 30,
+        "ernie-5-5-flash-preview": 28,
+        "mimo-v2-6-pro": 29,
+        "glm-5-3-flash": 30,
         "ling-3-1-flash": 31,
         "step-5-preview": 32,
         "hy4": 33,
@@ -142520,8 +142646,8 @@
         "ling-3-1-flash-1019": 36,
         "muse-spark-open": 37,
         "mistral-large-4": 38,
-        "gpt-6-luna": 39,
-        "qwen3-8-flash-next": 40,
+        "qwen3-8-flash-next": 39,
+        "gpt-6-luna": 40,
         "minimax-m3-1-flash": 41,
         "mimo-v2-6-flash": 42,
         "nanbeige4-3-33b": 43,
@@ -142585,45 +142711,45 @@
         "claude-fable-5-2": 1,
         "claude-opus-5-5": 2,
         "gpt-6-astra": 3,
-        "gemini-4-carbon": 4,
-        "claude-fable-5-1": 5,
+        "claude-fable-5-1": 4,
+        "claude-sonnet-5-5": 5,
         "gemini-4-neon": 6,
-        "claude-sonnet-5-5": 7,
-        "muse-wonder-full": 8,
-        "gemini-4-hydrogen": 9,
-        "gemini-4-argon": 10,
-        "gpt-6-1-sol": 11,
-        "muse-wonder": 12,
-        "kimi-k3-1-pro": 13,
-        "gpt-6-2-astra": 14,
-        "gpt-6-2-sol": 15,
-        "gpt-6-sol": 16,
-        "claude-haiku-5-5": 17,
-        "grok-4-7": 18,
-        "deepseek-v4-1-flash-1017": 19,
-        "gpt-6-1-terra": 20,
+        "gemini-4-carbon": 7,
+        "gpt-6-1-sol": 8,
+        "gemini-4-argon": 9,
+        "gpt-6-2-astra": 10,
+        "gemini-4-hydrogen": 11,
+        "muse-wonder-full": 12,
+        "gpt-6-2-sol": 13,
+        "muse-wonder": 14,
+        "gpt-6-sol": 15,
+        "kimi-k3-1-pro": 16,
+        "deepseek-v4-1-flash-1017": 17,
+        "gpt-6-1-terra": 18,
+        "claude-haiku-5-5": 19,
+        "grok-4-7": 20,
         "deepseek-v4-1-flash": 21,
         "kimi-k3": 22,
+        "glm-5-3": 23,
         "gpt-5-6-sol": 23,
-        "glm-5-3": 24,
-        "inkling-2-small": 25,
-        "hy4": 26,
-        "qwen4-max": 27,
+        "hy4": 25,
+        "qwen4-max": 26,
+        "inkling-2-small": 27,
         "qwen3-8-2-4t-a95b": 28,
-        "muse-ember": 29,
-        "gpt-5-6-terra": 30,
+        "gpt-5-6-terra": 29,
+        "muse-ember": 30,
         "ernie-5-5-flash-preview": 31,
         "mimo-v2-6-pro": 32,
         "mimo-v2-6-flash": 33,
         "qwen3-8-flash-next": 34,
-        "ling-3-1-flash": 35,
-        "minimax-m3-1-flash": 36,
-        "deepseek-v4-pro": 37,
+        "deepseek-v4-pro": 35,
+        "ling-3-1-flash": 36,
+        "minimax-m3-1-flash": 37,
         "gpt-6-luna": 38,
         "gpt-5-6-luna": 39,
-        "glm-5-3-flash": 40,
-        "mistral-large-4": 41,
-        "step-5-preview": 42,
+        "mistral-large-4": 40,
+        "step-5-preview": 41,
+        "glm-5-3-flash": 42,
         "deepseek-v4-flash": 43,
         "ling-3-1-flash-1019": 44,
         "nanbeige4-3-33b": 45,
@@ -143378,23 +143504,7 @@
         "index": "openbench_index",
         "model": "gemini-4-argon",
         "from": 6,
-        "to": 4,
-        "of": 98
-      },
-      {
-        "date": "2026-11-27",
-        "index": "openbench_index",
-        "model": "claude-opus-5-5",
-        "from": 4,
         "to": 5,
-        "of": 98
-      },
-      {
-        "date": "2026-11-27",
-        "index": "openbench_index",
-        "model": "gemini-4-hydrogen",
-        "from": 10,
-        "to": 6,
         "of": 98
       },
       {
@@ -143402,23 +143512,7 @@
         "index": "openbench_index",
         "model": "claude-sonnet-5-5",
         "from": 8,
-        "to": 7,
-        "of": 98
-      },
-      {
-        "date": "2026-11-27",
-        "index": "openbench_index",
-        "model": "muse-wonder-full",
-        "from": 5,
-        "to": 8,
-        "of": 98
-      },
-      {
-        "date": "2026-11-27",
-        "index": "openbench_index",
-        "model": "gpt-6-astra",
-        "from": 7,
-        "to": 9,
+        "to": 6,
         "of": 98
       },
       {
@@ -143426,7 +143520,69 @@
         "index": "openbench_index",
         "model": "gpt-6-2-astra",
         "from": 9,
+        "to": 7,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "gpt-6-astra",
+        "from": 7,
+        "to": 8,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "gemini-4-hydrogen",
+        "from": 10,
+        "to": 9,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "muse-wonder-full",
+        "from": 5,
         "to": 10,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "claude-fable-5-1",
+        "from": 12,
+        "to": 11,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "kimi-k3-1-pro",
+        "from": 11,
+        "to": 12,
+        "of": 98,
+        "open": {
+          "from": 1,
+          "to": 1,
+          "of": 74,
+          "quiet": true
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "gpt-6-2-sol",
+        "from": 15,
+        "to": 14,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "muse-wonder",
+        "from": 14,
+        "to": 15,
         "of": 98
       },
       {
@@ -143500,26 +143656,13 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "glm-5-3-flash",
-        "from": 32,
+        "model": "ernie-5-5-flash-preview",
+        "from": null,
         "to": 28,
         "of": 98,
         "open": {
-          "from": 10,
-          "to": 7,
-          "of": 74
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "openbench_index",
-        "model": "ernie-5-5-flash-preview",
-        "from": null,
-        "to": 29,
-        "of": 98,
-        "open": {
           "from": null,
-          "to": 8,
+          "to": 7,
           "of": 74
         }
       },
@@ -143528,10 +143671,23 @@
         "index": "openbench_index",
         "model": "mimo-v2-6-pro",
         "from": 25,
-        "to": 30,
+        "to": 29,
         "of": 98,
         "open": {
           "from": 5,
+          "to": 8,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "glm-5-3-flash",
+        "from": 32,
+        "to": 30,
+        "of": 98,
+        "open": {
+          "from": 10,
           "to": 9,
           "of": 74
         }
@@ -143599,16 +143755,10 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "qwen3-8-flash-next",
+        "model": "gpt-6-luna",
         "from": 39,
         "to": 40,
-        "of": 98,
-        "open": {
-          "from": 17,
-          "to": 17,
-          "of": 74,
-          "quiet": true
-        }
+        "of": 98
       },
       {
         "date": "2026-11-27",
@@ -143810,7 +143960,7 @@
         "index": "coding_index",
         "model": "claude-fable-5-1",
         "from": 6,
-        "to": 5,
+        "to": 4,
         "of": 102
       },
       {
@@ -143824,25 +143974,9 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "claude-sonnet-5-5",
-        "from": 5,
+        "model": "gemini-4-carbon",
+        "from": 4,
         "to": 7,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "muse-wonder-full",
-        "from": 7,
-        "to": 8,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "gemini-4-hydrogen",
-        "from": 12,
-        "to": 9,
         "of": 102
       },
       {
@@ -143850,7 +143984,47 @@
         "index": "coding_index",
         "model": "gpt-6-1-sol",
         "from": 9,
+        "to": 8,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "gemini-4-argon",
+        "from": 10,
+        "to": 9,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "gpt-6-2-astra",
+        "from": 13,
+        "to": 10,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "gemini-4-hydrogen",
+        "from": 12,
         "to": 11,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "muse-wonder-full",
+        "from": 7,
+        "to": 12,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "gpt-6-2-sol",
+        "from": 17,
+        "to": 13,
         "of": 102
       },
       {
@@ -143858,7 +144032,7 @@
         "index": "coding_index",
         "model": "muse-wonder",
         "from": 11,
-        "to": 12,
+        "to": 14,
         "of": 102
       },
       {
@@ -143866,7 +144040,7 @@
         "index": "coding_index",
         "model": "kimi-k3-1-pro",
         "from": 14,
-        "to": 13,
+        "to": 16,
         "of": 102,
         "open": {
           "from": 1,
@@ -143878,41 +144052,9 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "gpt-6-2-astra",
-        "from": 13,
-        "to": 14,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "gpt-6-2-sol",
-        "from": 17,
-        "to": 15,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "gpt-6-sol",
-        "from": 15,
-        "to": 16,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "claude-haiku-5-5",
-        "from": 19,
-        "to": 17,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
         "model": "deepseek-v4-1-flash-1017",
         "from": 16,
-        "to": 19,
+        "to": 17,
         "of": 102,
         "open": {
           "from": 2,
@@ -143920,6 +144062,22 @@
           "of": 78,
           "quiet": true
         }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "gpt-6-1-terra",
+        "from": 20,
+        "to": 18,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "grok-4-7",
+        "from": 18,
+        "to": 20,
+        "of": 102
       },
       {
         "date": "2026-11-27",
@@ -143937,17 +144095,9 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "gpt-5-6-sol",
-        "from": 24,
-        "to": 23,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
         "model": "glm-5-3",
         "from": 22,
-        "to": 24,
+        "to": 23,
         "of": 102,
         "open": {
           "from": 4,
@@ -143958,28 +144108,30 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "inkling-2-small",
-        "from": 29,
-        "to": 25,
-        "of": 102,
-        "open": {
-          "from": 8,
-          "to": 6,
-          "of": 78
-        }
+        "model": "gpt-5-6-sol",
+        "from": 24,
+        "to": 23,
+        "of": 102
       },
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "hy4",
-        "from": 25,
+        "model": "qwen4-max",
+        "from": 27,
         "to": 26,
+        "of": 102
+      },
+      {
+        "date": "2026-11-27",
+        "index": "coding_index",
+        "model": "inkling-2-small",
+        "from": 29,
+        "to": 27,
         "of": 102,
         "open": {
-          "from": 6,
+          "from": 8,
           "to": 7,
-          "of": 78,
-          "quiet": true
+          "of": 78
         }
       },
       {
@@ -143998,17 +144150,9 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "muse-ember",
-        "from": 30,
-        "to": 29,
-        "of": 102
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
         "model": "gpt-5-6-terra",
         "from": 26,
-        "to": 30,
+        "to": 29,
         "of": 102
       },
       {
@@ -144066,12 +144210,12 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "ling-3-1-flash",
-        "from": 36,
+        "model": "deepseek-v4-pro",
+        "from": 39,
         "to": 35,
         "of": 102,
         "open": {
-          "from": 14,
+          "from": 17,
           "to": 13,
           "of": 78
         }
@@ -144081,23 +144225,10 @@
         "index": "coding_index",
         "model": "minimax-m3-1-flash",
         "from": 35,
-        "to": 36,
-        "of": 102,
-        "open": {
-          "from": 13,
-          "to": 14,
-          "of": 78
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "deepseek-v4-pro",
-        "from": 39,
         "to": 37,
         "of": 102,
         "open": {
-          "from": 17,
+          "from": 13,
           "to": 15,
           "of": 78
         }
@@ -144121,27 +144252,15 @@
       {
         "date": "2026-11-27",
         "index": "coding_index",
-        "model": "glm-5-3-flash",
-        "from": 42,
+        "model": "mistral-large-4",
+        "from": 38,
         "to": 40,
         "of": 102,
         "open": {
-          "from": 18,
-          "to": 16,
-          "of": 78
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "coding_index",
-        "model": "mistral-large-4",
-        "from": 38,
-        "to": 41,
-        "of": 102,
-        "open": {
           "from": 16,
-          "to": 17,
-          "of": 78
+          "to": 16,
+          "of": 78,
+          "quiet": true
         }
       },
       {
@@ -144149,11 +144268,11 @@
         "index": "coding_index",
         "model": "step-5-preview",
         "from": 35,
-        "to": 42,
+        "to": 41,
         "of": 102,
         "open": {
           "from": 13,
-          "to": 18,
+          "to": 17,
           "of": 78
         }
       },
