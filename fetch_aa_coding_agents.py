@@ -65,15 +65,22 @@ URL = "https://artificialanalysis.ai/agents/coding-agents"
 DATASETS: dict[str, str] = {
     "deep-swe-v1.1": "deepswe_1_1",
     "frontiercode-v2.0": "frontiercode_2_0",
-    "swe-atlas-qna": "swe_atlas_qna",
+    # AA's own run of SWE Atlas Codebase Q&A, which it labels SWE-Atlas-QnA-AA
+    # since Coding Agent Index v2.0: its own judge (GPT-6 Luna, 5 votes per
+    # criterion) and 127 rubric criteria reworded. That is neither Scale's
+    # v1.0 nor its v1.1, so it has a column of its own rather than one of
+    # Scale's per-revision columns.
+    "swe-atlas-qna": "swe_atlas_qna_aa",
     "terminal-bench-v4": "terminal_bench_4_1",
 }
 
 # Datasets whose id names no minor revision -> the label the page's benchmark
 # list must give them for DATASETS' column to be right. A different label (or
-# none) skips the dataset. FrontierCode's and DeepSWE's ids carry the revision;
-# swe_atlas_qna is an unversioned column.
+# none) skips the dataset. FrontierCode's and DeepSWE's ids carry the revision.
+# "swe-atlas-qna" kept its id when AA changed the grading under it, so the label
+# is what says it is still the -AA variant swe_atlas_qna_aa holds.
 LABEL_GATES: dict[str, str] = {
+    "swe-atlas-qna": "SWE-Atlas-QnA-AA",
     "terminal-bench-v4": "Terminal-Bench 4.1",
 }
 

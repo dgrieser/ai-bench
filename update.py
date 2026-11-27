@@ -3062,9 +3062,17 @@ def fetch_swe_atlas_data(
         if not isinstance(row, dict):
             continue
         name = row.get("model")
-        key = row.get("key")
         score = row.get("score")
-        if not isinstance(name, str) or not isinstance(key, str):
+        # The legacy v1.0 track boards and the v1.1 page each name their
+        # revision; the column is the base plus that revision, and a revision
+        # llm.json has no column for is noted and not written (see
+        # _revisions.py).
+        base = row.get("base")
+        if not isinstance(name, str) or not isinstance(base, str):
+            continue
+        key = known_revision_key(base, row.get("revision"))
+        if key is None:
+            note_newer_revision(base, row.get("revision"))
             continue
         if not isinstance(score, (int, float)):
             continue

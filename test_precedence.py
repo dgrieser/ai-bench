@@ -255,7 +255,7 @@ class TestMayOverwrite(unittest.TestCase):
     def test_equal_rank_passes_so_a_source_can_refresh_itself(self) -> None:
         self.assertTrue(may_overwrite(AA_PAGE, AA_PAGE))
         self.assertTrue(
-            may_overwrite(TOOLATHLON_SOURCE_URL, SWE_ATLAS_KEY_URLS["swe_atlas_qna"])
+            may_overwrite(TOOLATHLON_SOURCE_URL, SWE_ATLAS_KEY_URLS["swe_atlas_qna_1_0"])
         )
 
 
@@ -279,15 +279,15 @@ class TestApplyScoreHonoursRank(unittest.TestCase):
 
     def test_aa_agent_ingest_overwrites_other_sources_and_itself(self) -> None:
         for source in (AA_CODING_AGENTS_SOURCE_URL, HF_CARD,
-                       SWE_ATLAS_KEY_URLS["swe_atlas_qna"], HAND_ENTERED):
+                       SWE_ATLAS_KEY_URLS["swe_atlas_qna_1_1"], HAND_ENTERED):
             with self.subTest(source=source):
-                model = model_with(55.6, source, "swe_atlas_qna")
+                model = model_with(55.6, source, "swe_atlas_qna_aa")
                 doc = {"benchmarks": {}, "models": [model]}
-                _, count, _ = update.update_aa_coding_agents_scores(doc, {"m": {"swe_atlas_qna": 51.34}})
+                _, count, _ = update.update_aa_coding_agents_scores(doc, {"m": {"swe_atlas_qna_aa": 51.34}})
                 self.assertEqual(count, 1)
-                self.assertEqual(model["scores"]["swe_atlas_qna"], 51.3)
-                self.assertEqual(model["scores_source"]["swe_atlas_qna"], AA_CODING_AGENTS_SOURCE_URL)
-                self.assertEqual(update.apply_score(doc, model, "m", "swe_atlas_qna", 60, HF_CARD, []), 0)
+                self.assertEqual(model["scores"]["swe_atlas_qna_aa"], 51.3)
+                self.assertEqual(model["scores_source"]["swe_atlas_qna_aa"], AA_CODING_AGENTS_SOURCE_URL)
+                self.assertEqual(update.apply_score(doc, model, "m", "swe_atlas_qna_aa", 60, HF_CARD, []), 0)
 
     def test_outranked_source_cannot_change_a_stored_value(self) -> None:
         model = model_with(score=39.6, source=AA_PAGE)

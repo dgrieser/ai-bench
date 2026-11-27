@@ -93,6 +93,19 @@ class TestDatasetMap(unittest.TestCase):
         self.assertEqual(ca.DATASETS["terminal-bench-v4"], "terminal_bench_4_1")
         self.assertEqual(ca.LABEL_GATES["terminal-bench-v4"], "Terminal-Bench 4.1")
 
+    def test_swe_atlas_qna_aa_has_its_own_column(self) -> None:
+        # AA's SWE-Atlas-QnA-AA re-judges Scale's Q&A track with its own judge
+        # and reworded criteria: it is neither Scale's v1.0 nor its v1.1, so it
+        # must not land in either of those columns, and only while the page
+        # still calls it the -AA variant.
+        self.assertEqual(ca.DATASETS["swe-atlas-qna"], "swe_atlas_qna_aa")
+        self.assertEqual(ca.LABEL_GATES["swe-atlas-qna"], "SWE-Atlas-QnA-AA")
+        entries = scores(
+            [row("Opus 5 (max)", {"swe-atlas-qna": 0.621, "terminal-bench-v4": 0.5})],
+            labels={**LABELS, "swe-atlas-qna": "SWE-Atlas-QnA"},
+        )
+        self.assertEqual([e["key"] for e in entries], ["terminal_bench_4_1"])
+
     def test_every_gate_names_a_mapped_dataset(self) -> None:
         self.assertLessEqual(set(ca.LABEL_GATES), set(ca.DATASETS))
 
@@ -112,7 +125,7 @@ class TestGetScores(unittest.TestCase):
         self.assertEqual(
             {e["key"]: e["score"] for e in entries},
             {
-                "frontiercode_2_0": 43.97, "swe_atlas_qna": 62.1,
+                "frontiercode_2_0": 43.97, "swe_atlas_qna_aa": 62.1,
                 "terminal_bench_4_1": 54.55, "aa_coding_agent_index_2_1": 53.54,
             },
         )
@@ -136,7 +149,7 @@ class TestGetScores(unittest.TestCase):
                     [row("Opus 5 (max)", {"terminal-bench-v4": 0.5455, "swe-atlas-qna": 0.621})],
                     labels=labels,
                 )
-                self.assertEqual([e["key"] for e in entries], ["swe_atlas_qna"])
+                self.assertEqual([e["key"] for e in entries], ["swe_atlas_qna_aa"])
 
     def test_the_index_is_read_only_at_its_version(self) -> None:
         for html in (HTML.replace("v2.1", "v2.2"), "<span>no version</span>"):
@@ -144,12 +157,12 @@ class TestGetScores(unittest.TestCase):
                 entries = scores(
                     [row("Opus 5 (max)", {"swe-atlas-qna": 0.621}, index=0.5)], html=html
                 )
-                self.assertEqual([e["key"] for e in entries], ["swe_atlas_qna"])
+                self.assertEqual([e["key"] for e in entries], ["swe_atlas_qna_aa"])
 
     def test_an_index_over_missing_components_is_not_the_index(self) -> None:
         r = row("Opus 5 (max)", {"swe-atlas-qna": 0.621}, index=0.2)
         r["evalCount"] = 1
-        self.assertEqual([e["key"] for e in scores([r])], ["swe_atlas_qna"])
+        self.assertEqual([e["key"] for e in scores([r])], ["swe_atlas_qna_aa"])
 
     def test_a_row_without_a_reward_is_dropped(self) -> None:
         entries = scores([

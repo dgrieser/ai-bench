@@ -256,9 +256,10 @@ AGENTS_LAST_EXAM_KEY_URLS = {
     revision_key("agents_last_exam", label): canonical(fetch_agents_last_exam.board_url(label))
     for label in ("1.0", "1.1")
 }
+# One page per column: v1.0's legacy track boards, and the v1.1 page that
+# carries every track and Overall. Both sit under labs.scale.com/leaderboard/.
 SWE_ATLAS_KEY_URLS = {
-    key: canonical(fetch_swe_atlas.BASE_URL.format(track=track))
-    for track, key in fetch_swe_atlas.TRACKS.items()
+    key: canonical(url) for key, url in fetch_swe_atlas.COLUMN_URLS.items()
 }
 EVALS_REPORT_KEY_URLS = {
     key: canonical(fetch_evals_report.BASE_URL.format(slug=slug))

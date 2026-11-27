@@ -251,8 +251,13 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
     ]
     for slug, key in fetch_evals_report.BENCHMARKS.items():
         items.append((fetch_evals_report.BASE_URL.format(slug=slug), (key,)))
-    for track, key in fetch_swe_atlas.TRACKS.items():
-        items.append((fetch_swe_atlas.BASE_URL.format(track=track), (key,)))
+    # SWE Atlas: v1.0's legacy board per track, and the v1.1 page for the
+    # rest (every track and Overall on one page).
+    swe_atlas_pages: dict[str, list[str]] = {}
+    for key, url in fetch_swe_atlas.COLUMN_URLS.items():
+        swe_atlas_pages.setdefault(url, []).append(key)
+    for url, keys in swe_atlas_pages.items():
+        items.append((url, tuple(keys)))
     for slug, key in fetch_vals.BENCHMARKS.items():
         items.append((fetch_vals.benchmark_url(slug), (key,)))
     return items
