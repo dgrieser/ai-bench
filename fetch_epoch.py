@@ -329,10 +329,16 @@ def load_models(archive: zipfile.ZipFile) -> dict[str, dict[str, object]]:
 
 _TITLE_RE = re.compile(r'<meta[^>]+property="og:title"[^>]+content="([^"]*)"', re.IGNORECASE)
 _TITLE_TAG_RE = re.compile(r"<title>([^<]*)</title>", re.IGNORECASE)
-_TITLE_REVISION_RE = re.compile(r"\bv(\d+(?:\.\d+)*)\b", re.IGNORECASE)
-# The one wording a bare-titled page names its revision in, FrontierCode's
-# "using only the current 1.1 revision".
-_TEXT_REVISION_RE = re.compile(r"\bcurrent\s+v?(\d+(?:\.\d+)+)\s+revision\b", re.IGNORECASE)
+# "v2", "v1.1", or a bare dotted number ("FrontierCode 1.1", since 2026-11
+# when Epoch dropped the "v"). A bare integer is never a revision: it is a
+# year or a count.
+_TITLE_REVISION_RE = re.compile(r"\bv(\d+(?:\.\d+)*)\b|(?<![\d.])(\d+\.\d+)(?![\d.])", re.IGNORECASE)
+# The wordings a bare-titled page names its revision in, FrontierCode's
+# "using only the current 1.1 revision" and, since 2026-11, "using only the
+# 1.1 revision".
+_TEXT_REVISION_RE = re.compile(
+    r"\b(?:current|only\s+the)\s+v?(\d+(?:\.\d+)+)\s+revision\b", re.IGNORECASE
+)
 _TAG_RE = re.compile(r"<[^>]+>")
 
 
@@ -347,7 +353,7 @@ def page_revision(page_html: str) -> str | None:
     if match:
         found = _TITLE_REVISION_RE.search(html.unescape(match.group(1)))
         if found:
-            return found.group(1)
+            return found.group(1) or found.group(2)
     text = re.sub(r"\s+", " ", html.unescape(_TAG_RE.sub(" ", page_html)))
     found = _TEXT_REVISION_RE.search(text)
     return found.group(1) if found else None
