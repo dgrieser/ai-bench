@@ -7,26 +7,40 @@ HTML and there is no JSON endpoint. The data ships inside the hashed
 /assets/*.js bundle, so this script resolves the bundle from the page's
 <script src> and reads it directly.
 
-**The site publishes two boards and they are not comparable.** It ships a
-"v1.0 Archive" beside a "v1.1 Current": 1.1 updated all 20 long-horizon tasks
-with tighter verification and closed-internet execution, and the site states
-outright that no v1.0 score is reused for the updated tasks. Its leader sits 21
-points above the archive's. llm.json therefore gives each revision its own
-column (``swe_marathon_1_0``, ``swe_marathon_1_1``); see _revisions.py. Every
-row here names the ``revision`` it belongs to, and --revision pins one.
+**The site publishes three boards and they are not comparable.** It ships a
+"v1.2 Current" beside two archives, "v1.1" and "v1.0". 1.1 updated all 20
+long-horizon tasks with tighter verification and closed-internet execution, and
+the site states outright that no v1.0 score is reused for the updated tasks.
+1.2 hardened them again -- pass bars raised to sit near the oracle (parameter-
+golf's val_bpb cap 0.983 -> 0.840, trimul-cuda's latency bar 10,400 -> 7,600
+us), slack-clone and stripe-clone swapped for mattermost-clone and one task the
+site holds out -- and scores a model as the mean of its per-task pass rates
+rather than over pooled trials. llm.json therefore gives each revision its own
+column (``swe_marathon_1_0``, ``swe_marathon_1_1``, ``swe_marathon_1_2``); see
+_revisions.py. Every row here names the ``revision`` it belongs to, and
+--revision pins one.
 
-The two boards are stored differently, which is why reading only the obvious
-one was the bug this replaces:
+The three boards are stored three different ways, and each is read as stored:
 
-  * **the archive** is a plain object-literal array carrying ``pass1``, parsed
-    as a JS literal (the minifier emits backtick strings, bare keys and
-    ``!0``/``!1`` booleans, so json.loads cannot be used);
-  * **the current board is never stored as a leaderboard at all** -- the bundle
-    ships the per-task trial log (``{version:"v1.1",tasks:JSON.parse("...")}``,
-    a real JSON blob) and the page aggregates it in the browser. A literal
-    scan finds only the archive, so this script reproduces the aggregation:
-    pass@1 is the share of a configuration's trials whose reward is a full 1,
-    which is the site's own definition, grouped over every task.
+  * **v1.0** is a plain object-literal array carrying ``pass1``, parsed as a JS
+    literal (the minifier emits backtick strings, bare keys and ``!0``/``!1``
+    booleans, so json.loads cannot be used);
+  * **v1.1 is never stored as a leaderboard at all** -- the bundle ships the
+    per-task trial log (``{version:"v1.1",tasks:JSON.parse("...")}``, a real
+    JSON blob) and the page aggregates it in the browser. This script
+    reproduces the aggregation: pass@1 is the share of a configuration's
+    trials whose reward is a full 1, which is the site's own definition for
+    that board, grouped over every task;
+  * **v1.2 ships its leaderboard ready-made** (``{version:"v1.2",...,
+    leaderboard:[{...pass1:82.5...}],tasks:JSON.parse(...)}``). Its trial log
+    covers only the 19 tasks the site shows, not the held-out 20th, so it
+    cannot reproduce the published number; the published ``pass1`` is read
+    instead. A revision with a published leaderboard never falls back to its
+    trial log.
+
+Which revision is current is read from the bundle, not pinned: the old
+``label:"v1.0 Archive"`` literals, the per-version ``status:"archive"`` /
+``"current"`` entries, or the badge ternary (``e==="v1.2"?"Current":"Archive"``).
 
 Each row is one (model, scaffold, reasoning effort) configuration -- the same
 model appears more than once when it was run under several harnesses (e.g. Kimi
@@ -40,7 +54,8 @@ That filter is a hardcoded model list inside the minified bundle, so it is not
 reproduced here; every configuration is reported instead and the ingest's
 best-run rule picks between them, the same way the other multi-configuration
 sources in this repo are read. The two agree: taking the best configuration
-reproduces the published number for every model on the current board.
+reproduces the published number for every model on the v1.1 board. The v1.2
+board is published one row per model already.
 
 The Oracle (held-out solution) and NOP (no actions) rows are reference bounds,
 not models, and are dropped unless --include-reference is passed.
@@ -67,16 +82,32 @@ HEADERS = {
     )
 }
 
-# Field that identifies the archived leaderboard array inside the bundle.
+# Field that identifies a leaderboard array inside the bundle.
 _MARKER = "pass1:"
 _SCRIPT_SRC_RE = re.compile(r'<script[^>]+src="([^"]+\.js)"')
-# The site's own name for each board it publishes: "v1.0 Archive",
-# "v1.1 Current". Which revision is archived and which is current is read from
-# these rather than pinned, so a 1.2 release relabels itself here.
+# The site's own name for each board it publishes. Which revision is archived
+# and which is current is read from the bundle rather than pinned. It has been
+# spelled three ways:
+#   * a label literal per board: label:`v1.0 Archive` (up to 1.1);
+#   * a status per version entry, keyed by the version or by a variable holding
+#     it: {version:vt,status:`archive`,...};
+#   * the badge ternary: e===`v1.2`?`Current`:`Archive` (1.2).
 _BOARD_LABEL_RE = re.compile(r"label:`(v[\d.]+)\s+(Archive|Current)`")
-# The per-task trial log the current board is aggregated from, with the
-# revision it belongs to: {version:`v1.1`,tasks:JSON.parse(`{...}`)}.
+_VERSION_VAR_RE = re.compile(r"(?<![\w$.])([A-Za-z_$][\w$]*)=`(v\d+(?:\.\d+)*)`")
+_BOARD_STATUS_RE = re.compile(
+    r"\{version:(`v[\d.]+`|[A-Za-z_$][\w$]*),status:`(archive|current)`"
+)
+_CURRENT_TERNARY_RE = re.compile(r"===`(v[\d.]+)`\?`Current`:`Archive`")
+# The per-task trial log a board is aggregated from, with the revision it
+# belongs to: {version:`v1.1`,tasks:JSON.parse(`{...}`)}.
 _TRIALS_RE = re.compile(r"version:`(v[\d.]+)`,tasks:JSON\.parse\(`")
+# A board shipped as a ready leaderboard, behind a few scalar fields:
+# {version:`v1.2`,collection:`ff200b68`,scoredTasks:20,...,leaderboard:[...
+_PUBLISHED_RE = re.compile(
+    r"\{version:`(v[\d.]+)`,"
+    r"(?:[A-Za-z_$][\w$]*:(?:`[^`$]*`|-?[\d.]+|!0|!1|null),)*"
+    r"leaderboard:(?=\[)"
+)
 
 # --revision value that reports every revision instead of pinning one.
 ALL_REVISIONS = "all"
@@ -226,47 +257,75 @@ def _parse_value(text: str, i: int) -> tuple[object, int]:
     raise ParseError(f"unsupported token at {i}: {text[i : i + 24]!r}")
 
 
-def extract_rows(bundle: str) -> list[dict]:
-    """Parse the leaderboard array (the one carrying ``pass1``) out of a bundle.
+def extract_rows(bundle: str, skip: frozenset[int] = frozenset()) -> list[dict]:
+    """Parse the first stored leaderboard literal (rows carrying ``pass1``).
 
-    Walks back from the marker to each preceding '[' and returns the first
-    candidate that parses as an array of row objects, so an extra wrapping
-    array or a reordered minification does not break extraction.
+    For each ``pass1`` marker, walks back to each preceding '[' and takes the
+    first candidate that parses as an array of named row objects, so an extra
+    wrapping array or a reordered minification does not break extraction.
+    Arrays starting at an offset in ``skip`` are boards already read another
+    way (a published leaderboard) and are passed over; so are arrays of task
+    rows, which carry ``pass1`` too but no model ``name``.
     """
-    marker = bundle.find(_MARKER)
-    if marker == -1:
+    if _MARKER not in bundle:
         raise ParseError(f"{_MARKER!r} not found in bundle")
 
-    search_from = marker
-    for _ in range(10):
-        start = bundle.rfind("[", 0, search_from)
-        if start == -1:
-            break
-        try:
-            value, _end = _parse_value(bundle, start)
-        except (ParseError, IndexError):
+    marker = bundle.find(_MARKER)
+    while marker != -1:
+        search_from = marker
+        next_from = marker + len(_MARKER)
+        for _ in range(10):
+            start = bundle.rfind("[", 0, search_from)
+            if start == -1:
+                break
+            try:
+                value, end = _parse_value(bundle, start)
+            except (ParseError, IndexError):
+                search_from = start
+                continue
+            if isinstance(value, list):
+                rows = [r for r in value if isinstance(r, dict) and "pass1" in r]
+                if rows:
+                    if start not in skip and any("name" in r for r in rows):
+                        return rows
+                    # Not this one: carry on past the whole array.
+                    next_from = max(next_from, end)
+                    break
             search_from = start
-            continue
-        if isinstance(value, list):
-            rows = [r for r in value if isinstance(r, dict) and "pass1" in r]
-            if rows:
-                return rows
-        search_from = start
+        marker = bundle.find(_MARKER, next_from)
 
     raise ParseError("could not parse a leaderboard array around the pass1 marker")
 
 
-def board_revisions(bundle: str) -> dict[str, str]:
-    """{"archive": label, "current": label} from the names the site gives its boards.
+def _version_names(bundle: str) -> dict[str, str]:
+    """{variable: label} for every minified constant holding a version string."""
+    return {name: revision_label(v) for name, v in _VERSION_VAR_RE.findall(bundle)}
 
-    Empty when the bundle names neither, which is the signal to stop rather
-    than guess: a row whose revision is unknown must not land in a revision's
-    column.
+
+def board_revisions(bundle: str) -> dict[str, str]:
+    """{revision label: "archive" | "current"} from the names the site gives its boards.
+
+    Empty when the bundle names none, which is the signal to stop rather than
+    guess: a row whose revision is unknown must not land in a revision's
+    column. The per-version status entries are trusted first; the badge ternary
+    only says which one is current, and makes every other version the bundle
+    names an archive.
     """
-    found = {
-        role.lower(): revision_label(version)
+    found: dict[str, str] = {
+        revision_label(version): role.lower()
         for version, role in _BOARD_LABEL_RE.findall(bundle)
     }
+    names = _version_names(bundle)
+    for ref, status in _BOARD_STATUS_RE.findall(bundle):
+        label = revision_label(ref.strip("`")) if ref.startswith("`") else names.get(ref)
+        if label is not None:
+            found.setdefault(label, status)
+    current = {revision_label(v) for v in _CURRENT_TERNARY_RE.findall(bundle)}
+    if len(current) == 1 and "current" not in found.values():
+        (label,) = current
+        found[label] = "current"
+        for other in set(names.values()) - {label}:
+            found.setdefault(other, "archive")
     return found
 
 
@@ -373,22 +432,25 @@ def leaderboard_from_trials(tasks: dict) -> list[dict]:
     return rows
 
 
-def archive_rows(bundle: str) -> list[dict]:
-    """The archived board, as stored: one object-literal row per (model, scaffold)."""
+def _literal_rows(stored: list) -> list[dict]:
+    """Stored leaderboard rows (archive literal or published board) as score rows."""
     rows: list[dict] = []
-    for row in extract_rows(bundle):
+    for row in stored:
+        if not isinstance(row, dict):
+            continue
         name = row.get("name")
         pass1 = row.get("pass1")
         if not isinstance(name, str) or not name:
             continue
         if isinstance(pass1, bool) or not isinstance(pass1, (int, float)):
             continue
+        effort = row.get("reasoningEffort")
         rows.append(
             {
                 "model": name,
                 "scaffold": row.get("scaffold"),
-                "effort": None,
-                "display_label": None,
+                "effort": effort if isinstance(effort, str) and effort else None,
+                "display_label": row.get("displayLabel"),
                 "score": round(float(pass1), 2),
                 "partial_avg": row.get("partialAvg"),
                 "cost_avg": row.get("costAvg"),
@@ -403,6 +465,34 @@ def archive_rows(bundle: str) -> list[dict]:
     return rows
 
 
+def archive_rows(bundle: str, skip: frozenset[int] = frozenset()) -> list[dict]:
+    """The archived board, as stored: one object-literal row per (model, scaffold)."""
+    return _literal_rows(extract_rows(bundle, skip))
+
+
+def published_leaderboards(bundle: str) -> list[tuple[str, int, list[dict]]]:
+    """(revision label, array offset, rows) for every board shipped ready-made.
+
+    v1.2 ships its leaderboard as computed by the site, beside a trial log that
+    covers only the tasks it shows; the published ``pass1`` is the board's
+    number and is read as is. The offset lets the archive-literal scan pass
+    over these arrays.
+    """
+    boards: list[tuple[str, int, list[dict]]] = []
+    for match in _PUBLISHED_RE.finditer(bundle):
+        start = match.end()
+        try:
+            value, _end = _parse_value(bundle, start)
+        except (ParseError, IndexError) as exc:
+            raise ParseError(
+                f"published leaderboard for {match.group(1)} does not parse: {exc}"
+            ) from exc
+        if not isinstance(value, list):
+            continue
+        boards.append((revision_label(match.group(1)), start, _literal_rows(value)))
+    return boards
+
+
 def get_scores(
     include_reference: bool = False, revision: str = DEFAULT_REVISION
 ) -> list[dict]:
@@ -411,7 +501,7 @@ def get_scores(
     Keys: model, revision, scaffold, effort, score (pass@1 %), partial_avg,
     cost_avg, tok_avg, trials, incomplete, reference, id, site_rank, rank.
 
-    revision="all" (the default) reports both published boards; any other value
+    revision="all" (the default) reports every published board; any other value
     pins one by label ("1.0"). Rows are ranked within their own revision, since
     ranking across revisions would compare two different task sets.
     """
@@ -433,23 +523,38 @@ def get_scores(
     if not boards:
         raise ParseError("bundle names no Archive/Current board revisions")
 
+    # Each board is read the way it is stored, best source first: a published
+    # leaderboard is the site's own number; a trial log is aggregated the way
+    # the page does; the bare literal is whichever archived board has neither.
+    # A revision is filled from one source only, never two added together.
     by_revision: dict[str, list[dict]] = {}
+    published_starts: set[int] = set()
+    for label, start, rows in published_leaderboards(bundle):
+        published_starts.add(start)
+        by_revision.setdefault(label, []).extend(rows)
+
+    published = set(by_revision)
     for label, tasks in extract_trial_logs(bundle):
+        if label in published:
+            print(f"  note: revision {label} publishes its leaderboard; its trial log is ignored",
+                  file=sys.stderr)
+            continue
         by_revision.setdefault(label, []).extend(leaderboard_from_trials(tasks))
 
-    # Whatever the site archived is the board still stored as a literal; the
-    # current one is rebuilt from its trial log above. Should the archive ever
-    # ship a trial log of its own, the log wins and the literal is left alone
-    # rather than counted twice.
-    archived = boards.get("archive")
-    if archived is None:
+    archived = [label for label, role in boards.items() if role == "archive"]
+    unread = [label for label in archived if label not in by_revision]
+    if not archived:
         print("  warning: bundle names no archived board; the stored literal is skipped",
               file=sys.stderr)
-    elif archived in by_revision:
-        print(f"  note: revision {archived} ships a trial log; stored literal ignored",
+    elif not unread:
+        print("  note: every archived revision ships a log or board; stored literal ignored",
+              file=sys.stderr)
+    elif len(unread) > 1:
+        print(f"  warning: archived revisions {', '.join(sorted(unread))} have no data "
+              "of their own and the stored literal names none of them; skipped",
               file=sys.stderr)
     else:
-        by_revision[archived] = archive_rows(bundle)
+        by_revision[unread[0]] = archive_rows(bundle, frozenset(published_starts))
 
     if revision != ALL_REVISIONS:
         wanted = revision_label(revision)
@@ -473,7 +578,7 @@ def get_scores(
         kept.sort(key=lambda r: -r["score"])
         for i, r in enumerate(kept, 1):
             r["rank"] = i
-        role = next((name for name, value in boards.items() if value == label), "?")
+        role = boards.get(label, "?")
         print(
             f"  revision {label} ({role}): {len(kept)} row(s)"
             + (f", {dropped} reference row(s) dropped" if dropped else ""),

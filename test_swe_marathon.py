@@ -74,9 +74,73 @@ def scores(bundle_text: str | None = None, **kwargs) -> list[dict]:
         return sm.get_scores(**kwargs)
 
 
+# The 1.2 shape (2026-11): the "vX Archive" label literals are gone. Versions
+# are minified constants, the badge is a ternary on the current one, and 1.2
+# ships its leaderboard ready-made beside a trial log of the tasks it shows.
+# 1.1 stays a trial log and 1.0 the archive literal.
+V12_TRIAL_LOG = {
+    # Only the shown tasks: aggregating this would give GPT-7 100%, not the
+    # published 82.5, which is how a test can tell which source was read.
+    "task-a": {"task": "task-a", "configs": [
+        config("GPT-7", "Codex", [1.0, 1.0], effort="max"),
+    ]},
+}
+V12_OBJECT = (
+    "var ct={version:`v1.2`,collection:`ff200b68`,scoredTasks:20,sampleTasks:19,"
+    "nTrials:2022,leaderboard:["
+    "{id:`gpt-7-codex-max`,name:`GPT-7`,displayLabel:`GPT-7 (max)`,"
+    "reasoningEffort:`max`,modelVariant:`openai/gpt-7@max`,scaffold:`Codex`,"
+    "pass1:82.5,tokAvg:19.232,nTasks:20,nLoggedTrials:153,minTrialsPerTask:2,"
+    "pass1Label:`82.5`},"
+    "{id:`kimi-k3-cc-max`,name:`Kimi K3`,displayLabel:`Kimi K3 (max)`,"
+    "reasoningEffort:`max`,scaffold:`Claude Code`,pass1:58.21428571428571,"
+    "tokAvg:29.665,nTasks:20,nLoggedTrials:157,pass1Label:`58.2`}],"
+    "tasks:JSON.parse(`%s`)};" % json.dumps(V12_TRIAL_LOG)
+)
+V12_NAMES = (
+    "mt=new Set([`Claude Opus 4.8`]),ht=e=>mt.has(e.model),gt=`v1.2`,_t=`v1.1`,"
+    "vt=`v1.0`,yt=gt,bt=[gt,_t,vt],xt=e=>bt.includes(e)&&e!==`v1.2`,"
+    "St=e=>`${e} ${e===`v1.2`?`Current`:`Archive`}`;"
+)
+V12_STATUS = (
+    "Xt={[vt]:{version:vt,status:`archive`,resultsPending:!1,leaderboard:ze},"
+    "[_t]:{version:_t,status:`archive`,resultsPending:!1,leaderboard:Bt},"
+    "[gt]:{version:gt,status:`current`,resultsPending:!1,leaderboard:Jt}};"
+)
+
+
+def bundle_v12(status: bool = True, published_first: bool = False) -> str:
+    parts = [
+        ARCHIVE_ARRAY,
+        "var ot={version:`v1.1`,tasks:JSON.parse(`%s`)};" % json.dumps(TRIAL_LOG),
+        V12_OBJECT,
+        V12_NAMES,
+    ]
+    if published_first:
+        # The archive-literal scan must not mistake 1.2's board for 1.0's.
+        parts.insert(0, parts.pop(2))
+    if status:
+        parts.append(V12_STATUS)
+    return "".join(parts)
+
+
 class TestBoardRevisions(unittest.TestCase):
     def test_the_site_names_which_board_is_archived(self) -> None:
-        self.assertEqual(sm.board_revisions(bundle()), {"archive": "1.0", "current": "1.1"})
+        self.assertEqual(sm.board_revisions(bundle()), {"1.0": "archive", "1.1": "current"})
+
+    def test_the_12_shape_names_every_board_through_its_status(self) -> None:
+        self.assertEqual(
+            sm.board_revisions(bundle_v12()),
+            {"1.0": "archive", "1.1": "archive", "1.2": "current"},
+        )
+
+    def test_the_badge_ternary_alone_is_enough(self) -> None:
+        """Without the status entries the badge still says which is current,
+        and every other version the bundle names is an archive."""
+        self.assertEqual(
+            sm.board_revisions(bundle_v12(status=False)),
+            {"1.0": "archive", "1.1": "archive", "1.2": "current"},
+        )
 
     def test_a_bundle_naming_no_boards_yields_nothing(self) -> None:
         self.assertEqual(sm.board_revisions("var x=1;"), {})
@@ -196,6 +260,62 @@ class TestGetScores(unittest.TestCase):
         rows = scores(bundle(trial_log=TRIAL_LOG, version="v1.0"))
         archive = [r for r in rows if r["revision"] == "1.0"]
         self.assertEqual({r["model"] for r in archive}, {"Kimi K3", "GLM 5.3"})
+
+
+class TestVersion12Shape(unittest.TestCase):
+    """The bundle as it stands since 1.2: three boards, three storage shapes."""
+
+    def by_revision(self, text: str | None = None) -> dict[str, dict[tuple, float]]:
+        out: dict[str, dict[tuple, float]] = {}
+        for r in scores(bundle_v12() if text is None else text):
+            out.setdefault(r["revision"], {})[(r["model"], r["effort"])] = r["score"]
+        return out
+
+    def test_all_three_boards_are_read(self) -> None:
+        self.assertEqual(set(self.by_revision()), {"1.0", "1.1", "1.2"})
+
+    def test_the_published_12_leaderboard_is_read_as_published(self) -> None:
+        """Not re-aggregated from its trial log, which lacks the held-out task."""
+        self.assertEqual(self.by_revision()["1.2"], {
+            ("GPT-7", "max"): 82.5,
+            ("Kimi K3", "max"): 58.21,
+        })
+
+    def test_11_is_still_aggregated_from_its_trial_log(self) -> None:
+        self.assertEqual(self.by_revision()["1.1"][("Kimi K3", "max")], 75.0)
+
+    def test_10_is_still_the_archive_literal(self) -> None:
+        self.assertEqual(self.by_revision()["1.0"], {
+            ("Grok 4.5", None): 29.0, ("GLM 5.2", None): 13.0,
+        })
+
+    def test_the_archive_literal_is_not_confused_with_the_published_board(self) -> None:
+        self.assertEqual(
+            self.by_revision(bundle_v12(published_first=True))["1.0"],
+            {("Grok 4.5", None): 29.0, ("GLM 5.2", None): 13.0},
+        )
+
+    def test_12_rows_carry_their_effort_and_label(self) -> None:
+        row = next(r for r in scores(bundle_v12()) if r["revision"] == "1.2" and r["rank"] == 1)
+        self.assertEqual(
+            (row["model"], row["scaffold"], row["effort"], row["display_label"], row["trials"]),
+            ("GPT-7", "Codex", "max", "GPT-7 (max)", 153),
+        )
+
+    def test_pinning_12(self) -> None:
+        self.assertEqual({r["revision"] for r in scores(bundle_v12(), revision="1.2")}, {"1.2"})
+
+    def test_published_leaderboards_reports_its_offset(self) -> None:
+        text = bundle_v12()
+        ((label, start, rows),) = sm.published_leaderboards(text)
+        self.assertEqual(label, "1.2")
+        self.assertEqual(text[start], "[")
+        self.assertEqual(len(rows), 2)
+
+    def test_two_archives_without_data_of_their_own_skip_the_literal(self) -> None:
+        """A literal that could belong to either archive is not guessed at."""
+        text = ARCHIVE_ARRAY + V12_OBJECT + V12_NAMES + V12_STATUS
+        self.assertEqual({r["revision"] for r in scores(text)}, {"1.2"})
 
 
 if __name__ == "__main__":

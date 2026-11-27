@@ -3221,8 +3221,8 @@ def fetch_swe_marathon_data(
 ) -> dict[str, dict[str, dict[str, Any]]]:
     """SWE-Marathon pass@1, one column per published board.
 
-    The site ships a v1.0 archive beside the current v1.1 board and the two are
-    not comparable, so each fills its own column. Within a board the rows are
+    The site ships the current v1.2 board beside the v1.1 and v1.0 archives and
+    none of them are comparable, so each fills its own column. Within a board the rows are
     one per (model, scaffold, reasoning effort) and the score is
     configuration-dependent, so the model's best result on that board is what
     lands -- the same "best reported run wins" rule the evals.report ingest

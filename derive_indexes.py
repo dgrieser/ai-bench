@@ -245,7 +245,13 @@ INDEXES: list[IndexDef] = [
             # since the second pass the same day: level with Vibe Code Bench,
             # under the large frontier boards, which is what 20 tasks with a
             # one-task gap between neighbours warrant.
-            ("swe_marathon_1_1", 0.5),
+            #
+            # 1.2 since 2026-11-27, taking 1.1's 0.5: the site made it the
+            # current board and archived 1.1. It scores 13 tracked models
+            # against 1.1's 25, with no REVISION_FALLBACKS entry (see there),
+            # so the 1.1-only models lose their SWE-Marathon evidence; none of
+            # them drops below the evidence bar for it.
+            ("swe_marathon_1_2", 0.5),
             # Terminal-Bench is the one family aggregated twice over. 4.0 is
             # the current release; 2.1 stays in because it is not a superseded
             # revision in the sense above -- it is a separate series -- but
@@ -911,6 +917,13 @@ REVISION_FALLBACKS: dict[str, str] = {
     # not a revision's drift, and would rank a model on the shape of a field it
     # was never measured against. A model on 1.0 alone simply supports no
     # comparison on this benchmark.
+    # SWE-Marathon 1.2 has none either. It is not 1.1's task set re-verified:
+    # every task is a hardened variant (pass bars raised near the oracle),
+    # slack-clone and stripe-clone gave way to mattermost-clone and a held-out
+    # task, and the score became a mean of per-task pass rates instead of a
+    # share of pooled trials. The 9 models on both boards rank -0.35 Spearman
+    # between them and their ratios run from x0.57 to x1.58, so a fitted
+    # factor would be a scale invented from noise.
 }
 
 # How many models must carry both revisions before their overlap is trusted

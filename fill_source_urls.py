@@ -193,7 +193,7 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
             fetch_frontiercode.LEADERBOARD_URL,
             ("frontiercode_1_0", "frontiercode_1_1", "frontiercode_extended_1_1"),
         ),
-        (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
+        (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1", "swe_marathon_1_2")),
         (fetch_real_swe.URL, ("real_swe_1_1", "real_swe_1_0")),
         (fetch_programbench.LEADERBOARD_URL, ("programbench_almost",)),
         (fetch_kernelbench.LEADERBOARD_URL, ("kernelbench_hard",)),
