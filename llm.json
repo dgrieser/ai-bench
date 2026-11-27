@@ -129069,13 +129069,13 @@
     {
       "name": "ernie-5-5-flash-preview",
       "date_added": "2026-11-11",
-      "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
-      "params": "280B-A40B",
+      "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
+      "params": "280B-A14B",
       "context": "1m",
       "vram": {
-        "fp16": 624,
-        "int8": 312,
-        "int4": 156
+        "fp16": 653,
+        "int8": 327,
+        "int4": 163
       },
       "creator": {
         "name": "Baidu",
@@ -129105,7 +129105,7 @@
         "aa_economics_index": 37.3,
         "real_swe_1_1": null,
         "real_swe_1_0": null,
-        "deepswe_1_1": null,
+        "deepswe_1_1": 71.2,
         "deepswe_1_0": null,
         "frontiercode_2_0": 22.6,
         "frontiercode_extended_1_1": null,
@@ -129113,7 +129113,7 @@
         "frontiercode_1_0": null,
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
-        "programbench_almost": null,
+        "programbench_almost": 29.5,
         "kernelbench_hard": null,
         "nl2repo": 64.8,
         "vibe_code_bench_1_1": null,
@@ -129129,7 +129129,7 @@
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
-        "livecodebench": 40.1,
+        "livecodebench": null,
         "scicode": null,
         "terminal_bench_4_0": 30.3,
         "terminal_bench_3_0": null,
@@ -129137,7 +129137,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": 13.3,
-        "toolathlon": null,
+        "toolathlon": 75,
         "mcp_atlas": 84.6,
         "claw_eval": null,
         "automation_bench_aa": 70.6,
@@ -129177,7 +129177,7 @@
         "aa_omniscience_accuracy_1_1": 34,
         "aa_omniscience_accuracy_1_0": null,
         "simpleqa_verified": null,
-        "aa_lcr": null,
+        "aa_lcr": 79,
         "critpt": null,
         "critpt_2_0": null,
         "critpt_hard_2_0": 30.5,
@@ -129228,7 +129228,7 @@
         "aa_economics_index": "2026-11-27",
         "real_swe_1_1": null,
         "real_swe_1_0": null,
-        "deepswe_1_1": null,
+        "deepswe_1_1": "2026-11-27",
         "deepswe_1_0": null,
         "frontiercode_2_0": "2026-11-27",
         "frontiercode_extended_1_1": null,
@@ -129236,7 +129236,7 @@
         "frontiercode_1_0": null,
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
-        "programbench_almost": null,
+        "programbench_almost": "2026-11-27",
         "kernelbench_hard": null,
         "nl2repo": "2026-11-12",
         "vibe_code_bench_1_1": null,
@@ -129252,7 +129252,6 @@
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
-        "livecodebench": "2026-11-11",
         "scicode": null,
         "terminal_bench_4_0": "2026-11-27",
         "terminal_bench_3_0": null,
@@ -129260,7 +129259,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": "2026-11-27",
-        "toolathlon": null,
+        "toolathlon": "2026-11-27",
         "mcp_atlas": "2026-11-12",
         "claw_eval": null,
         "automation_bench_aa": "2026-11-27",
@@ -129300,7 +129299,7 @@
         "aa_omniscience_accuracy_1_1": "2026-11-27",
         "aa_omniscience_accuracy_1_0": null,
         "simpleqa_verified": null,
-        "aa_lcr": null,
+        "aa_lcr": "2026-11-27",
         "critpt": null,
         "critpt_2_0": null,
         "critpt_hard_2_0": "2026-11-27",
@@ -129351,7 +129350,7 @@
         "aa_economics_index": "https://artificialanalysis.ai/models/ernie-5-5-flash",
         "real_swe_1_1": null,
         "real_swe_1_0": null,
-        "deepswe_1_1": null,
+        "deepswe_1_1": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
         "deepswe_1_0": null,
         "frontiercode_2_0": "https://artificialanalysis.ai/models/ernie-5-5-flash",
         "frontiercode_extended_1_1": null,
@@ -129359,7 +129358,7 @@
         "frontiercode_1_0": null,
         "frontierswe_2_0": null,
         "frontierswe_1_0": null,
-        "programbench_almost": null,
+        "programbench_almost": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
         "kernelbench_hard": null,
         "nl2repo": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "vibe_code_bench_1_1": null,
@@ -129375,7 +129374,6 @@
         "swe_bench_verified": null,
         "swe_bench_multimodal": null,
         "swe_bench_multilingual": null,
-        "livecodebench": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
         "scicode": null,
         "terminal_bench_4_0": "https://artificialanalysis.ai/models/ernie-5-5-flash",
         "terminal_bench_3_0": null,
@@ -129383,7 +129381,7 @@
         "terminal_bench_2_0": null,
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "toolathlon": null,
+        "toolathlon": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
         "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
         "claw_eval": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/ernie-5-5-flash",
@@ -129423,7 +129421,7 @@
         "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/ernie-5-5-flash",
         "aa_omniscience_accuracy_1_0": null,
         "simpleqa_verified": null,
-        "aa_lcr": null,
+        "aa_lcr": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
         "critpt": null,
         "critpt_2_0": null,
         "critpt_hard_2_0": "https://artificialanalysis.ai/models/ernie-5-5-flash",
@@ -129505,13 +129503,6 @@
             "date": "2026-11-12",
             "score": 64.8,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
-          }
-        ],
-        "livecodebench": [
-          {
-            "date": "2026-11-11",
-            "score": 40.1,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base"
           }
         ],
         "terminal_bench_4_0": [
@@ -129611,12 +129602,40 @@
             "score": 46.4,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
           }
+        ],
+        "deepswe_1_1": [
+          {
+            "date": "2026-11-27",
+            "score": 71.2,
+            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
+          }
+        ],
+        "programbench_almost": [
+          {
+            "date": "2026-11-27",
+            "score": 29.5,
+            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
+          }
+        ],
+        "toolathlon": [
+          {
+            "date": "2026-11-27",
+            "score": 75,
+            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
+          }
+        ],
+        "aa_lcr": [
+          {
+            "date": "2026-11-27",
+            "score": 79,
+            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
+          }
         ]
       },
       "vram_source": {
-        "fp16": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/",
-        "int8": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/",
-        "int4": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Base/"
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/"
       },
       "aa_variant": {
         "slug": "ernie-5-5-flash",
@@ -137142,650 +137161,6 @@
             "source": "https://microsoft.ai/pdf/MAI-Code-2-And-MAI-Code-2-Flash-Model-Card.pdf?v=2"
           }
         ]
-      }
-    },
-    {
-      "name": "ernie-5-5-flash",
-      "date_added": "2026-11-27",
-      "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-      "params": "280B-A14B",
-      "context": "1m",
-      "vram": {
-        "fp16": 653,
-        "int8": 327,
-        "int4": 163
-      },
-      "creator": {
-        "name": "Baidu",
-        "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
-      },
-      "scores": {
-        "openbench_index": 74883,
-        "coding_index": 69527,
-        "tooling_index": 84688,
-        "knowledge_index": 82213,
-        "vision_index": null,
-        "trust_index": 65145,
-        "security_index": null,
-        "aa_intelligence_index_5_0": 31.3,
-        "aa_intelligence_index_4_3": null,
-        "aa_intelligence_index_4_2": null,
-        "aa_intelligence_index_4_1": null,
-        "aa_intelligence_index_4_0": null,
-        "aa_coding_agent_index_2_1": null,
-        "aa_coding_index_4_1": null,
-        "aa_coding_index_4_0": null,
-        "aa_cyber_index": null,
-        "aa_engineering_index": 35.8,
-        "aa_strategy_ops_index": 49.5,
-        "aa_healthcare_index": null,
-        "aa_legal_index": 37.8,
-        "aa_finance_index": 43.3,
-        "aa_economics_index": 37.3,
-        "real_swe_1_1": null,
-        "real_swe_1_0": null,
-        "deepswe_1_1": 71.2,
-        "deepswe_1_0": null,
-        "frontiercode_2_0": 22.6,
-        "frontiercode_extended_1_1": null,
-        "frontiercode_1_1": null,
-        "frontiercode_1_0": null,
-        "frontierswe_2_0": null,
-        "frontierswe_1_0": null,
-        "programbench_almost": 29.5,
-        "kernelbench_hard": null,
-        "nl2repo": 64.8,
-        "vibe_code_bench_1_1": null,
-        "ale_bench": null,
-        "swe_bench_pro_hard_2_0": null,
-        "swe_bench_pro_2_0": null,
-        "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
-        "swe_atlas_rf": null,
-        "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
-        "swe_bench_verified": null,
-        "swe_bench_multimodal": null,
-        "swe_bench_multilingual": null,
-        "livecodebench": null,
-        "scicode": null,
-        "terminal_bench_4_1": null,
-        "terminal_bench_4_0": 30.3,
-        "terminal_bench_3_0": null,
-        "terminal_bench_2_1": null,
-        "terminal_bench_2_0": null,
-        "terminal_bench_hard": null,
-        "terminal_bench_science_0_1": 13.3,
-        "toolathlon": 75,
-        "mcp_atlas": 84.6,
-        "claw_eval": null,
-        "automation_bench_aa": 70.6,
-        "vending_bench_2": null,
-        "tau3_bench_banking": null,
-        "tau2_bench_telecom": null,
-        "tau2_bench_retail": null,
-        "tau2_bench_airline": null,
-        "bfcl_v4": null,
-        "ifbench": null,
-        "itbench_aa": 47.5,
-        "gdpval_aa": 1685,
-        "apex_agents": 64.2,
-        "agents_last_exam_1_1": null,
-        "agents_last_exam_1_0": null,
-        "aa_briefcase": 1475,
-        "browsecomp": 87.4,
-        "arena_text": null,
-        "arena_text_non_english": null,
-        "arena_webdev": null,
-        "arena_agent": null,
-        "arena_agent_tool_hallucination": null,
-        "cwe_bench_aa": null,
-        "deepsec_bench_aa": null,
-        "cybergym_e2e_aa": null,
-        "cybergym": null,
-        "exploitgym": null,
-        "exploitbench": null,
-        "sec_bench_pro_260617": null,
-        "sec_bench_pro": null,
-        "cyberbench_1_1": null,
-        "cyberbench_1_0": null,
-        "aa_omniscience_1_1": 5.8,
-        "aa_omniscience_1_0": null,
-        "aa_omniscience_hallucination_1_1": 42.8,
-        "aa_omniscience_hallucination_1_0": null,
-        "aa_omniscience_accuracy_1_1": 34,
-        "aa_omniscience_accuracy_1_0": null,
-        "simpleqa_verified": null,
-        "aa_lcr": 79,
-        "critpt": null,
-        "critpt_2_0": null,
-        "critpt_hard_2_0": 30.5,
-        "aime_2026": null,
-        "aime_2025": null,
-        "hmmt_feb_2026": null,
-        "frontiermath_tier_4": null,
-        "frontiermath_tiers_1_3": null,
-        "gpqa_diamond": null,
-        "hle_diamond": null,
-        "hle": 46.4,
-        "arc_agi_3": null,
-        "arc_agi_2": null,
-        "arc_agi_1": null,
-        "mmlu_pro": null,
-        "mmmlu": null,
-        "mmmu_pro": null,
-        "zerobench": null,
-        "osworld_2_1": null,
-        "osworld_2_0_2026_06_24": null,
-        "osworld_2_0_2026_08_08": null,
-        "osworld_2_0_vendor": null,
-        "osworld_verified": null,
-        "mathvista_mini": null,
-        "charxiv_reasoning": null
-      },
-      "scores_updated": {
-        "openbench_index": "2026-11-27",
-        "coding_index": "2026-11-27",
-        "tooling_index": "2026-11-27",
-        "knowledge_index": "2026-11-27",
-        "vision_index": null,
-        "trust_index": "2026-11-27",
-        "security_index": null,
-        "aa_intelligence_index_5_0": "2026-11-27",
-        "aa_intelligence_index_4_3": null,
-        "aa_intelligence_index_4_2": null,
-        "aa_intelligence_index_4_1": null,
-        "aa_intelligence_index_4_0": null,
-        "aa_coding_agent_index_2_1": null,
-        "aa_coding_index_4_1": null,
-        "aa_coding_index_4_0": null,
-        "aa_cyber_index": null,
-        "aa_engineering_index": "2026-11-27",
-        "aa_strategy_ops_index": "2026-11-27",
-        "aa_healthcare_index": null,
-        "aa_legal_index": "2026-11-27",
-        "aa_finance_index": "2026-11-27",
-        "aa_economics_index": "2026-11-27",
-        "real_swe_1_1": null,
-        "real_swe_1_0": null,
-        "deepswe_1_1": "2026-11-27",
-        "deepswe_1_0": null,
-        "frontiercode_2_0": "2026-11-27",
-        "frontiercode_extended_1_1": null,
-        "frontiercode_1_1": null,
-        "frontiercode_1_0": null,
-        "frontierswe_2_0": null,
-        "frontierswe_1_0": null,
-        "programbench_almost": "2026-11-27",
-        "kernelbench_hard": null,
-        "nl2repo": "2026-11-27",
-        "vibe_code_bench_1_1": null,
-        "ale_bench": null,
-        "swe_bench_pro_hard_2_0": null,
-        "swe_bench_pro_2_0": null,
-        "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
-        "swe_atlas_rf": null,
-        "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
-        "swe_bench_verified": null,
-        "swe_bench_multimodal": null,
-        "swe_bench_multilingual": null,
-        "livecodebench": null,
-        "scicode": null,
-        "terminal_bench_4_1": null,
-        "terminal_bench_4_0": "2026-11-27",
-        "terminal_bench_3_0": null,
-        "terminal_bench_2_1": null,
-        "terminal_bench_2_0": null,
-        "terminal_bench_hard": null,
-        "terminal_bench_science_0_1": "2026-11-27",
-        "toolathlon": "2026-11-27",
-        "mcp_atlas": "2026-11-27",
-        "claw_eval": null,
-        "automation_bench_aa": "2026-11-27",
-        "vending_bench_2": null,
-        "tau3_bench_banking": null,
-        "tau2_bench_telecom": null,
-        "tau2_bench_retail": null,
-        "tau2_bench_airline": null,
-        "bfcl_v4": null,
-        "ifbench": null,
-        "itbench_aa": "2026-11-27",
-        "gdpval_aa": "2026-11-27",
-        "apex_agents": "2026-11-27",
-        "agents_last_exam_1_1": null,
-        "agents_last_exam_1_0": null,
-        "aa_briefcase": "2026-11-27",
-        "browsecomp": "2026-11-27",
-        "arena_text": null,
-        "arena_text_non_english": null,
-        "arena_webdev": null,
-        "arena_agent": null,
-        "arena_agent_tool_hallucination": null,
-        "cwe_bench_aa": null,
-        "deepsec_bench_aa": null,
-        "cybergym_e2e_aa": null,
-        "cybergym": null,
-        "exploitgym": null,
-        "exploitbench": null,
-        "sec_bench_pro_260617": null,
-        "sec_bench_pro": null,
-        "cyberbench_1_1": null,
-        "cyberbench_1_0": null,
-        "aa_omniscience_1_1": "2026-11-27",
-        "aa_omniscience_1_0": null,
-        "aa_omniscience_hallucination_1_1": "2026-11-27",
-        "aa_omniscience_hallucination_1_0": null,
-        "aa_omniscience_accuracy_1_1": "2026-11-27",
-        "aa_omniscience_accuracy_1_0": null,
-        "simpleqa_verified": null,
-        "aa_lcr": "2026-11-27",
-        "critpt": null,
-        "critpt_2_0": null,
-        "critpt_hard_2_0": "2026-11-27",
-        "aime_2026": null,
-        "aime_2025": null,
-        "hmmt_feb_2026": null,
-        "frontiermath_tier_4": null,
-        "frontiermath_tiers_1_3": null,
-        "gpqa_diamond": null,
-        "hle_diamond": null,
-        "hle": "2026-11-27",
-        "arc_agi_3": null,
-        "arc_agi_2": null,
-        "arc_agi_1": null,
-        "mmlu_pro": null,
-        "mmmlu": null,
-        "mmmu_pro": null,
-        "zerobench": null,
-        "osworld_2_1": null,
-        "osworld_2_0_2026_06_24": null,
-        "osworld_2_0_2026_08_08": null,
-        "osworld_2_0_vendor": null,
-        "osworld_verified": null,
-        "mathvista_mini": null,
-        "charxiv_reasoning": null
-      },
-      "scores_source": {
-        "openbench_index": "https://github.com/dgrieser/ai-bench#openbench-index",
-        "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
-        "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
-        "vision_index": null,
-        "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
-        "security_index": null,
-        "aa_intelligence_index_5_0": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aa_intelligence_index_4_3": null,
-        "aa_intelligence_index_4_2": null,
-        "aa_intelligence_index_4_1": null,
-        "aa_intelligence_index_4_0": null,
-        "aa_coding_agent_index_2_1": null,
-        "aa_coding_index_4_1": null,
-        "aa_coding_index_4_0": null,
-        "aa_cyber_index": null,
-        "aa_engineering_index": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aa_strategy_ops_index": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aa_healthcare_index": null,
-        "aa_legal_index": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aa_finance_index": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aa_economics_index": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "real_swe_1_1": null,
-        "real_swe_1_0": null,
-        "deepswe_1_1": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "deepswe_1_0": null,
-        "frontiercode_2_0": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "frontiercode_extended_1_1": null,
-        "frontiercode_1_1": null,
-        "frontiercode_1_0": null,
-        "frontierswe_2_0": null,
-        "frontierswe_1_0": null,
-        "programbench_almost": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "kernelbench_hard": null,
-        "nl2repo": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "vibe_code_bench_1_1": null,
-        "ale_bench": null,
-        "swe_bench_pro_hard_2_0": null,
-        "swe_bench_pro_2_0": null,
-        "swe_bench_pro": null,
-        "swe_marathon_1_1": null,
-        "swe_marathon_1_0": null,
-        "swe_atlas_rf": null,
-        "swe_atlas_tw": null,
-        "swe_atlas_qna": null,
-        "swe_bench_verified": null,
-        "swe_bench_multimodal": null,
-        "swe_bench_multilingual": null,
-        "livecodebench": null,
-        "scicode": null,
-        "terminal_bench_4_1": null,
-        "terminal_bench_4_0": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "terminal_bench_3_0": null,
-        "terminal_bench_2_1": null,
-        "terminal_bench_2_0": null,
-        "terminal_bench_hard": null,
-        "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "toolathlon": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "mcp_atlas": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "claw_eval": null,
-        "automation_bench_aa": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "vending_bench_2": null,
-        "tau3_bench_banking": null,
-        "tau2_bench_telecom": null,
-        "tau2_bench_retail": null,
-        "tau2_bench_airline": null,
-        "bfcl_v4": null,
-        "ifbench": null,
-        "itbench_aa": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "gdpval_aa": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "apex_agents": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "agents_last_exam_1_1": null,
-        "agents_last_exam_1_0": null,
-        "aa_briefcase": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "browsecomp": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "arena_text": null,
-        "arena_text_non_english": null,
-        "arena_webdev": null,
-        "arena_agent": null,
-        "arena_agent_tool_hallucination": null,
-        "cwe_bench_aa": null,
-        "deepsec_bench_aa": null,
-        "cybergym_e2e_aa": null,
-        "cybergym": null,
-        "exploitgym": null,
-        "exploitbench": null,
-        "sec_bench_pro_260617": null,
-        "sec_bench_pro": null,
-        "cyberbench_1_1": null,
-        "cyberbench_1_0": null,
-        "aa_omniscience_1_1": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aa_omniscience_1_0": null,
-        "aa_omniscience_hallucination_1_1": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aa_omniscience_hallucination_1_0": null,
-        "aa_omniscience_accuracy_1_1": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aa_omniscience_accuracy_1_0": null,
-        "simpleqa_verified": null,
-        "aa_lcr": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "critpt": null,
-        "critpt_2_0": null,
-        "critpt_hard_2_0": "https://artificialanalysis.ai/models/ernie-5-5-flash",
-        "aime_2026": null,
-        "aime_2025": null,
-        "hmmt_feb_2026": null,
-        "frontiermath_tier_4": null,
-        "frontiermath_tiers_1_3": null,
-        "gpqa_diamond": null,
-        "hle_diamond": null,
-        "hle": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "arc_agi_3": null,
-        "arc_agi_2": null,
-        "arc_agi_1": null,
-        "mmlu_pro": null,
-        "mmmlu": null,
-        "mmmu_pro": null,
-        "zerobench": null,
-        "osworld_2_1": null,
-        "osworld_2_0_2026_06_24": null,
-        "osworld_2_0_2026_08_08": null,
-        "osworld_2_0_vendor": null,
-        "osworld_verified": null,
-        "mathvista_mini": null,
-        "charxiv_reasoning": null
-      },
-      "scores_history": {
-        "aa_intelligence_index_5_0": [
-          {
-            "date": "2026-11-27",
-            "score": 31.3,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "aa_engineering_index": [
-          {
-            "date": "2026-11-27",
-            "score": 35.8,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "aa_strategy_ops_index": [
-          {
-            "date": "2026-11-27",
-            "score": 49.5,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "aa_legal_index": [
-          {
-            "date": "2026-11-27",
-            "score": 37.8,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "aa_finance_index": [
-          {
-            "date": "2026-11-27",
-            "score": 43.3,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "aa_economics_index": [
-          {
-            "date": "2026-11-27",
-            "score": 37.3,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "deepswe_1_1": [
-          {
-            "date": "2026-11-27",
-            "score": 71.2,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ],
-        "frontiercode_2_0": [
-          {
-            "date": "2026-11-27",
-            "score": 22.6,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "programbench_almost": [
-          {
-            "date": "2026-11-27",
-            "score": 29.5,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ],
-        "nl2repo": [
-          {
-            "date": "2026-11-27",
-            "score": 64.8,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ],
-        "terminal_bench_4_0": [
-          {
-            "date": "2026-11-27",
-            "score": 30.3,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "terminal_bench_science_0_1": [
-          {
-            "date": "2026-11-27",
-            "score": 13.3,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "toolathlon": [
-          {
-            "date": "2026-11-27",
-            "score": 75,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ],
-        "mcp_atlas": [
-          {
-            "date": "2026-11-27",
-            "score": 84.6,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ],
-        "automation_bench_aa": [
-          {
-            "date": "2026-11-27",
-            "score": 70.6,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "itbench_aa": [
-          {
-            "date": "2026-11-27",
-            "score": 47.5,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "gdpval_aa": [
-          {
-            "date": "2026-11-27",
-            "score": 1685,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "apex_agents": [
-          {
-            "date": "2026-11-27",
-            "score": 64.2,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ],
-        "aa_briefcase": [
-          {
-            "date": "2026-11-27",
-            "score": 1475,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "browsecomp": [
-          {
-            "date": "2026-11-27",
-            "score": 87.4,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ],
-        "aa_omniscience_1_1": [
-          {
-            "date": "2026-11-27",
-            "score": 5.8,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "aa_omniscience_hallucination_1_1": [
-          {
-            "date": "2026-11-27",
-            "score": 42.8,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "aa_omniscience_accuracy_1_1": [
-          {
-            "date": "2026-11-27",
-            "score": 34,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "aa_lcr": [
-          {
-            "date": "2026-11-27",
-            "score": 79,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ],
-        "critpt_hard_2_0": [
-          {
-            "date": "2026-11-27",
-            "score": 30.5,
-            "source": "https://artificialanalysis.ai/models/ernie-5-5-flash"
-          }
-        ],
-        "hle": [
-          {
-            "date": "2026-11-27",
-            "score": 46.4,
-            "source": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"
-          }
-        ]
-      },
-      "aa_variant": {
-        "slug": "ernie-5-5-flash",
-        "name": "ERNIE 5.5 Flash Preview"
-      },
-      "index_coverage": {
-        "coding_index": {
-          "measured": [
-            "deepswe_1_1",
-            "frontiercode_2_0",
-            "terminal_bench_4_0",
-            "programbench_almost",
-            "nl2repo"
-          ],
-          "of": 21,
-          "share": 0.319,
-          "second_hand": [
-            "deepswe_1_1",
-            "programbench_almost",
-            "nl2repo"
-          ]
-        },
-        "tooling_index": {
-          "measured": [
-            "automation_bench_aa",
-            "terminal_bench_4_0",
-            "toolathlon",
-            "gdpval_aa",
-            "mcp_atlas",
-            "itbench_aa",
-            "apex_agents"
-          ],
-          "of": 18,
-          "share": 0.627,
-          "second_hand": [
-            "toolathlon",
-            "mcp_atlas",
-            "apex_agents"
-          ]
-        },
-        "knowledge_index": {
-          "measured": [
-            "aa_omniscience_1_1",
-            "hle",
-            "critpt_hard_2_0"
-          ],
-          "of": 12,
-          "share": 0.351,
-          "second_hand": [
-            "hle"
-          ]
-        },
-        "trust_index": {
-          "measured": [
-            "aa_omniscience_hallucination_1_1",
-            "aa_omniscience_accuracy_1_1",
-            "aa_lcr"
-          ],
-          "of": 8,
-          "share": 0.361,
-          "second_hand": [
-            "aa_lcr"
-          ]
-        }
-      },
-      "vram_source": {
-        "fp16": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/",
-        "int8": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/",
-        "int4": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/"
       }
     }
   ],
