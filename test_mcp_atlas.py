@@ -17,9 +17,14 @@ the key the mapping file already holds, or the fix silently unmaps the field.
 
 from __future__ import annotations
 
+import json
 import unittest
+from pathlib import Path
 
+import fetch_evals_report
 import fetch_mcp_atlas as mcp
+
+HERE = Path(__file__).resolve().parent
 
 
 class DropsRunSettings(unittest.TestCase):
@@ -131,6 +136,30 @@ class SplitsTheLabel(unittest.TestCase):
         self.assertEqual(mcp.split_harness("gpt-5.6 (sol)"), ("gpt-5.6", "sol"))
         self.assertEqual(mcp.split_harness("Inkling (xHigh)"), ("Inkling", "xHigh"))
         self.assertEqual(mcp.split_harness("Muse Spark 1.1"), ("Muse Spark 1.1", None))
+
+
+class OnlyScaleFeedsTheColumn(unittest.TestCase):
+    """mcp_atlas is Scale's board over all 1,000 tasks, which only Scale can
+    run (README, "MCP-Atlas is one configuration"). A self-report source
+    routed back into it would refill the 27 withdrawn public-subset and
+    pre-re-score numbers, fill-only or not, since the cells are null."""
+
+    def test_no_self_report_source_maps_onto_mcp_atlas(self):
+        self.assertNotIn("mcp_atlas", fetch_evals_report.BENCHMARKS.values())
+        for name in ("llmstats-benchmark-name-mapping.json", "huggingface-benchmark-name-mapping.json"):
+            mapping = json.loads((HERE / name).read_text(encoding="utf-8"))
+            routed = sorted(label for label, key in mapping.items() if key == "mcp_atlas")
+            self.assertEqual(routed, [], f"{name} maps {routed} onto mcp_atlas")
+
+    def test_every_stored_value_is_the_boards(self):
+        doc = json.loads((HERE / "llm.json").read_text(encoding="utf-8"))
+        foreign = {
+            m["name"]: (m.get("scores_source") or {}).get("mcp_atlas")
+            for m in doc["models"]
+            if (m.get("scores") or {}).get("mcp_atlas") is not None
+            and not str((m.get("scores_source") or {}).get("mcp_atlas")).startswith(mcp.URL)
+        }
+        self.assertEqual(foreign, {}, "mcp_atlas values not from Scale's board")
 
 
 if __name__ == "__main__":

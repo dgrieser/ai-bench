@@ -3,11 +3,17 @@
 Fetch MCP-Atlas (pass rate %) scores from the Scale Labs leaderboard.
 
 MCP-Atlas (Scale AI) grades an agent on real MCP servers; the leaderboard at
-https://labs.scale.com/leaderboard/mcp_atlas runs the benchmark's 500-task
-public subset and reports Scale's own runs, so it is the benchmark's first-party
-source. Labs republishing a self-reported MCP-Atlas number -- llm-stats and
-evals.report do, and so do model cards -- disagree with it by a point or two;
-update.py therefore runs this scraper after those.
+https://labs.scale.com/leaderboard/mcp_atlas reports Scale's own runs over all
+1,000 tasks -- the 500 public ones plus 500 held out -- under the April 2026
+configuration (100 tool calls per task, re-scored in place). It is not the
+public 500-task subset: the page's own "All 1000" / "Public 500" comparison
+table shows the board's scores are the All 1000 column, which
+test_versions_scale_vals.TestMcpAtlas re-checks.
+
+Nobody else can run the held-out half, so this is the column's only source:
+self-reported numbers (llm-stats, evals.report, model cards) are public-500
+runs or predate the re-score, and none of them is mapped onto mcp_atlas
+(README, "MCP-Atlas is one configuration").
 
 The page is the same Next.js App Router app as the SWE Atlas boards, with the
 same flight-payload row shape, so the extraction mirrors fetch_swe_atlas.py.

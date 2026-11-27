@@ -2,6 +2,37 @@
 """
 Fetch GPQA Diamond (%) scores from OpenRouter's model pages.
 
+RETIRED as a source (2026-11-27): OpenRouter stopped publishing
+``gpqa_diamond`` on its model pages. update.py no longer runs this fetcher
+unless asked to (``--openrouter``), and the five gpqa_diamond values it wrote
+before then stay in llm.json, credited to the model pages they came from.
+What the pages carry instead:
+
+  * ``gpqa_diamond_unsat``    labelled "GPQA Unsat" / "GPQA Diamond
+                              (Unsaturated)" in the page's own bundle. Nothing
+                              OpenRouter publishes (docs, llms-full.txt, blog,
+                              the API reference's benchmark_type enum, a
+                              /benchmarks page -- that slug 404s) says which
+                              questions it keeps. The numbers say it is not the
+                              198-question set: single-run endpoint scores are
+                              multiples of 1/465 (e.g. 370/465 = 0.795699,
+                              372/465 = 0.8), i.e. 93 questions x 5 epochs,
+                              while others sit on other denominators (0.8125,
+                              0.759259 = 41/54) -- partial runs over the 50-
+                              question floor. An undocumented, "unsaturated"
+                              subset of roughly 93 questions is a different
+                              measurement and is not filed under gpqa_diamond;
+                              with no definition to cite it gets no column
+                              either.
+  * ``toolcall_schema_fuzz``  "TCF", a tool-call schema fuzz pass rate per
+                              endpoint: a provider-quality signal for routing,
+                              not a model benchmark.
+  * ``vgi_bench``             "VGI-Bench", hidden by the page's own filter.
+
+The fetcher now refuses to read that as "no model has a score": when none of
+the pages read carries ``gpqa_diamond`` it raises, naming what they carry
+(get_scores). The description below is what it read while the source was live.
+
 OpenRouter (https://openrouter.ai/{author}/{model}) runs a small set of
 benchmarks itself against every provider endpoint that serves a model, and
 shows the results on the model's page. It is a per-model source, like
@@ -59,6 +90,10 @@ MODELS_PAGE_URL = f"{SITE_URL}/models"
 MODEL_PAGE_URL = SITE_URL + "/{model}"
 
 BENCHMARK = "gpqa_diamond"
+# What the model pages carried when the source was retired (2026-11-27), none
+# of them BENCHMARK. test_versions_aggregators.TestOpenRouter pins it, so
+# gpqa_diamond returning, or a type being added or renamed, is noticed.
+CARRIED_AT_RETIREMENT = ("gpqa_diamond_unsat", "toolcall_schema_fuzz", "vgi_bench")
 # OpenRouter's own router: a run through whichever endpoint it picked, so a
 # repeat of one of the endpoint rows rather than a deployment of its own.
 ROUTER_PROVIDER = "auto-routing"
@@ -190,6 +225,18 @@ def benchmark_query(page_html: str) -> dict | None:
     return None
 
 
+def benchmark_types(query: dict) -> list[str]:
+    """Every benchmark_type the query carries a row of, sorted."""
+    data = (query.get("state") or {}).get("data") or {}
+    rows = data.get("scores") if isinstance(data, dict) else None
+    if not isinstance(rows, list):
+        return []
+    return sorted({
+        row["benchmark_type"] for row in rows
+        if isinstance(row, dict) and isinstance(row.get("benchmark_type"), str)
+    })
+
+
 def endpoint_runs(query: dict, benchmark: str = BENCHMARK) -> list[float]:
     """One 0-1 score per endpoint run of benchmark, router row and failed or at-chance runs dropped."""
     data = (query.get("state") or {}).get("data") or {}
@@ -231,6 +278,9 @@ def parse_model(page_html: str, model: str) -> dict:
         "low": round(min(runs) * 100, 2) if runs else None,
         "high": round(max(runs) * 100, 2) if runs else None,
         "source": MODEL_PAGE_URL.format(model=model),
+        # What the page publishes, so get_scores can tell "this model has no
+        # run" from "OpenRouter no longer runs the benchmark at all".
+        "carried": benchmark_types(query),
     }
 
 
@@ -261,6 +311,19 @@ def get_scores(models: list[str]) -> list[dict]:
         raise ValueError(
             f"Every one of {len(wanted)} OpenRouter page(s) failed to parse -- the "
             "page layout changed; refusing to report no scores."
+        )
+    # A model without a run is one model; no page carrying the benchmark at
+    # all is OpenRouter having stopped running it, which must not read as
+    # every model scoring None (it did in November 2026, when the pages
+    # switched to gpqa_diamond_unsat -- see the module docstring).
+    if results and not any(BENCHMARK in row["carried"] for row in results):
+        carried = sorted({t for row in results for t in row["carried"]})
+        raise ValueError(
+            f"OpenRouter no longer publishes benchmark_type {BENCHMARK!r}: none of the "
+            f"{len(results)} model page(s) read carries it (they carry "
+            f"{', '.join(carried) or 'no benchmark rows'}). A renamed or re-scoped "
+            "benchmark is a different measurement; refusing to report every model "
+            "as unscored."
         )
     return results
 
@@ -320,4 +383,7 @@ if __name__ == "__main__":
         raise SystemExit(130)
     except (urllib.error.URLError, OSError) as exc:
         print(f"error: could not fetch OpenRouter: {exc}", file=sys.stderr)
+        raise SystemExit(1)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
         raise SystemExit(1)

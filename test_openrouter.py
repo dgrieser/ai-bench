@@ -12,6 +12,11 @@ is found by its key rather than by position, that only gpqa_diamond endpoint
 rows count, that the router row and a 0 are left out and one endpoint counts
 once, that the score is the median of what is left, and that a page without
 the query stops the read instead of reporting a model without scores.
+
+The source is retired (November 2026: the pages dropped gpqa_diamond for an
+undocumented "gpqa_diamond_unsat" subset). TestRetired pins that a page set
+carrying no gpqa_diamond at all stops the read, that the unsat rows never
+reach the score, and that update.py does not run the fetcher by default.
 """
 
 from __future__ import annotations
@@ -155,6 +160,42 @@ class TestParse(unittest.TestCase):
         with mock.patch.object(fo, "fetch_text", return_value="<html></html>"):
             with self.assertRaises(ValueError):
                 fo.get_scores(["x/bad"])
+
+
+class TestRetired(unittest.TestCase):
+    UNSAT = [
+        score_row("A", 0.795699, "e1", benchmark="gpqa_diamond_unsat"),
+        score_row("B", 0.8, "e2", benchmark="gpqa_diamond_unsat"),
+        score_row("A", 0.95, "e1", benchmark="toolcall_schema_fuzz"),
+    ]
+
+    def test_unsat_rows_are_not_gpqa_diamond(self) -> None:
+        row = fo.parse_model(page(self.UNSAT), "x/model")
+        self.assertIsNone(row["score"])
+        self.assertEqual(row["runs"], 0)
+        self.assertEqual(row["carried"], ["gpqa_diamond_unsat", "toolcall_schema_fuzz"])
+
+    def test_no_page_carrying_the_benchmark_stops_the_read(self) -> None:
+        with mock.patch.object(fo, "fetch_text", return_value=page(self.UNSAT)):
+            with self.assertRaisesRegex(ValueError, "no longer publishes benchmark_type 'gpqa_diamond'.*gpqa_diamond_unsat"):
+                fo.get_scores(["x/a", "x/b"])
+
+    def test_one_page_carrying_it_is_enough(self) -> None:
+        pages = {
+            "https://openrouter.ai/x/a": page(self.UNSAT),
+            "https://openrouter.ai/x/b": page([score_row("A", 0.8, "e1")]),
+        }
+        with mock.patch.object(fo, "fetch_text", side_effect=pages.__getitem__):
+            rows = fo.get_scores(["x/a", "x/b"])
+        self.assertEqual({r["model"]: r["score"] for r in rows}, {"x/a": None, "x/b": 80.0})
+
+    def test_update_skips_the_source_unless_asked(self) -> None:
+        self.assertTrue(update.OPENROUTER_RETIRED)
+        for argv, skipped in ((["update.py"], True), (["update.py", "--openrouter"], False)):
+            with mock.patch("sys.argv", argv):
+                args = update.parse_args()
+            update.skip_retired_sources(args)
+            self.assertEqual(args.skip_openrouter, skipped, argv)
 
 
 class TestIngest(unittest.TestCase):

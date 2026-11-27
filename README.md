@@ -453,7 +453,7 @@ current address.
 ./fetch_zerobench.py                    # ZeroBench, the maintainers' own board only
 ./fetch_bfcl.py                         # BFCL v4 Overall Accuracy, from the Gorilla team
 ./fetch_llmstats.py
-./fetch_openrouter.py --model openai/gpt-6-sol   # GPQA Diamond, median of OpenRouter's endpoint runs
+./fetch_openrouter.py --model openai/gpt-6-sol   # GPQA Diamond, median of OpenRouter's endpoint runs (retired: now fails, see below)
 ./fetch_openrouter.py --format names    # the catalogue ids the mapping is reviewed against
 ./fetch_evals_report.py
 ./fetch_epoch.py                        # Epoch AI's hub: its own GPQA Diamond and SWE-bench Verified runs, and its copies of nine boards
@@ -845,7 +845,7 @@ already gives row collisions inside a single source.
 | 3 | **Third-party runs** — Vals AI *for the boards it re-runs* | Vals runs every model itself, on its own harness, so its numbers are measurements — but of benchmarks it does not own, which is what keeps it off rank 2. Vibe Code Bench and CyberBench are Vals' own benchmarks, so those pages are first-party leaderboards and rank 2; `fetch_vals.VALS_OWN_BENCHMARKS` draws the line, per board rather than per source. |
 | 4 | **Curated third parties** — evals.report, benchlm.ai | Compilers of results someone else produced. evals.report keeps only Official and Verified rows (`TRUSTED_STATUSES`); benchlm.ai mirrors Datacurve's DeepSWE board with no status of its own. They used to share a rank with Vals, and on `mmlu_pro`, which evals.report and Vals both publish, the stored value was whichever ran last — a `--skip-vals` run left a different number than a full one. |
 | 5 | **Cross-benchmark aggregate** — llm-stats | Republished numbers nobody in the chain ran. Fill-only — it writes a null, a value from a custom source (below), a value credited to the same page it is reading, which is that page refreshing its own number, or an OpenRouter or Epoch AI value (ranks 6 and 7); never another fetcher's. |
-| 6 | **OpenRouter's endpoint runs** (`fetch_openrouter.py`, GPQA Diamond only) | OpenRouter runs GPQA Diamond against every provider endpoint serving a model; the score is the median of those runs, with the router's own run and failed runs left out -- a 0, or anything at or under the 25% a four-option guess scores, which is a broken endpoint rather than a weak model (one such run halved Ling-3.0-flash-Fin's two-run median to 39.6). A measurement, but of whatever each provider deploys — quantized, on its own stack, sometimes broken — so it typically reads 1–7 points under the AA run of the same model. It seeds the column for models nobody else measures, and every other fetcher takes it over: the ranks above by rank, llm-stats' fill-only ingest by the one exception fill-only makes (`_precedence.yields_to_fill_only`). It is not fill-only itself, so it replaces an Epoch AI value, a model card's number and a hand entry. |
+| 6 | **OpenRouter's endpoint runs** (`fetch_openrouter.py`, GPQA Diamond only; **retired 2026-11-27**, so only the values it already wrote hold this rank — [why](#openrouter-is-retired-as-a-gpqa-diamond-source)) | OpenRouter ran GPQA Diamond against every provider endpoint serving a model; the score is the median of those runs, with the router's own run and failed runs left out -- a 0, or anything at or under the 25% a four-option guess scores, which is a broken endpoint rather than a weak model (one such run halved Ling-3.0-flash-Fin's two-run median to 39.6). A measurement, but of whatever each provider deploys — quantized, on its own stack, sometimes broken — so it typically reads 1–7 points under the AA run of the same model. It seeds the column for models nobody else measures, and every other fetcher takes it over: the ranks above by rank, llm-stats' fill-only ingest by the one exception fill-only makes (`_precedence.yields_to_fill_only`). It is not fill-only itself, so it replaces an Epoch AI value, a model card's number and a hand entry. |
 | 7 | **Epoch AI's Benchmarking Hub** (`fetch_epoch.py`) | Epoch's own GPQA Diamond and SWE-bench Verified runs, and its copies of nine other boards. A second source for every column it feeds: it fills a cell nobody better reports and yields to every rank above, llm-stats' fill-only ingest included (the `yields_to_fill_only` exception OpenRouter has). That is what makes it safe to read files whose rows are not all what the column holds — see [what it contributes](#what-epoch-ai-contributes). Not fill-only, so it replaces a model card's number and a hand entry. |
 | 8 | **Model cards** — Hugging Face | A lab's own report under its own prompts and settings. Fill-only like llm-stats, on the same terms but without the OpenRouter and Epoch exception, so it never replaces their values. It shared a rank with llm-stats until OpenRouter was read; neither ever replaces the other's value, so the split changed nothing between the two, and where they overlap llm-stats runs first and so claims the gap. |
 | 9 | **Hand entries** (`add.py`, `edit.py`) | The page the entry cited — `edit.py --score-url`, or the admin page's score card — which is required for every score written, and `test_hand_sources.py` holds llm.json to it: in a column no scraper reaches a hand entry is the column's only word, so the page is all a reader can check it by. A hand entry seeds a column until something measures it, and any scraper may overwrite it. What counts as hand-entered is decided by URL, not by who wrote it: every fetcher's pages are known (`RANKED_PREFIXES` is built from their URL constants), so a stored page outside them is a custom source (`_precedence.is_fetcher_source`). Every fetcher replaces a custom-sourced value, the fill-only aggregates included, and one reporting the same number takes over its credit without restamping its date. A hand entry that cites a fetcher's own page — a Hugging Face card, say — ranks as that fetcher instead. Citing the leaderboard a number was actually read from puts the value on that leaderboard's rank instead of this one. |
@@ -896,7 +896,7 @@ are read.
 
 The rungs are where they are because of what actually disagrees. Where both a
 first-party run and a self-report exist for one model they differ by a point or
-two, and `mcp_atlas`, `bfcl_v4`, `frontiercode_1_1`, `swe_marathon_1_1` and
+two, and `bfcl_v4`, `frontiercode_1_1`, `swe_marathon_1_1` and
 `deepswe_1_1` each carry both, so the run has to be the one that lands. IFBench and MMLU-Pro
 are the two columns where AA and evals.report both measure and the ranking
 therefore changed an outcome: before it, precedence was the order `main()`
@@ -1095,7 +1095,7 @@ it, in the precedence order above:
 | Column | Leading source | Gap fillers |
 | --- | --- | --- |
 | **BFCL v4** (`bfcl_v4`) | `fetch_bfcl.py`, the Gorilla team's own leaderboard (`data_overall.csv`, Overall Accuracy) | evals.report's `bfcl` table, then Hugging Face model cards |
-| **MCP-Atlas** (`mcp_atlas`) | `fetch_mcp_atlas.py`, Scale's own leaderboard runs | evals.report's `mcp-atlas` table, llm-stats' `mcp_atlas` column, then Hugging Face model cards |
+| **MCP-Atlas** (`mcp_atlas`) | `fetch_mcp_atlas.py`, Scale's own leaderboard runs over all 1,000 tasks | None: [it is one configuration](#mcp-atlas-is-one-configuration), and only Scale can run it |
 | **IFBench** (`ifbench`) | Artificial Analysis, which runs Ai2's benchmark itself (`ifbench` in the API's evaluations, with the model page as fallback) | evals.report's `ifbench` table, then Hugging Face model cards |
 
 Two version traps are handled in the benchmark-name mappings rather than by
@@ -1121,9 +1121,9 @@ hoping the labels agree:
   is read off the flat field, where no note reaches: Mistral Large 4's 91.8
   "SciCode", which the note calls SciCode-Verified from Mistral's preview
   post (AA and Epoch put the preview at 54.2 on SciCode itself).
-- **MCP-Atlas is not MCPMark.** The `MCP Atlas` / `MCP-Atlas (Public Set)`
-  spellings map onto `mcp_atlas`; `MCPMark` and `MCP Mark Verified` are a
-  different benchmark and stay unmapped.
+- **MCP-Atlas is not MCPMark.** `MCPMark` and `MCP Mark Verified` are a
+  different benchmark and stay unmapped. No MCP-Atlas spelling from a card
+  maps either, for the reason below.
 - **A parenthetical on a Scale row is not always the effort.** Scale labels a
   row `claude-opus-5 (xhigh)` but also `gpt-5.6 (sol)`, and only the first is a
   run setting: Sol, Luna and Terra are three models with three slugs here.
@@ -1156,6 +1156,47 @@ hoping the labels agree:
 
 All three feed the [Tooling index](#tooling-index); the weight each carries, and
 why, is in that section's table.
+
+#### MCP-Atlas is one configuration
+
+Scale's board at `labs.scale.com/leaderboard/mcp_atlas` ranks **all 1,000
+tasks**: the 500 public ones (the Hugging Face dataset) plus 500 it holds out.
+The page states the public subset's size and also prints a comparison table,
+"Pass Rate % (All 1000)" beside "Pass Rate % (Public 500)", for 20 models.
+The board's own scores reproduce the All 1000 column for all 20 (the Public
+500 column matches once, by coincidence). `llm.json` used to describe the
+column as the public 500-task subset. That was wrong, and the description now
+says what the board ranks. `test_versions_scale_vals.TestMcpAtlas` re-checks
+which column the board reproduces on every run.
+
+That makes Scale the only source that can produce the column's number.
+Nobody else can run the held-out 500, so a vendor's launch figure or a model
+card is at best a public-500 run in its own harness. Scale's table shows the
+two sets differ by up to 4.8 points (GPT-5.4: 70.6 on all 1,000, 75.4 on the
+public 500). The other feeds were mixed as well. evals.report's `mcp-atlas`
+table labels itself "1,000 tasks", but its "Official" rows are Scale's board
+from 2024 to 2025, before the April 2026 re-score that swapped the 20-turn
+cap for a 100-tool-call budget and a new judge. Claude Opus 4.5 is at 62.3
+there and 69.8 now, and Qwen3 235B Instruct 2507 is at 12.0. Its "Verified"
+rows are vendor numbers. llm-stats' flat `mcp_atlas` field mixes old-config
+numbers (Claude Opus 4.6 62.7 against 76.8 now) with launch numbers.
+
+So since 2026-11-27 `mcp_atlas` holds Scale's leaderboard runs and nothing
+else:
+
+- `fetch_evals_report.BENCHMARKS` no longer reads `mcp-atlas`.
+- `llmstats-benchmark-name-mapping.json` maps `mcp_atlas` to `__unmappable__`.
+- `huggingface-benchmark-name-mapping.json` maps `MCP Atlas`,
+  `MCP Atlas Public` and `MCP-Atlas` to `__unmappable__`, beside the
+  spellings that already were.
+- The 27 values those sources had written were withdrawn: 2 from evals.report,
+  15 from llm-stats, 9 from model cards and 1 hand entry (threatfrontier.com).
+  Each has a `null` entry in `scores_history` dated 2026-11-27.
+  `deepseek-v4-flash` (69.0) and `qwen3-235b-a22b-instruct-2507` (12.0) were
+  the evals.report ones.
+
+A hand entry is the one way a non-Scale number could come back. Don't add
+one. A model belongs in the column once Scale's board lists it.
 
 ### Detecting silent version switches
 
@@ -1698,8 +1739,8 @@ HLE and GPQA Diamond are read off the model pages as well as the API: the
 free API tier carries neither, so without the page a row that switched run
 would lose both.
 
-GPQA Diamond has one more source below AA: `fetch_openrouter.py`, OpenRouter's
-own run of the benchmark against each provider endpoint serving a model, reported
+GPQA Diamond had one more source below AA, retired in November 2026 (below):
+`fetch_openrouter.py`, OpenRouter's own run of the benchmark against each provider endpoint serving a model, reported
 as the median over the endpoints. It is there for the models AA has not run yet
 (`claude-opus-5-5`, `gpt-6-luna` and `gpt-6-sol` when it was added) and ranks
 under every other fetcher except the model cards
@@ -1709,6 +1750,30 @@ is keyed by catalogue id, variants (`:free`, `:batch`) folded onto the plain id,
 and doubles as the list of model pages the fetcher reads. OpenRouter publishes
 tau2-bench airline the same way; llm.json has no column for it, and the
 Artificial Analysis table the pages mirror is ignored in favour of AA itself.
+
+#### OpenRouter is retired as a GPQA Diamond source
+
+In November 2026 OpenRouter's model pages stopped carrying `gpqa_diamond`. They
+now carry `gpqa_diamond_unsat` ("GPQA Unsat", "GPQA Diamond (Unsaturated)" in
+the page bundle), `toolcall_schema_fuzz` ("TCF") and `vgi_bench`. Nothing
+OpenRouter publishes defines the unsat set: its docs, `llms-full.txt` and the
+benchmark API's `benchmark_type` enum still name only `gpqa_diamond`, and
+`/benchmarks/gpqa-diamond-unsat` 404s. The numbers rule out the 198-question
+Diamond set, though. Single-run endpoint scores are multiples of 1/465
+(370/465 = 0.795699, 372/465 = 0.8), which is 93 questions × 5 epochs, and
+partial runs land on other denominators (41/54). An undocumented subset of
+about 93 "unsaturated" questions is a different measurement. It is **not** filed
+under `gpqa_diamond`, and with no definition to cite it gets no column of its
+own. TCF is a per-endpoint routing signal, not a model benchmark.
+
+So `update.py` no longer reads OpenRouter (`OPENROUTER_RETIRED`; `--openrouter`
+runs it anyway). The five `gpqa_diamond` values it wrote before the switch
+(dated 2026-10-14 to 2026-11-18) stay, credited to their model pages and still
+ranked as endpoint runs, so any other source takes them over. Run by hand,
+`fetch_openrouter.py` now fails with a message naming what the pages carry
+rather than reporting every model as unscored.
+`test_versions_aggregators.TestOpenRouter` pins the three types above, so it
+fails if `gpqa_diamond` comes back or a type is added or renamed.
 
 AA reports an untested benchmark as null. A `0` is a measurement — CritPt and
 ZeroBench floors are real — and is written like any other score, so a
@@ -3238,7 +3303,7 @@ Contributing benchmarks and why they carry the weight they do:
 | Terminal-Bench 4.0 | 1.0 | Level with the anchor since the 2026-10-03 re-weighting, up from 0.8. Its standing was always provenance and a live head held back by reach; the reach has arrived — **85 scored models, 84 of them AA-run**, where it had 32 — and the head is still live: 7.5 points between the best model and the fifth on AA's own harness (63.6 at the top), which the column has carried since 2026-10-03, when AA's model pages took precedence over its Coding Agent Index for this column. It remains the least tool-shaped member (terminal/CLI agency rather than structured tool calling, overlapping the Coding index, where it carries 0.85), and that is the one argument against it; at 85 models it no longer has a coverage argument against it to add. |
 | Toolathlon-Verified | 0.8 | The purest tool-use benchmark available: long-horizon tasks over real MCP servers, execution-graded. Down from 0.9: the field has grown to 40 but only 13 of those are the team's verified runs, and the head has closed to 2.5 points between the best model and the fifth. |
 | GDPval-AA v2 | 0.7 | Tool use is how the work gets done here, not a side effect: AA runs the model in its Stirrup agentic harness with shell access to a sandbox filesystem and web browsing, and the deliverable — a document, spreadsheet, slide deck, diagram — is the output of that trajectory. The best provenance of the set (104 of 109 scores AA-run) and a wide head (175 Elo between the best model and the fifth). Below Terminal-Bench 4.0 because the two largely measure the same shell-agency axis — 0.95 with 2.1 and 0.83 with 4.0 — and Terminal-Bench scores task success directly where this Elo is mediated by pairwise judging of deliverable quality. |
-| MCP-Atlas | 0.7 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, 0.82 with Toolathlon over 23 models. Down from 0.85: the top is approaching its ceiling (87.2, 3.5 points to the fifth) and only 11 of its 30 scores are Scale's own runs. |
+| MCP-Atlas | 0.7 | The purest *MCP* signal in the set: production-like servers, hundreds of tools, judged on end-task success, 0.82 with Toolathlon over 23 models. Down from 0.85: the top is approaching its ceiling (87.2, 3.5 points to the fifth) and since 2026-11-27 it holds Scale's own runs only (14 models), having dropped 27 self-reported public-subset or pre-re-score numbers ([why](#mcp-atlas-is-one-configuration)). |
 | ITBench-AA | 0.6 | High trust per measurement (AA-run end to end, a third of the tasks held privately by IBM, 56.2 at the top) but a small task set and domain-narrow: diagnosing Kubernetes incidents from an offline snapshot. 23 scored models. |
 | τ³-Bench Banking | 0.5 | The anchor until 2026-10-03, and still the best-provenanced τ³ run there is: 94 of its 96 scores AA-run, execution-graded against backend state, with tool *discovery* built in (tools hidden in KB documents, unlocked via meta-tools). Down to 0.5 because it is frozen. AA retired it from its Intelligence Index on 2026-09-07 and lists it as a legacy evaluation, and no model added here since 2026-09-22 carries it, so every new frontier model is unranked on the index's anchor. It stays as coverage for the 96 models it did score. |
 | BFCL v4 | 0.45 | High trust per measurement — first-party runs, published model responses, reproducible at a pinned commit — but only 9 of its 31 values are the board's own, the rest card self-reports, and it correlates 0.87 with τ³ Banking and 0.83 with Terminal-Bench Hard, so it buys coverage and stability rather than information. |

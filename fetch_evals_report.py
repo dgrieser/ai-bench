@@ -64,7 +64,12 @@ BENCHMARKS: dict[str, str] = {
     # evals.report's "bfcl" table is the V4 series: its leader matches the
     # Overall Acc column of BFCL's own data_overall.csv (see fetch_bfcl.py).
     "bfcl": "bfcl_v4",
-    "mcp-atlas": "mcp_atlas",
+    # "mcp-atlas" is deliberately absent. Its "Official" rows are Scale's
+    # board from before the April 2026 re-score (Claude Opus 4.5 62.3, Qwen3
+    # 235B 12.0, dated 2024-2025, 20-turn config) and its "Verified" rows are
+    # vendor launch numbers, which can only be public-500 runs. mcp_atlas holds
+    # Scale's current board over all 1,000 tasks and nothing else (README:
+    # "MCP-Atlas is one configuration").
     "ifbench": "ifbench",
     # Both also arrive as Hugging Face card self-reports, which the HF ingest
     # writes into nulls only; this source runs after it and does overwrite, so
