@@ -137150,9 +137150,9 @@
       "params": "280B-A14B",
       "context": "1m",
       "vram": {
-        "fp16": null,
-        "int8": null,
-        "int4": null
+        "fp16": 653,
+        "int8": 327,
+        "int4": 163
       },
       "creator": {
         "name": "Baidu",
@@ -137780,6 +137780,11 @@
             "aa_lcr"
           ]
         }
+      },
+      "vram_source": {
+        "fp16": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/",
+        "int8": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/",
+        "int4": "https://www.spheron.network/tools/gpu-recommender/baidu/ERNIE-5.5-Flash-Preview/"
       }
     }
   ],
