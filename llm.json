@@ -1486,20 +1486,22 @@
       "name": "MCP-Atlas",
       "short_name": "MCPAtlas",
       "category": "Agentic Tool Use",
-      "description": "Scale AI's MCP tool-use benchmark: 1,000 human-authored tasks over 40+ real MCP servers exposing 300+ tools, each needing several dependent tool calls picked out from distractors, graded by an LLM judge against the ground-truth answer. The leaderboard runs the representative 500-task public subset under the April 2026 configuration, which replaced the original 20-turn cap with a budget of 100 tool calls per task. Metric is pass rate.",
+      "description": "Scale AI's MCP tool-use benchmark: 1,000 human-authored tasks (500 public, 500 held out) over 36 real MCP servers exposing 220 tools, each needing several dependent tool calls picked out from distractors, graded by an LLM judge against the ground-truth answer. The leaderboard ranks all 1,000 tasks, not the public 500 (its scores are the \"All 1000\" column of Scale's own All/Public comparison), under the April 2026 configuration, which replaced the original 20-turn cap with a budget of 100 tool calls per task and re-scored every model. Only Scale can run the held-out half, so the column holds Scale's leaderboard runs alone. Metric is pass rate.",
       "settings": [
         "pass rate",
-        "public 500-task subset",
+        "all 1,000 tasks",
+        "500 held out",
         "100 tool calls/task"
       ],
       "excludes": [
-        "MCPMark and MCP Mark Verified, a different benchmark"
+        "MCPMark and MCP Mark Verified, a different benchmark",
+        "public 500-task runs (vendor launch numbers, model cards, llm-stats), a different task set",
+        "scores from before Scale's April 2026 re-score (20-turn cap, old judge)"
       ],
       "urls": [
         "https://labs.scale.com/leaderboard/mcp_atlas",
         "https://scale.com/blog/mcp-atlas",
-        "https://github.com/scaleapi/mcp-atlas",
-        "https://evals.report/benchmarks/mcp-atlas"
+        "https://github.com/scaleapi/mcp-atlas"
       ]
     },
     "claw_eval": {
@@ -2944,9 +2946,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 26539,
+        "openbench_index": 26653,
         "coding_index": 18606,
-        "tooling_index": 28507,
+        "tooling_index": 28887,
         "knowledge_index": 18826,
         "vision_index": null,
         "trust_index": 38324,
@@ -3559,9 +3561,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 22802,
+        "openbench_index": 22919,
         "coding_index": 17766,
-        "tooling_index": 27439,
+        "tooling_index": 27830,
         "knowledge_index": 13598,
         "vision_index": 10215,
         "trust_index": 28802,
@@ -6280,9 +6282,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 24207,
+        "openbench_index": 24332,
         "coding_index": 19929,
-        "tooling_index": 23428,
+        "tooling_index": 23844,
         "knowledge_index": 29905,
         "vision_index": null,
         "trust_index": 26856,
@@ -6890,7 +6892,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 17046,
+        "tooling_index": 17450,
         "knowledge_index": 31891,
         "vision_index": null,
         "trust_index": 39979,
@@ -7512,7 +7514,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 22288,
+        "tooling_index": 22704,
         "knowledge_index": 38570,
         "vision_index": null,
         "trust_index": 43711,
@@ -8068,9 +8070,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44702,
+        "openbench_index": 44763,
         "coding_index": 31202,
-        "tooling_index": 40786,
+        "tooling_index": 40988,
         "knowledge_index": 61844,
         "vision_index": 59959,
         "trust_index": 55317,
@@ -8895,7 +8897,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 39532,
+        "tooling_index": 39682,
         "knowledge_index": 56218,
         "vision_index": 45358,
         "trust_index": 53034,
@@ -9585,7 +9587,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 45964,
+        "tooling_index": 45879,
         "knowledge_index": 53490,
         "vision_index": 48246,
         "trust_index": 56719,
@@ -10231,7 +10233,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 36876,
+        "tooling_index": 37112,
         "knowledge_index": 49376,
         "vision_index": 36265,
         "trust_index": 51350,
@@ -10838,7 +10840,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 32250,
+        "tooling_index": 32583,
         "knowledge_index": 40401,
         "vision_index": 30966,
         "trust_index": 46310,
@@ -11483,7 +11485,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 28420,
+        "tooling_index": 28803,
         "knowledge_index": 29790,
         "vision_index": 27050,
         "trust_index": 39288,
@@ -12018,7 +12020,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 12480,
+        "tooling_index": 12818,
         "knowledge_index": 9516,
         "vision_index": 9328,
         "trust_index": 30518,
@@ -12590,7 +12592,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 7684,
+        "tooling_index": 7919,
         "knowledge_index": 9223,
         "vision_index": 108,
         "trust_index": 28413,
@@ -13140,9 +13142,9 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 33970,
+        "openbench_index": 34100,
         "coding_index": 19097,
-        "tooling_index": 27925,
+        "tooling_index": 28357,
         "knowledge_index": 51486,
         "vision_index": null,
         "trust_index": 48563,
@@ -14309,9 +14311,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 25152,
+        "openbench_index": 25277,
         "coding_index": 21491,
-        "tooling_index": 20539,
+        "tooling_index": 20955,
         "knowledge_index": 33513,
         "vision_index": null,
         "trust_index": 30065,
@@ -14941,9 +14943,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 29735,
+        "openbench_index": 29858,
         "coding_index": 17442,
-        "tooling_index": 24606,
+        "tooling_index": 25016,
         "knowledge_index": 45725,
         "vision_index": null,
         "trust_index": 41048,
@@ -15784,7 +15786,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 20482,
+        "tooling_index": 20910,
         "knowledge_index": 40887,
         "vision_index": null,
         "trust_index": 43714,
@@ -16405,9 +16407,9 @@
         "url": "https://mistral.ai/products/studio#models"
       },
       "scores": {
-        "openbench_index": 29839,
+        "openbench_index": 29965,
         "coding_index": 17189,
-        "tooling_index": 21921,
+        "tooling_index": 22339,
         "knowledge_index": 38016,
         "vision_index": 24158,
         "trust_index": 49616,
@@ -17172,9 +17174,9 @@
         "url": "https://www.minimax.io/"
       },
       "scores": {
-        "openbench_index": 46809,
+        "openbench_index": 46897,
         "coding_index": 29290,
-        "tooling_index": 37930,
+        "tooling_index": 38225,
         "knowledge_index": 60629,
         "vision_index": null,
         "trust_index": 70193,
@@ -18821,7 +18823,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 11120,
+        "tooling_index": 11432,
         "knowledge_index": 38983,
         "vision_index": null,
         "trust_index": 31751,
@@ -19335,9 +19337,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 38147,
+        "openbench_index": 38199,
         "coding_index": 23362,
-        "tooling_index": 38660,
+        "tooling_index": 38833,
         "knowledge_index": 50795,
         "vision_index": 40987,
         "trust_index": 47684,
@@ -20163,9 +20165,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 32907,
+        "openbench_index": 33020,
         "coding_index": 21833,
-        "tooling_index": 29166,
+        "tooling_index": 29541,
         "knowledge_index": 41688,
         "vision_index": 33786,
         "trust_index": 45417,
@@ -20946,9 +20948,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 25489,
+        "openbench_index": 25604,
         "coding_index": 13518,
-        "tooling_index": 15750,
+        "tooling_index": 16134,
         "knowledge_index": 28751,
         "vision_index": 17753,
         "trust_index": 49584,
@@ -21656,7 +21658,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 11869,
+        "tooling_index": 12191,
         "knowledge_index": 23993,
         "vision_index": 10215,
         "trust_index": 38864,
@@ -22195,9 +22197,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 39756,
+        "openbench_index": 39822,
         "coding_index": 23237,
-        "tooling_index": 35923,
+        "tooling_index": 36143,
         "knowledge_index": 53582,
         "vision_index": 47535,
         "trust_index": 55881,
@@ -22237,7 +22239,7 @@
         "tau3_bench_banking": 9.3,
         "automation_bench_aa": 5.2,
         "tau2_bench_telecom": 95.3,
-        "mcp_atlas": 62.8,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 64.4,
         "itbench_aa": null,
@@ -22321,7 +22323,7 @@
         "tau3_bench_banking": "2026-08-07",
         "automation_bench_aa": "2026-10-03",
         "tau2_bench_telecom": "2026-04-22",
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
@@ -22405,7 +22407,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/qwen3-6-35b-a3b",
         "automation_bench_aa": "https://artificialanalysis.ai/models/qwen3-6-35b-a3b",
         "tau2_bench_telecom": "https://artificialanalysis.ai/models/qwen3-6-35b-a3b",
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/qwen3-6-35b-a3b",
         "itbench_aa": null,
@@ -22594,6 +22596,11 @@
             "date": "2026-08-21",
             "score": 62.8,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -22805,7 +22812,6 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "terminal_bench_hard",
             "terminal_bench_2_1",
@@ -22813,13 +22819,12 @@
             "ifbench"
           ],
           "of": 18,
-          "share": 0.651,
+          "share": 0.568,
           "converted": [
             "terminal_bench_4_1"
           ],
           "second_hand": [
-            "toolathlon",
-            "mcp_atlas"
+            "toolathlon"
           ]
         },
         "knowledge_index": {
@@ -22876,9 +22881,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 44603,
+        "openbench_index": 44616,
         "coding_index": 28076,
-        "tooling_index": 42300,
+        "tooling_index": 42344,
         "knowledge_index": 57259,
         "vision_index": 46385,
         "trust_index": 59604,
@@ -23536,9 +23541,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 62377,
+        "openbench_index": 62639,
         "coding_index": 58172,
-        "tooling_index": 68247,
+        "tooling_index": 69119,
         "knowledge_index": 73963,
         "vision_index": null,
         "trust_index": 53429,
@@ -23579,7 +23584,7 @@
         "tau3_bench_banking": 39.4,
         "automation_bench_aa": 54,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 69,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 79.2,
         "itbench_aa": null,
@@ -23673,7 +23678,7 @@
         "tau3_bench_banking": "2026-08-07",
         "automation_bench_aa": "2026-10-03",
         "tau2_bench_telecom": "2026-09-23",
-        "mcp_atlas": "2026-09-23",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": "2026-09-23",
         "itbench_aa": "2026-09-23",
@@ -23767,7 +23772,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/deepseek-v4-flash",
         "automation_bench_aa": "https://artificialanalysis.ai/models/deepseek-v4-flash",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://evals.report/benchmarks/mcp-atlas",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://evals.report/benchmarks/ifbench",
         "itbench_aa": null,
@@ -24068,6 +24073,11 @@
             "date": "2026-09-23",
             "score": 69,
             "source": "https://evals.report/benchmarks/mcp-atlas"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -24399,20 +24409,18 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "agents_last_exam_1_1",
             "terminal_bench_2_1",
             "ifbench"
           ],
           "of": 18,
-          "share": 0.639,
+          "share": 0.556,
           "converted": [
             "terminal_bench_4_1",
             "agents_last_exam_1_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "agents_last_exam_1_1",
             "ifbench"
           ]
@@ -24471,9 +24479,9 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 51677,
+        "openbench_index": 51083,
         "coding_index": 37374,
-        "tooling_index": 55865,
+        "tooling_index": 53884,
         "knowledge_index": 59086,
         "vision_index": null,
         "trust_index": 59370,
@@ -24514,7 +24522,7 @@
         "tau3_bench_banking": 22.9,
         "automation_bench_aa": 18.4,
         "tau2_bench_telecom": 92.7,
-        "mcp_atlas": 79.1,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -24605,7 +24613,7 @@
         "tau3_bench_banking": "2026-08-07",
         "automation_bench_aa": "2026-10-03",
         "tau2_bench_telecom": "2026-04-28",
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -24696,7 +24704,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/hy3",
         "automation_bench_aa": "https://artificialanalysis.ai/models/hy3",
         "tau2_bench_telecom": "https://artificialanalysis.ai/models/hy3",
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -24920,6 +24928,11 @@
             "date": "2026-08-21",
             "score": 79.1,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -25255,7 +25268,6 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "terminal_bench_hard",
             "terminal_bench_2_1",
@@ -25263,13 +25275,12 @@
             "apex_agents_1_1"
           ],
           "of": 18,
-          "share": 0.692,
+          "share": 0.609,
           "converted": [
             "terminal_bench_4_1",
             "apex_agents_1_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "apex_agents_1_1"
           ]
         },
@@ -25821,7 +25832,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 9900,
+        "tooling_index": 10184,
         "knowledge_index": 6044,
         "vision_index": null,
         "trust_index": 14243,
@@ -26319,7 +26330,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 15807,
+        "tooling_index": 16183,
         "knowledge_index": 11592,
         "vision_index": null,
         "trust_index": 23302,
@@ -26805,9 +26816,9 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 37407,
+        "openbench_index": 37461,
         "coding_index": 25750,
-        "tooling_index": 38240,
+        "tooling_index": 38420,
         "knowledge_index": 36811,
         "vision_index": 28907,
         "trust_index": 50755,
@@ -27736,7 +27747,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 18068,
+        "tooling_index": 18472,
         "knowledge_index": 14244,
         "vision_index": 16460,
         "trust_index": 22048,
@@ -28811,7 +28822,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 10537,
+        "tooling_index": 10834,
         "knowledge_index": 11874,
         "vision_index": 4736,
         "trust_index": 9674,
@@ -29300,9 +29311,9 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 41783,
+        "openbench_index": 41872,
         "coding_index": 25526,
-        "tooling_index": 33664,
+        "tooling_index": 33960,
         "knowledge_index": 54129,
         "vision_index": 27529,
         "trust_index": 63626,
@@ -30029,7 +30040,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 40522,
+        "tooling_index": 40633,
         "knowledge_index": 51055,
         "vision_index": 54857,
         "trust_index": 53429,
@@ -30574,7 +30585,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 8029,
+        "tooling_index": 8279,
         "knowledge_index": 8598,
         "vision_index": 3294,
         "trust_index": 14966,
@@ -31140,9 +31151,9 @@
         "url": "https://cohere.com/"
       },
       "scores": {
-        "openbench_index": 33870,
+        "openbench_index": 33972,
         "coding_index": 27988,
-        "tooling_index": 31239,
+        "tooling_index": 31580,
         "knowledge_index": 37888,
         "vision_index": null,
         "trust_index": 41674,
@@ -31885,9 +31896,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 67113,
+        "openbench_index": 66626,
         "coding_index": 54180,
-        "tooling_index": 65901,
+        "tooling_index": 64277,
         "knowledge_index": 80291,
         "vision_index": null,
         "trust_index": 76182,
@@ -33006,9 +33017,9 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 62837,
+        "openbench_index": 62664,
         "coding_index": 55976,
-        "tooling_index": 58878,
+        "tooling_index": 58302,
         "knowledge_index": 74703,
         "vision_index": 69648,
         "trust_index": 68700,
@@ -33049,7 +33060,7 @@
         "tau3_bench_banking": 15.3,
         "automation_bench_aa": 21.3,
         "tau2_bench_telecom": 88.9,
-        "mcp_atlas": 74.2,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 82.9,
         "itbench_aa": null,
@@ -33161,7 +33172,7 @@
         "tau3_bench_banking": "2026-08-07",
         "automation_bench_aa": "2026-10-03",
         "tau2_bench_telecom": "2026-06-18",
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
@@ -33273,7 +33284,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/minimax-m3",
         "automation_bench_aa": "https://artificialanalysis.ai/models/minimax-m3",
         "tau2_bench_telecom": "https://artificialanalysis.ai/models/minimax-m3",
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/minimax-m3",
         "itbench_aa": null,
@@ -33658,6 +33669,11 @@
             "date": "2026-08-21",
             "score": 74.2,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -34094,7 +34110,6 @@
             "automation_bench_aa",
             "terminal_bench_4_1",
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "terminal_bench_hard",
             "terminal_bench_2_1",
@@ -34105,9 +34120,8 @@
             "claw_eval"
           ],
           "of": 18,
-          "share": 0.692,
+          "share": 0.609,
           "second_hand": [
-            "mcp_atlas",
             "apex_agents_1_1",
             "vending_bench_2",
             "claw_eval"
@@ -35063,7 +35077,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 9184,
+        "tooling_index": 9462,
         "knowledge_index": 15453,
         "vision_index": 15246,
         "trust_index": 37139,
@@ -35668,9 +35682,9 @@
       },
       "context": "1m",
       "scores": {
-        "openbench_index": 21918,
+        "openbench_index": 22018,
         "coding_index": 15511,
-        "tooling_index": 11849,
+        "tooling_index": 12182,
         "knowledge_index": 23337,
         "vision_index": 19367,
         "trust_index": 40837,
@@ -39288,7 +39302,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 31476,
+        "tooling_index": 31813,
         "knowledge_index": 47165,
         "vision_index": null,
         "trust_index": 41970,
@@ -43777,9 +43791,9 @@
       },
       "context": "200k",
       "scores": {
-        "openbench_index": 33734,
+        "openbench_index": 33796,
         "coding_index": 22132,
-        "tooling_index": 37258,
+        "tooling_index": 37467,
         "knowledge_index": 45487,
         "vision_index": null,
         "trust_index": 36375,
@@ -44474,7 +44488,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 41253,
+        "tooling_index": 39719,
         "knowledge_index": 59073,
         "vision_index": null,
         "trust_index": 44233,
@@ -49394,7 +49408,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 16411,
+        "tooling_index": 16808,
         "knowledge_index": 31251,
         "vision_index": null,
         "trust_index": 31815,
@@ -49967,7 +49981,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 13801,
+        "tooling_index": 14166,
         "knowledge_index": 21599,
         "vision_index": null,
         "trust_index": 33405,
@@ -50550,7 +50564,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 11752,
+        "tooling_index": 12083,
         "knowledge_index": 11464,
         "vision_index": null,
         "trust_index": 20400,
@@ -51546,7 +51560,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 22477,
+        "tooling_index": null,
         "knowledge_index": 37226,
         "vision_index": null,
         "trust_index": 43190,
@@ -51587,7 +51601,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": 33.3,
-        "mcp_atlas": 12,
+        "mcp_atlas": null,
         "bfcl_v4": 52.2,
         "ifbench": 46.1,
         "itbench_aa": null,
@@ -51631,7 +51645,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-11-27",
+        "tooling_index": null,
         "knowledge_index": "2026-11-27",
         "vision_index": null,
         "trust_index": "2026-11-27",
@@ -51672,7 +51686,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": "2026-06-25",
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": "2026-08-21",
         "ifbench": "2026-08-21",
         "itbench_aa": null,
@@ -51716,7 +51730,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
@@ -51757,7 +51771,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
-        "mcp_atlas": "https://evals.report/benchmarks/mcp-atlas",
+        "mcp_atlas": null,
         "bfcl_v4": "https://evals.report/benchmarks/bfcl",
         "ifbench": "https://artificialanalysis.ai/models/qwen3-235b-a22b-instruct-2507",
         "itbench_aa": null,
@@ -51851,6 +51865,11 @@
             "date": "2026-08-21",
             "score": 12,
             "source": "https://evals.report/benchmarks/mcp-atlas"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "tau2_bench_telecom": [
@@ -51996,25 +52015,6 @@
         "name": "Qwen3 235B A22B 2507 Instruct"
       },
       "index_coverage": {
-        "tooling_index": {
-          "measured": [
-            "mcp_atlas",
-            "bfcl_v4",
-            "terminal_bench_hard",
-            "tau2_bench_telecom",
-            "ifbench",
-            "tau2_bench_retail",
-            "tau2_bench_airline"
-          ],
-          "of": 18,
-          "share": 0.254,
-          "second_hand": [
-            "mcp_atlas",
-            "bfcl_v4",
-            "tau2_bench_retail",
-            "tau2_bench_airline"
-          ]
-        },
         "knowledge_index": {
           "measured": [
             "aa_omniscience_1_0",
@@ -52054,7 +52054,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 25547,
+        "tooling_index": 25955,
         "knowledge_index": 44843,
         "vision_index": null,
         "trust_index": 45755,
@@ -55376,9 +55376,9 @@
       },
       "context": "256k",
       "scores": {
-        "openbench_index": 25287,
+        "openbench_index": 25412,
         "coding_index": 17099,
-        "tooling_index": 22240,
+        "tooling_index": 22657,
         "knowledge_index": 24654,
         "vision_index": 22853,
         "trust_index": 39150,
@@ -56050,7 +56050,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 14636,
+        "tooling_index": 15007,
         "knowledge_index": 11745,
         "vision_index": 12399,
         "trust_index": 18476,
@@ -56595,7 +56595,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 12711,
+        "tooling_index": 13055,
         "knowledge_index": 12743,
         "vision_index": 6294,
         "trust_index": 28215,
@@ -57557,7 +57557,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 8759,
+        "tooling_index": 9027,
         "knowledge_index": 11604,
         "vision_index": 15143,
         "trust_index": 19527,
@@ -58105,7 +58105,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 5598,
+        "tooling_index": 5776,
         "knowledge_index": 8906,
         "vision_index": 1997,
         "trust_index": 9588,
@@ -60104,9 +60104,9 @@
         "url": "https://deepmind.google/technologies/gemini/"
       },
       "scores": {
-        "openbench_index": 29901,
+        "openbench_index": 30024,
         "coding_index": 18962,
-        "tooling_index": 25065,
+        "tooling_index": 25474,
         "knowledge_index": 33945,
         "vision_index": 35930,
         "trust_index": 46405,
@@ -60723,7 +60723,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": 21828,
-        "tooling_index": 35138,
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -60765,7 +60765,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 49.4,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -60799,7 +60799,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": "2026-11-27",
-        "tooling_index": "2026-11-27",
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -60841,7 +60841,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-09-15",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -60875,7 +60875,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -60917,7 +60917,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://huggingface.co/ornith-ai/Ornith-1.5-9B",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -61024,6 +61024,11 @@
             "date": "2026-09-15",
             "score": 49.4,
             "source": "https://huggingface.co/ornith-ai/Ornith-1.5-9B"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -61070,22 +61075,6 @@
             "swe_bench_verified",
             "nl2repo"
           ]
-        },
-        "tooling_index": {
-          "measured": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ],
-          "of": 18,
-          "share": 0.237,
-          "second_hand": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ]
         }
       }
     },
@@ -61102,7 +61091,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": 35162,
-        "tooling_index": 45689,
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -61144,7 +61133,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 64.4,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -61178,7 +61167,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": "2026-11-27",
-        "tooling_index": "2026-11-27",
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -61220,7 +61209,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-09-15",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -61254,7 +61243,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -61296,7 +61285,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -61403,6 +61392,11 @@
             "date": "2026-09-15",
             "score": 64.4,
             "source": "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -61449,22 +61443,6 @@
             "swe_bench_verified",
             "nl2repo"
           ]
-        },
-        "tooling_index": {
-          "measured": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ],
-          "of": 18,
-          "share": 0.237,
-          "second_hand": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ]
         }
       }
     },
@@ -61481,7 +61459,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": 50825,
-        "tooling_index": 54250,
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -61523,7 +61501,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 76.4,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -61557,7 +61535,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": "2026-11-27",
-        "tooling_index": "2026-11-27",
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -61599,7 +61577,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-09-15",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -61633,7 +61611,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": "https://github.com/dgrieser/ai-bench#coding-index",
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": null,
         "vision_index": null,
         "trust_index": null,
@@ -61675,7 +61653,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://huggingface.co/ornith-ai/Ornith-1.5-397B",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -61782,6 +61760,11 @@
             "date": "2026-09-15",
             "score": 76.4,
             "source": "https://huggingface.co/ornith-ai/Ornith-1.5-397B"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -61828,22 +61811,6 @@
             "swe_bench_verified",
             "nl2repo"
           ]
-        },
-        "tooling_index": {
-          "measured": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ],
-          "of": 18,
-          "share": 0.237,
-          "second_hand": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ]
         }
       }
     },
@@ -61858,9 +61825,9 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 51333,
+        "openbench_index": 51163,
         "coding_index": 31995,
-        "tooling_index": 42925,
+        "tooling_index": 42359,
         "knowledge_index": 69797,
         "vision_index": null,
         "trust_index": 73550,
@@ -62848,7 +62815,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 26306,
+        "tooling_index": 26689,
         "knowledge_index": 31410,
         "vision_index": 31681,
         "trust_index": 32129,
@@ -63336,9 +63303,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 49647,
+        "openbench_index": 49397,
         "coding_index": 32177,
-        "tooling_index": 45391,
+        "tooling_index": 44557,
         "knowledge_index": 70877,
         "vision_index": 42169,
         "trust_index": 62982,
@@ -64423,9 +64390,9 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 65638,
+        "openbench_index": 65695,
         "coding_index": 65279,
-        "tooling_index": 68869,
+        "tooling_index": 69057,
         "knowledge_index": 77424,
         "vision_index": null,
         "trust_index": 55121,
@@ -64466,7 +64433,7 @@
         "tau3_bench_banking": 39.6,
         "automation_bench_aa": 56.7,
         "tau2_bench_telecom": 96.2,
-        "mcp_atlas": 73.6,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 76.5,
         "itbench_aa": null,
@@ -64575,7 +64542,7 @@
         "tau3_bench_banking": "2026-08-13",
         "automation_bench_aa": "2026-10-03",
         "tau2_bench_telecom": "2026-07-20",
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
@@ -64684,7 +64651,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/deepseek-v4-pro",
         "automation_bench_aa": "https://artificialanalysis.ai/models/deepseek-v4-pro",
         "tau2_bench_telecom": "https://artificialanalysis.ai/models/deepseek-v4-pro",
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://evals.report/benchmarks/ifbench",
         "itbench_aa": null,
@@ -65088,6 +65055,11 @@
             "date": "2026-08-21",
             "score": 73.6,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -65470,7 +65442,6 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "agents_last_exam_1_1",
             "terminal_bench_hard",
@@ -65482,12 +65453,11 @@
             "claw_eval"
           ],
           "of": 18,
-          "share": 0.828,
+          "share": 0.746,
           "converted": [
             "agents_last_exam_1_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "ifbench",
             "apex_agents_1_1",
             "vending_bench_2",
@@ -65564,9 +65534,9 @@
         "url": "https://longcat.chat/platform/docs/"
       },
       "scores": {
-        "openbench_index": 41578,
+        "openbench_index": 41651,
         "coding_index": 26646,
-        "tooling_index": 35890,
+        "tooling_index": 36134,
         "knowledge_index": 59943,
         "vision_index": null,
         "trust_index": 55304,
@@ -66551,9 +66521,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 47514,
+        "openbench_index": 47618,
         "coding_index": 33182,
-        "tooling_index": 39455,
+        "tooling_index": 39802,
         "knowledge_index": 66602,
         "vision_index": 51320,
         "trust_index": 62931,
@@ -67400,9 +67370,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 59172,
+        "openbench_index": 59037,
         "coding_index": 43847,
-        "tooling_index": 54592,
+        "tooling_index": 54144,
         "knowledge_index": 78061,
         "vision_index": 70175,
         "trust_index": 71724,
@@ -68302,9 +68272,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 56776,
+        "openbench_index": 56437,
         "coding_index": 47754,
-        "tooling_index": 57507,
+        "tooling_index": 56377,
         "knowledge_index": 69851,
         "vision_index": null,
         "trust_index": 58879,
@@ -68345,7 +68315,7 @@
         "tau3_bench_banking": 20.2,
         "automation_bench_aa": 24.5,
         "tau2_bench_telecom": 90.1,
-        "mcp_atlas": 76,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 63.1,
         "itbench_aa": null,
@@ -68432,7 +68402,7 @@
         "tau3_bench_banking": "2026-08-07",
         "automation_bench_aa": "2026-10-03",
         "tau2_bench_telecom": "2026-07-20",
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
@@ -68519,7 +68489,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/kimi-k2-7-code",
         "automation_bench_aa": "https://artificialanalysis.ai/models/kimi-k2-7-code",
         "tau2_bench_telecom": "https://artificialanalysis.ai/models/kimi-k2-7-code",
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://artificialanalysis.ai/models/kimi-k2-7-code",
         "itbench_aa": null,
@@ -68709,6 +68679,11 @@
             "date": "2026-08-21",
             "score": 76,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -68934,7 +68909,6 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "terminal_bench_hard",
             "terminal_bench_2_1",
@@ -68944,12 +68918,11 @@
             "vending_bench_2"
           ],
           "of": 18,
-          "share": 0.751,
+          "share": 0.669,
           "converted": [
             "terminal_bench_4_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "apex_agents_1_1",
             "vending_bench_2"
           ]
@@ -69007,9 +68980,9 @@
         "url": "https://www.moonshot.cn/"
       },
       "scores": {
-        "openbench_index": 79358,
+        "openbench_index": 79037,
         "coding_index": 74117,
-        "tooling_index": 79354,
+        "tooling_index": 78284,
         "knowledge_index": 87491,
         "vision_index": 84012,
         "trust_index": 80772,
@@ -70615,9 +70588,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 46196,
+        "openbench_index": 46231,
         "coding_index": 29968,
-        "tooling_index": 43308,
+        "tooling_index": 43425,
         "knowledge_index": 61575,
         "vision_index": 55208,
         "trust_index": 59907,
@@ -71280,9 +71253,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 52390,
+        "openbench_index": 52374,
         "coding_index": 33029,
-        "tooling_index": 46347,
+        "tooling_index": 46295,
         "knowledge_index": 71570,
         "vision_index": 66377,
         "trust_index": 71365,
@@ -72008,9 +71981,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 53708,
+        "openbench_index": 53589,
         "coding_index": 40499,
-        "tooling_index": 53279,
+        "tooling_index": 52882,
         "knowledge_index": 68864,
         "vision_index": 42487,
         "trust_index": 60981,
@@ -73465,9 +73438,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 76236,
+        "openbench_index": 76077,
         "coding_index": 70915,
-        "tooling_index": 78025,
+        "tooling_index": 77494,
         "knowledge_index": 85063,
         "vision_index": 89963,
         "trust_index": 75178,
@@ -74436,9 +74409,9 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 43168,
+        "openbench_index": 42980,
         "coding_index": 27541,
-        "tooling_index": 39609,
+        "tooling_index": 38983,
         "knowledge_index": 56982,
         "vision_index": null,
         "trust_index": 57902,
@@ -74479,7 +74452,7 @@
         "tau3_bench_banking": 27.2,
         "automation_bench_aa": 3.2,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 65.5,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -74561,7 +74534,7 @@
         "tau3_bench_banking": "2026-08-10",
         "automation_bench_aa": "2026-10-03",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-09-08",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -74643,7 +74616,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/ling-3-0-flash",
         "automation_bench_aa": "https://artificialanalysis.ai/models/ling-3-0-flash",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -74793,6 +74766,11 @@
             "date": "2026-09-08",
             "score": 65.5,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -74987,17 +74965,13 @@
             "automation_bench_aa",
             "terminal_bench_4_1",
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "terminal_bench_2_1"
           ],
           "of": 18,
-          "share": 0.485,
+          "share": 0.402,
           "converted": [
             "terminal_bench_4_1"
-          ],
-          "second_hand": [
-            "mcp_atlas"
           ]
         },
         "knowledge_index": {
@@ -75044,7 +75018,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 27035,
+        "tooling_index": 27428,
         "knowledge_index": 39050,
         "vision_index": null,
         "trust_index": 51858,
@@ -75555,7 +75529,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 22829,
+        "tooling_index": 23245,
         "knowledge_index": 25617,
         "vision_index": null,
         "trust_index": 44522,
@@ -76025,9 +75999,9 @@
         "url": "https://ai.meta.com/"
       },
       "scores": {
-        "openbench_index": 47965,
+        "openbench_index": 47501,
         "coding_index": 34452,
-        "tooling_index": 48847,
+        "tooling_index": 47300,
         "knowledge_index": 52302,
         "vision_index": 48607,
         "trust_index": 60521,
@@ -76069,7 +76043,7 @@
         "tau3_bench_banking": 23.5,
         "automation_bench_aa": 6.8,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 75.5,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 77,
         "itbench_aa": null,
@@ -76167,7 +76141,7 @@
         "tau3_bench_banking": "2026-08-11",
         "automation_bench_aa": "2026-10-03",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": "2026-08-21",
         "itbench_aa": null,
@@ -76265,7 +76239,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/muse-glimmer",
         "automation_bench_aa": "https://artificialanalysis.ai/models/muse-glimmer",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
         "itbench_aa": null,
@@ -76472,6 +76446,11 @@
             "date": "2026-08-21",
             "score": 75.5,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -76789,7 +76768,6 @@
             "automation_bench_aa",
             "terminal_bench_4_1",
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "terminal_bench_2_1",
             "ifbench",
@@ -76797,12 +76775,11 @@
             "tau2_bench_airline"
           ],
           "of": 18,
-          "share": 0.55,
+          "share": 0.467,
           "converted": [
             "terminal_bench_4_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "ifbench",
             "tau2_bench_retail",
             "tau2_bench_airline"
@@ -76866,9 +76843,9 @@
         "url": "https://www.nvidia.com/"
       },
       "scores": {
-        "openbench_index": 36883,
+        "openbench_index": 36973,
         "coding_index": 20600,
-        "tooling_index": 33452,
+        "tooling_index": 33753,
         "knowledge_index": 43925,
         "vision_index": null,
         "trust_index": 56314,
@@ -77634,9 +77611,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 78589,
+        "openbench_index": 78225,
         "coding_index": 73586,
-        "tooling_index": 82564,
+        "tooling_index": 81348,
         "knowledge_index": 83373,
         "vision_index": null,
         "trust_index": 76954,
@@ -78962,9 +78939,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 62307,
+        "openbench_index": 62021,
         "coding_index": 50138,
-        "tooling_index": 67808,
+        "tooling_index": 66855,
         "knowledge_index": 65480,
         "vision_index": 69535,
         "trust_index": 68406,
@@ -80054,7 +80031,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 44126,
+        "tooling_index": 45545,
         "knowledge_index": 69181,
         "vision_index": null,
         "trust_index": 67087,
@@ -80095,7 +80072,7 @@
         "tau3_bench_banking": 21.6,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 58.2,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 80,
         "itbench_aa": null,
@@ -80177,7 +80154,7 @@
         "tau3_bench_banking": "2026-08-17",
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-09-20",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": "2026-09-20",
         "itbench_aa": null,
@@ -80259,7 +80236,7 @@
         "tau3_bench_banking": "https://artificialanalysis.ai/models/solar-open2-250b",
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://huggingface.co/upstage/Solar-Open2-250B",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://huggingface.co/upstage/Solar-Open2-250B",
         "itbench_aa": null,
@@ -80366,6 +80343,11 @@
             "date": "2026-09-20",
             "score": 58.2,
             "source": "https://huggingface.co/upstage/Solar-Open2-250B"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "tau3_bench_banking": [
@@ -80490,7 +80472,6 @@
         "tooling_index": {
           "measured": [
             "gdpval_aa",
-            "mcp_atlas",
             "tau3_bench_banking",
             "terminal_bench_hard",
             "terminal_bench_2_1",
@@ -80498,12 +80479,11 @@
             "apex_agents_1_1"
           ],
           "of": 18,
-          "share": 0.361,
+          "share": 0.278,
           "converted": [
             "apex_agents_1_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "terminal_bench_hard",
             "ifbench",
             "apex_agents_1_1"
@@ -80556,9 +80536,9 @@
         "url": "https://www.sktelecom.com/index_en.html"
       },
       "scores": {
-        "openbench_index": 43856,
+        "openbench_index": 43923,
         "coding_index": 21675,
-        "tooling_index": 36675,
+        "tooling_index": 36900,
         "knowledge_index": 67562,
         "vision_index": null,
         "trust_index": 64866,
@@ -81220,7 +81200,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 66337,
+        "tooling_index": null,
         "knowledge_index": 84319,
         "vision_index": null,
         "trust_index": null,
@@ -81262,7 +81242,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 80,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -81296,7 +81276,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-11-27",
+        "tooling_index": null,
         "knowledge_index": "2026-11-27",
         "vision_index": null,
         "trust_index": null,
@@ -81338,7 +81318,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -81372,7 +81352,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": null,
@@ -81414,7 +81394,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://huggingface.co/ornith-ai/Ornith-1.5-397B",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -81507,6 +81487,11 @@
             "date": "2026-08-21",
             "score": 80,
             "source": "https://huggingface.co/ornith-ai/Ornith-1.5-397B"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -81544,22 +81529,6 @@
         "int4": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-397B/"
       },
       "index_coverage": {
-        "tooling_index": {
-          "measured": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ],
-          "of": 18,
-          "share": 0.237,
-          "second_hand": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ]
-        },
         "knowledge_index": {
           "measured": [
             "hle",
@@ -81592,7 +81561,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 50638,
+        "tooling_index": null,
         "knowledge_index": 63143,
         "vision_index": null,
         "trust_index": null,
@@ -81634,7 +81603,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 70.2,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -81668,7 +81637,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-11-27",
+        "tooling_index": null,
         "knowledge_index": "2026-11-27",
         "vision_index": null,
         "trust_index": null,
@@ -81710,7 +81679,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -81744,7 +81713,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": null,
@@ -81786,7 +81755,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -81879,6 +81848,11 @@
             "date": "2026-08-21",
             "score": 70.2,
             "source": "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -81916,22 +81890,6 @@
         "int4": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-35B-A3B/"
       },
       "index_coverage": {
-        "tooling_index": {
-          "measured": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ],
-          "of": 18,
-          "share": 0.237,
-          "second_hand": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ]
-        },
         "knowledge_index": {
           "measured": [
             "hle",
@@ -81964,7 +81922,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 40396,
+        "tooling_index": null,
         "knowledge_index": 54278,
         "vision_index": null,
         "trust_index": null,
@@ -82006,7 +81964,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 54.2,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -82040,7 +81998,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-11-27",
+        "tooling_index": null,
         "knowledge_index": "2026-11-27",
         "vision_index": null,
         "trust_index": null,
@@ -82082,7 +82040,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-08-21",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -82116,7 +82074,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": null,
@@ -82158,7 +82116,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": null,
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://huggingface.co/ornith-ai/Ornith-1.5-9B",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -82251,6 +82209,11 @@
             "date": "2026-08-21",
             "score": 54.2,
             "source": "https://huggingface.co/ornith-ai/Ornith-1.5-9B"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -82288,22 +82251,6 @@
         "int4": "https://www.spheron.network/tools/gpu-recommender/ornith-ai/Ornith-1.5-9B/"
       },
       "index_coverage": {
-        "tooling_index": {
-          "measured": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ],
-          "of": 18,
-          "share": 0.237,
-          "second_hand": [
-            "toolathlon",
-            "mcp_atlas",
-            "terminal_bench_2_1",
-            "claw_eval"
-          ]
-        },
         "knowledge_index": {
           "measured": [
             "hle",
@@ -82334,9 +82281,9 @@
         "url": "https://www.deepseek.com/"
       },
       "scores": {
-        "openbench_index": 60150,
+        "openbench_index": 59866,
         "coding_index": 49240,
-        "tooling_index": 72332,
+        "tooling_index": 71384,
         "knowledge_index": 68694,
         "vision_index": 50052,
         "trust_index": 53497,
@@ -82909,9 +82856,9 @@
         "url": "https://z.ai/"
       },
       "scores": {
-        "openbench_index": 74962,
+        "openbench_index": 74780,
         "coding_index": 60501,
-        "tooling_index": 86573,
+        "tooling_index": 85966,
         "knowledge_index": 77341,
         "vision_index": null,
         "trust_index": 76955,
@@ -84084,9 +84031,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 69893,
+        "openbench_index": 69625,
         "coding_index": 66246,
-        "tooling_index": 76596,
+        "tooling_index": 75702,
         "knowledge_index": 71703,
         "vision_index": 71484,
         "trust_index": 65141,
@@ -84996,9 +84943,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 28357,
+        "openbench_index": 28480,
         "coding_index": 15556,
-        "tooling_index": 18496,
+        "tooling_index": 18908,
         "knowledge_index": 31170,
         "vision_index": null,
         "trust_index": 53863,
@@ -85690,9 +85637,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 31922,
+        "openbench_index": 32044,
         "coding_index": 15451,
-        "tooling_index": 26654,
+        "tooling_index": 27061,
         "knowledge_index": 37610,
         "vision_index": null,
         "trust_index": 54595,
@@ -86446,9 +86393,9 @@
         "url": "https://www.ibm.com/au-en"
       },
       "scores": {
-        "openbench_index": 35830,
+        "openbench_index": 35940,
         "coding_index": 17654,
-        "tooling_index": 30280,
+        "tooling_index": 30646,
         "knowledge_index": 44691,
         "vision_index": null,
         "trust_index": 58985,
@@ -87167,9 +87114,9 @@
         "url": "https://aistudio.tencent.com/llm/en"
       },
       "scores": {
-        "openbench_index": 74068,
+        "openbench_index": 73758,
         "coding_index": 73419,
-        "tooling_index": 83409,
+        "tooling_index": 82379,
         "knowledge_index": 79954,
         "vision_index": 69545,
         "trust_index": 60104,
@@ -87210,7 +87157,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": 65.6,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 83.7,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -87311,7 +87258,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "2026-11-05",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-08-29",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -87412,7 +87359,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/tencent-hy4",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -87681,6 +87628,11 @@
             "date": "2026-08-29",
             "score": 83.7,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -87971,20 +87923,18 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "agents_last_exam_1_1",
             "terminal_bench_2_1",
             "apex_agents_1_1"
           ],
           "of": 18,
-          "share": 0.621,
+          "share": 0.538,
           "converted": [
             "apex_agents_1_1"
           ],
           "second_hand": [
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "apex_agents_1_1"
           ]
         },
@@ -88066,9 +88016,9 @@
         "url": "https://mbzuai.ac.ae/"
       },
       "scores": {
-        "openbench_index": 60852,
+        "openbench_index": 60601,
         "coding_index": 44484,
-        "tooling_index": 62254,
+        "tooling_index": 61418,
         "knowledge_index": 68108,
         "vision_index": null,
         "trust_index": 74457,
@@ -88799,9 +88749,9 @@
         "url": "https://www.openbmb.cn/en/home"
       },
       "scores": {
-        "openbench_index": 33959,
+        "openbench_index": 34053,
         "coding_index": 15920,
-        "tooling_index": 33358,
+        "tooling_index": 33672,
         "knowledge_index": 38386,
         "vision_index": null,
         "trust_index": 53669,
@@ -89383,9 +89333,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 72196,
+        "openbench_index": 71918,
         "coding_index": 76500,
-        "tooling_index": 78473,
+        "tooling_index": 77547,
         "knowledge_index": 76596,
         "vision_index": 63450,
         "trust_index": 56858,
@@ -90355,7 +90305,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 48135,
+        "tooling_index": 47935,
         "knowledge_index": 60485,
         "vision_index": 74240,
         "trust_index": 64584,
@@ -90801,9 +90751,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 87948,
+        "openbench_index": 87947,
         "coding_index": 92890,
-        "tooling_index": 88805,
+        "tooling_index": 88802,
         "knowledge_index": 94903,
         "vision_index": null,
         "trust_index": 76816,
@@ -92107,9 +92057,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 64698,
+        "openbench_index": 64402,
         "coding_index": 62711,
-        "tooling_index": 67906,
+        "tooling_index": 66921,
         "knowledge_index": 78139,
         "vision_index": 71674,
         "trust_index": 55167,
@@ -93115,9 +93065,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 74018,
+        "openbench_index": 73745,
         "coding_index": 70543,
-        "tooling_index": 78411,
+        "tooling_index": 77501,
         "knowledge_index": 85302,
         "vision_index": 82615,
         "trust_index": 66145,
@@ -94187,9 +94137,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 78653,
+        "openbench_index": 78110,
         "coding_index": 73577,
-        "tooling_index": 83514,
+        "tooling_index": 81702,
         "knowledge_index": 93218,
         "vision_index": 89775,
         "trust_index": 70173,
@@ -95275,9 +95225,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 89654,
+        "openbench_index": 89492,
         "coding_index": 94386,
-        "tooling_index": 88214,
+        "tooling_index": 87676,
         "knowledge_index": 97989,
         "vision_index": 97334,
         "trust_index": 80701,
@@ -96864,7 +96814,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 47158,
+        "tooling_index": 46997,
         "knowledge_index": 55486,
         "vision_index": null,
         "trust_index": 59836,
@@ -97348,9 +97298,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 15446,
+        "openbench_index": 15539,
         "coding_index": 11314,
-        "tooling_index": 10842,
+        "tooling_index": 11154,
         "knowledge_index": 14001,
         "vision_index": null,
         "trust_index": 26795,
@@ -97960,9 +97910,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 36412,
+        "openbench_index": 36454,
         "coding_index": 18764,
-        "tooling_index": 39893,
+        "tooling_index": 40032,
         "knowledge_index": 40683,
         "vision_index": null,
         "trust_index": 50850,
@@ -98621,9 +98571,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 46622,
+        "openbench_index": 46480,
         "coding_index": 29956,
-        "tooling_index": 53887,
+        "tooling_index": 53413,
         "knowledge_index": 47987,
         "vision_index": null,
         "trust_index": 57086,
@@ -99284,9 +99234,9 @@
         "url": "https://ifm.ai/"
       },
       "scores": {
-        "openbench_index": 48628,
+        "openbench_index": 48550,
         "coding_index": 27739,
-        "tooling_index": 49451,
+        "tooling_index": 49189,
         "knowledge_index": 59371,
         "vision_index": null,
         "trust_index": 66262,
@@ -99887,9 +99837,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 75020,
+        "openbench_index": 74773,
         "coding_index": 68552,
-        "tooling_index": 79895,
+        "tooling_index": 79073,
         "knowledge_index": 83848,
         "vision_index": 70591,
         "trust_index": 71633,
@@ -100920,9 +100870,9 @@
         "url": "https://huggingface.co/XiaomiMiMo"
       },
       "scores": {
-        "openbench_index": 68488,
+        "openbench_index": 68215,
         "coding_index": 66757,
-        "tooling_index": 76535,
+        "tooling_index": 75627,
         "knowledge_index": 70574,
         "vision_index": 49897,
         "trust_index": 59656,
@@ -101953,9 +101903,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 90605,
+        "openbench_index": 90402,
         "coding_index": 97173,
-        "tooling_index": 90072,
+        "tooling_index": 89395,
         "knowledge_index": 97197,
         "vision_index": 97901,
         "trust_index": 79408,
@@ -103246,9 +103196,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 69879,
+        "openbench_index": 69584,
         "coding_index": 63136,
-        "tooling_index": 69131,
+        "tooling_index": 68147,
         "knowledge_index": 82526,
         "vision_index": 77006,
         "trust_index": 71279,
@@ -104410,9 +104360,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 83544,
+        "openbench_index": 83321,
         "coding_index": 82875,
-        "tooling_index": 83530,
+        "tooling_index": 82788,
         "knowledge_index": 93813,
         "vision_index": 90373,
         "trust_index": 78202,
@@ -105471,7 +105421,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 57795,
+        "tooling_index": 57288,
         "knowledge_index": null,
         "vision_index": 74923,
         "trust_index": null,
@@ -105839,9 +105789,9 @@
         "url": "https://minimaxi.com/"
       },
       "scores": {
-        "openbench_index": 69480,
+        "openbench_index": 69228,
         "coding_index": 64329,
-        "tooling_index": 79747,
+        "tooling_index": 78906,
         "knowledge_index": 82003,
         "vision_index": 75303,
         "trust_index": 55827,
@@ -107359,9 +107309,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 89770,
+        "openbench_index": 89705,
         "coding_index": 92567,
-        "tooling_index": 95145,
+        "tooling_index": 94931,
         "knowledge_index": 93852,
         "vision_index": null,
         "trust_index": 77513,
@@ -108557,9 +108507,9 @@
         "url": "https://openai.com/"
       },
       "scores": {
-        "openbench_index": 86971,
+        "openbench_index": 86769,
         "coding_index": 89596,
-        "tooling_index": 84240,
+        "tooling_index": 83567,
         "knowledge_index": 97396,
         "vision_index": 94329,
         "trust_index": 80842,
@@ -110012,9 +109962,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 90442,
+        "openbench_index": 90481,
         "coding_index": 88651,
-        "tooling_index": 91902,
+        "tooling_index": 92032,
         "knowledge_index": 94316,
         "vision_index": null,
         "trust_index": 88515,
@@ -111134,9 +111084,9 @@
         "url": "https://huggingface.co/inclusionAI"
       },
       "scores": {
-        "openbench_index": 74689,
+        "openbench_index": 74364,
         "coding_index": 64790,
-        "tooling_index": 82677,
+        "tooling_index": 81592,
         "knowledge_index": 82988,
         "vision_index": null,
         "trust_index": 72004,
@@ -111177,7 +111127,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": 67.5,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 83,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -111269,7 +111219,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "2026-11-14",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-09-30",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -111361,7 +111311,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/ling-3-1-flash",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://threatfrontier.com/articles/ling-3-1-flash-ant-group-best-flash-model-yet-cybergym",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -111564,6 +111514,11 @@
             "date": "2026-09-30",
             "score": 83,
             "source": "https://threatfrontier.com/articles/ling-3-1-flash-ant-group-best-flash-model-yet-cybergym"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -111787,16 +111742,14 @@
             "automation_bench_aa",
             "terminal_bench_4_1",
             "gdpval_aa",
-            "mcp_atlas",
             "terminal_bench_2_1"
           ],
           "of": 18,
-          "share": 0.426,
+          "share": 0.343,
           "converted": [
             "terminal_bench_4_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "terminal_bench_2_1"
           ]
         },
@@ -111853,9 +111806,9 @@
         "url": "https://www.stepfun.com/"
       },
       "scores": {
-        "openbench_index": 74381,
+        "openbench_index": 73704,
         "coding_index": 61122,
-        "tooling_index": 81843,
+        "tooling_index": 79585,
         "knowledge_index": 85852,
         "vision_index": 60549,
         "trust_index": 74456,
@@ -111896,7 +111849,7 @@
         "tau3_bench_banking": 42.5,
         "automation_bench_aa": 51,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 85.6,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": 55.6,
@@ -111999,7 +111952,7 @@
         "tau3_bench_banking": "2026-10-03",
         "automation_bench_aa": "2026-10-08",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-10-03",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": "2026-10-08",
@@ -112102,7 +112055,7 @@
         "tau3_bench_banking": "https://huggingface.co/SHSLab/Step-5-Preview-BF16",
         "automation_bench_aa": "https://artificialanalysis.ai/models/step-5",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://huggingface.co/SHSLab/Step-5-Preview-BF16",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": "https://artificialanalysis.ai/models/step-5",
@@ -112387,6 +112340,11 @@
             "date": "2026-10-03",
             "score": 85.6,
             "source": "https://huggingface.co/SHSLab/Step-5-Preview-BF16"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -112749,16 +112707,14 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "itbench_aa",
             "tau3_bench_banking",
             "terminal_bench_2_1"
           ],
           "of": 18,
-          "share": 0.651,
+          "share": 0.568,
           "second_hand": [
             "toolathlon",
-            "mcp_atlas",
             "tau3_bench_banking",
             "terminal_bench_2_1"
           ]
@@ -112838,7 +112794,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 41378,
+        "tooling_index": 41468,
         "knowledge_index": 50432,
         "vision_index": null,
         "trust_index": 50100,
@@ -113281,9 +113237,9 @@
         "url": "https://mistral.ai/"
       },
       "scores": {
-        "openbench_index": 70303,
+        "openbench_index": 70020,
         "coding_index": 61363,
-        "tooling_index": 76043,
+        "tooling_index": 75099,
         "knowledge_index": 74728,
         "vision_index": 60549,
         "trust_index": 71489,
@@ -114463,9 +114419,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 76628,
+        "openbench_index": 76331,
         "coding_index": 79232,
-        "tooling_index": 73549,
+        "tooling_index": 72557,
         "knowledge_index": 86469,
         "vision_index": null,
         "trust_index": 71294,
@@ -115583,9 +115539,9 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 85076,
+        "openbench_index": 84913,
         "coding_index": 83853,
-        "tooling_index": 87456,
+        "tooling_index": 86914,
         "knowledge_index": 91217,
         "vision_index": null,
         "trust_index": 80001,
@@ -116567,9 +116523,9 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 88739,
+        "openbench_index": 88622,
         "coding_index": 87073,
-        "tooling_index": 91219,
+        "tooling_index": 90829,
         "knowledge_index": 93502,
         "vision_index": null,
         "trust_index": 84906,
@@ -117332,9 +117288,9 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 81905,
+        "openbench_index": 81667,
         "coding_index": 78656,
-        "tooling_index": 82264,
+        "tooling_index": 81469,
         "knowledge_index": 83789,
         "vision_index": null,
         "trust_index": 84243,
@@ -118776,9 +118732,9 @@
         "url": "https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/"
       },
       "scores": {
-        "openbench_index": 52035,
+        "openbench_index": 51921,
         "coding_index": 35045,
-        "tooling_index": 51585,
+        "tooling_index": 51206,
         "knowledge_index": 69186,
         "vision_index": null,
         "trust_index": 62671,
@@ -119645,9 +119601,9 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 70963,
+        "openbench_index": 69621,
         "coding_index": 56136,
-        "tooling_index": 70085,
+        "tooling_index": 65613,
         "knowledge_index": 84133,
         "vision_index": 85034,
         "trust_index": 81906,
@@ -119688,7 +119644,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": 49.7,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 89.2,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -119789,7 +119745,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "2026-10-15",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-10-19",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -119890,7 +119846,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/muse-spark-open",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -120155,6 +120111,11 @@
             "date": "2026-10-19",
             "score": 89.2,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -120392,18 +120353,16 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "terminal_bench_2_1",
             "apex_agents_1_1"
           ],
           "of": 18,
-          "share": 0.58,
+          "share": 0.497,
           "converted": [
             "terminal_bench_4_1"
           ],
           "second_hand": [
             "toolathlon",
-            "mcp_atlas",
             "apex_agents_1_1"
           ]
         },
@@ -120475,9 +120434,9 @@
         "url": null
       },
       "scores": {
-        "openbench_index": 62285,
+        "openbench_index": 61623,
         "coding_index": 49433,
-        "tooling_index": 65637,
+        "tooling_index": 63430,
         "knowledge_index": 76487,
         "vision_index": null,
         "trust_index": 65164,
@@ -120518,7 +120477,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": 48.5,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 80.8,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": 79.7,
         "itbench_aa": null,
@@ -120625,7 +120584,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "2026-10-16",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-10-22",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": "2026-11-16",
         "itbench_aa": null,
@@ -120732,7 +120691,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/reflection-beam",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": "https://evals.report/benchmarks/ifbench",
         "itbench_aa": null,
@@ -121027,6 +120986,11 @@
             "date": "2026-10-22",
             "score": 80.8,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -121402,15 +121366,13 @@
             "automation_bench_aa",
             "terminal_bench_4_1",
             "gdpval_aa",
-            "mcp_atlas",
             "terminal_bench_2_1",
             "ifbench",
             "apex_agents_1_1"
           ],
           "of": 18,
-          "share": 0.503,
+          "share": 0.42,
           "second_hand": [
-            "mcp_atlas",
             "terminal_bench_2_1",
             "ifbench",
             "apex_agents_1_1"
@@ -121478,9 +121440,9 @@
         "url": "https://www.deepseek.com/en/"
       },
       "scores": {
-        "openbench_index": 78385,
+        "openbench_index": 78178,
         "coding_index": 79720,
-        "tooling_index": 83796,
+        "tooling_index": 83103,
         "knowledge_index": 81821,
         "vision_index": 72286,
         "trust_index": 68230,
@@ -122829,7 +122791,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 37043,
+        "tooling_index": 37262,
         "knowledge_index": 39068,
         "vision_index": null,
         "trust_index": 44300,
@@ -123191,7 +123153,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 39445,
+        "tooling_index": 40948,
         "knowledge_index": 60357,
         "vision_index": null,
         "trust_index": 55700,
@@ -123232,7 +123194,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": 15.5,
         "tau2_bench_telecom": null,
-        "mcp_atlas": 52.2,
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -123310,7 +123272,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "2026-10-19",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "2026-10-19",
+        "mcp_atlas": "2026-11-27",
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -123388,7 +123350,7 @@
         "tau3_bench_banking": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/nemotron-3-5-bolt-74b-a9b",
         "tau2_bench_telecom": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "bfcl_v4": null,
         "ifbench": null,
         "itbench_aa": null,
@@ -123449,6 +123411,11 @@
             "date": "2026-10-19",
             "score": 52.2,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -123534,16 +123501,12 @@
           "measured": [
             "automation_bench_aa",
             "terminal_bench_4_1",
-            "gdpval_aa",
-            "mcp_atlas"
+            "gdpval_aa"
           ],
           "of": 18,
-          "share": 0.402,
+          "share": 0.32,
           "converted": [
             "terminal_bench_4_1"
-          ],
-          "second_hand": [
-            "mcp_atlas"
           ]
         },
         "knowledge_index": {
@@ -123875,9 +123838,9 @@
         "url": "https://www.inclusion-ai.org/"
       },
       "scores": {
-        "openbench_index": 72047,
+        "openbench_index": 71818,
         "coding_index": 57753,
-        "tooling_index": 81821,
+        "tooling_index": 81058,
         "knowledge_index": 82499,
         "vision_index": null,
         "trust_index": 71199,
@@ -124428,9 +124391,9 @@
         "url": "https://www.moonshot.ai/"
       },
       "scores": {
-        "openbench_index": 87691,
+        "openbench_index": 87624,
         "coding_index": 82780,
-        "tooling_index": 95084,
+        "tooling_index": 94859,
         "knowledge_index": 90823,
         "vision_index": 92476,
         "trust_index": 82835,
@@ -125515,9 +125478,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 83490,
+        "openbench_index": 83277,
         "coding_index": 79529,
-        "tooling_index": 83467,
+        "tooling_index": 82758,
         "knowledge_index": 94537,
         "vision_index": 93350,
         "trust_index": 81642,
@@ -126677,9 +126640,9 @@
         "url": "https://huggingface.co/Nanbeige"
       },
       "scores": {
-        "openbench_index": 67576,
+        "openbench_index": 67300,
         "coding_index": 57069,
-        "tooling_index": 73906,
+        "tooling_index": 72988,
         "knowledge_index": 68245,
         "vision_index": null,
         "trust_index": 72186,
@@ -127268,9 +127231,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 92494,
+        "openbench_index": 92451,
         "coding_index": 92076,
-        "tooling_index": 96860,
+        "tooling_index": 96716,
         "knowledge_index": 97764,
         "vision_index": null,
         "trust_index": 84594,
@@ -128226,7 +128189,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 68037,
+        "tooling_index": 67074,
         "knowledge_index": 74052,
         "vision_index": null,
         "trust_index": 68667,
@@ -128797,7 +128760,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": null,
         "toolathlon": null,
-        "mcp_atlas": 83.1,
+        "mcp_atlas": null,
         "claw_eval": null,
         "automation_bench_aa": null,
         "vending_bench_2": null,
@@ -128925,7 +128888,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": null,
         "toolathlon": null,
-        "mcp_atlas": "2026-11-04",
+        "mcp_atlas": "2026-11-27",
         "claw_eval": null,
         "automation_bench_aa": null,
         "vending_bench_2": null,
@@ -129053,7 +129016,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": null,
         "toolathlon": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "claw_eval": null,
         "automation_bench_aa": null,
         "vending_bench_2": null,
@@ -129139,6 +129102,11 @@
             "date": "2026-11-04",
             "score": 83.1,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "browsecomp": [
@@ -129168,7 +129136,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 20212,
+        "tooling_index": 20623,
         "knowledge_index": 20776,
         "vision_index": 14967,
         "trust_index": 26648,
@@ -129750,9 +129718,9 @@
         "url": "https://www.liquid.ai"
       },
       "scores": {
-        "openbench_index": 34902,
+        "openbench_index": 35498,
         "coding_index": 15473,
-        "tooling_index": 34938,
+        "tooling_index": 36926,
         "knowledge_index": 46455,
         "vision_index": null,
         "trust_index": 51241,
@@ -129811,7 +129779,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": 0,
         "toolathlon": null,
-        "mcp_atlas": 32.6,
+        "mcp_atlas": null,
         "claw_eval": 51.4,
         "automation_bench_aa": 7,
         "vending_bench_2": null,
@@ -129939,7 +129907,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": "2026-11-18",
         "toolathlon": null,
-        "mcp_atlas": "2026-11-04",
+        "mcp_atlas": "2026-11-27",
         "claw_eval": "2026-11-04",
         "automation_bench_aa": "2026-11-18",
         "vending_bench_2": null,
@@ -130067,7 +130035,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/lfm3-1-7b",
         "toolathlon": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "claw_eval": "https://huggingface.co/LiquidAI/LFM3-1.7B",
         "automation_bench_aa": "https://artificialanalysis.ai/models/lfm3-1-7b",
         "vending_bench_2": null,
@@ -130237,6 +130205,11 @@
             "date": "2026-11-04",
             "score": 32.6,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "claw_eval": [
@@ -130373,19 +130346,17 @@
           "measured": [
             "automation_bench_aa",
             "terminal_bench_4_1",
-            "mcp_atlas",
             "bfcl_v4",
             "terminal_bench_2_1",
             "ifbench",
             "claw_eval"
           ],
           "of": 18,
-          "share": 0.45,
+          "share": 0.367,
           "converted": [
             "terminal_bench_4_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "bfcl_v4",
             "terminal_bench_2_1",
             "ifbench",
@@ -130455,7 +130426,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 53209,
+        "tooling_index": null,
         "knowledge_index": 64347,
         "vision_index": null,
         "trust_index": 62525,
@@ -130514,7 +130485,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": null,
         "toolathlon": null,
-        "mcp_atlas": 71.7,
+        "mcp_atlas": null,
         "claw_eval": null,
         "automation_bench_aa": null,
         "vending_bench_2": null,
@@ -130583,7 +130554,7 @@
       "scores_updated": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "2026-11-27",
+        "tooling_index": null,
         "knowledge_index": "2026-11-27",
         "vision_index": null,
         "trust_index": "2026-11-27",
@@ -130642,7 +130613,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": null,
         "toolathlon": null,
-        "mcp_atlas": "2026-11-04",
+        "mcp_atlas": "2026-11-27",
         "claw_eval": null,
         "automation_bench_aa": null,
         "vending_bench_2": null,
@@ -130711,7 +130682,7 @@
       "scores_source": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": "https://github.com/dgrieser/ai-bench#tooling-index",
+        "tooling_index": null,
         "knowledge_index": "https://github.com/dgrieser/ai-bench#knowledge-index",
         "vision_index": null,
         "trust_index": "https://github.com/dgrieser/ai-bench#trust-index",
@@ -130770,7 +130741,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": null,
         "toolathlon": null,
-        "mcp_atlas": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+        "mcp_atlas": null,
         "claw_eval": null,
         "automation_bench_aa": null,
         "vending_bench_2": null,
@@ -130877,6 +130848,11 @@
             "date": "2026-11-04",
             "score": 71.7,
             "source": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "tau3_bench_banking": [
@@ -130944,22 +130920,6 @@
         ]
       },
       "index_coverage": {
-        "tooling_index": {
-          "measured": [
-            "mcp_atlas",
-            "tau3_bench_banking",
-            "terminal_bench_2_1",
-            "ifbench"
-          ],
-          "of": 18,
-          "share": 0.183,
-          "second_hand": [
-            "mcp_atlas",
-            "tau3_bench_banking",
-            "terminal_bench_2_1",
-            "ifbench"
-          ]
-        },
         "knowledge_index": {
           "measured": [
             "mmlu_pro",
@@ -131011,9 +130971,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 75852,
+        "openbench_index": 76075,
         "coding_index": 73383,
-        "tooling_index": 73902,
+        "tooling_index": 74645,
         "knowledge_index": 85665,
         "vision_index": 86599,
         "trust_index": 75268,
@@ -131931,9 +131891,9 @@
         "url": "https://www.anthropic.com/"
       },
       "scores": {
-        "openbench_index": 93904,
+        "openbench_index": 93848,
         "coding_index": 98575,
-        "tooling_index": 95867,
+        "tooling_index": 95680,
         "knowledge_index": 99765,
         "vision_index": null,
         "trust_index": 82426,
@@ -132905,9 +132865,9 @@
         "url": "https://www.llama.com/"
       },
       "scores": {
-        "openbench_index": 75297,
+        "openbench_index": 75083,
         "coding_index": 70240,
-        "tooling_index": 83237,
+        "tooling_index": 82524,
         "knowledge_index": 84384,
         "vision_index": null,
         "trust_index": 66385,
@@ -134039,9 +133999,9 @@
         "url": "https://ernie.baidu.com/blog/posts/ernie4.5/"
       },
       "scores": {
-        "openbench_index": 75184,
+        "openbench_index": 74803,
         "coding_index": 69836,
-        "tooling_index": 85298,
+        "tooling_index": 84025,
         "knowledge_index": 82345,
         "vision_index": null,
         "trust_index": 65170,
@@ -134100,7 +134060,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": 13.3,
         "toolathlon": 75,
-        "mcp_atlas": 84.6,
+        "mcp_atlas": null,
         "claw_eval": null,
         "automation_bench_aa": 70.6,
         "vending_bench_2": null,
@@ -134227,7 +134187,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": "2026-11-27",
         "toolathlon": "2026-11-27",
-        "mcp_atlas": "2026-11-12",
+        "mcp_atlas": "2026-11-27",
         "claw_eval": null,
         "automation_bench_aa": "2026-11-27",
         "vending_bench_2": null,
@@ -134354,7 +134314,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/ernie-5-5-flash",
         "toolathlon": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "claw_eval": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/ernie-5-5-flash",
         "vending_bench_2": null,
@@ -134517,6 +134477,11 @@
             "date": "2026-11-12",
             "score": 84.6,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -134639,18 +134604,16 @@
             "terminal_bench_4_1",
             "toolathlon",
             "gdpval_aa",
-            "mcp_atlas",
             "itbench_aa",
             "apex_agents_1_1"
           ],
           "of": 18,
-          "share": 0.627,
+          "share": 0.544,
           "converted": [
             "terminal_bench_4_1"
           ],
           "second_hand": [
             "toolathlon",
-            "mcp_atlas",
             "apex_agents_1_1"
           ]
         },
@@ -134698,7 +134661,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 66423,
+        "tooling_index": 65502,
         "knowledge_index": 69102,
         "vision_index": null,
         "trust_index": 60469,
@@ -135256,9 +135219,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 89601,
+        "openbench_index": 89519,
         "coding_index": 87485,
-        "tooling_index": 94012,
+        "tooling_index": 93739,
         "knowledge_index": 94943,
         "vision_index": null,
         "trust_index": 83643,
@@ -136102,9 +136065,9 @@
         "url": "https://qwen.ai/"
       },
       "scores": {
-        "openbench_index": 83298,
+        "openbench_index": 83203,
         "coding_index": 73373,
-        "tooling_index": 92905,
+        "tooling_index": 92590,
         "knowledge_index": 88689,
         "vision_index": null,
         "trust_index": 80443,
@@ -137286,9 +137249,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 89683,
+        "openbench_index": 89612,
         "coding_index": 88181,
-        "tooling_index": 95079,
+        "tooling_index": 94843,
         "knowledge_index": 99001,
         "vision_index": 99309,
         "trust_index": 79419,
@@ -138196,9 +138159,9 @@
         "url": "https://openai.com/index/introducing-gpt-oss/"
       },
       "scores": {
-        "openbench_index": 85173,
+        "openbench_index": 85026,
         "coding_index": 86651,
-        "tooling_index": 88816,
+        "tooling_index": 88327,
         "knowledge_index": 95204,
         "vision_index": null,
         "trust_index": 73009,
@@ -139028,9 +138991,9 @@
         "url": "https://deepmind.google/models"
       },
       "scores": {
-        "openbench_index": 93082,
+        "openbench_index": 93050,
         "coding_index": 92312,
-        "tooling_index": 97943,
+        "tooling_index": 97838,
         "knowledge_index": 97422,
         "vision_index": null,
         "trust_index": 85567,
@@ -139870,9 +139833,9 @@
         "url": "https://thinkingmachines.ai/"
       },
       "scores": {
-        "openbench_index": 61371,
+        "openbench_index": 60468,
         "coding_index": 51574,
-        "tooling_index": 65822,
+        "tooling_index": 62811,
         "knowledge_index": 65460,
         "vision_index": 49552,
         "trust_index": 65334,
@@ -139933,7 +139896,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": 1.4,
         "toolathlon": null,
-        "mcp_atlas": 82.7,
+        "mcp_atlas": null,
         "claw_eval": null,
         "automation_bench_aa": 41.8,
         "vending_bench_2": null,
@@ -140064,7 +140027,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": "2026-11-20",
         "toolathlon": null,
-        "mcp_atlas": "2026-11-20",
+        "mcp_atlas": "2026-11-27",
         "claw_eval": null,
         "automation_bench_aa": "2026-11-20",
         "vending_bench_2": null,
@@ -140195,7 +140158,7 @@
         "terminal_bench_hard": null,
         "terminal_bench_science_0_1": "https://artificialanalysis.ai/models/inkling-2-mini",
         "toolathlon": null,
-        "mcp_atlas": "https://llm-stats.com/leaderboards/open-llm-leaderboard",
+        "mcp_atlas": null,
         "claw_eval": null,
         "automation_bench_aa": "https://artificialanalysis.ai/models/inkling-2-mini",
         "vending_bench_2": null,
@@ -140380,6 +140343,11 @@
             "date": "2026-11-20",
             "score": 82.7,
             "source": "https://llm-stats.com/leaderboards/open-llm-leaderboard"
+          },
+          {
+            "date": "2026-11-27",
+            "score": null,
+            "source": null
           }
         ],
         "automation_bench_aa": [
@@ -140576,17 +140544,15 @@
             "automation_bench_aa",
             "terminal_bench_4_1",
             "gdpval_aa",
-            "mcp_atlas",
             "terminal_bench_2_1",
             "apex_agents_1_1"
           ],
           "of": 18,
-          "share": 0.485,
+          "share": 0.402,
           "converted": [
             "terminal_bench_4_1"
           ],
           "second_hand": [
-            "mcp_atlas",
             "terminal_bench_2_1",
             "apex_agents_1_1"
           ]
@@ -141128,7 +141094,7 @@
       "scores": {
         "openbench_index": null,
         "coding_index": null,
-        "tooling_index": 74066,
+        "tooling_index": 73091,
         "knowledge_index": 69067,
         "vision_index": null,
         "trust_index": 57823,
@@ -142611,12 +142577,12 @@
         "claude-fable-5-2": 1,
         "gemini-4-neon": 2,
         "gemini-4-carbon": 3,
-        "claude-opus-5-5": 4,
-        "gemini-4-argon": 5,
+        "gemini-4-argon": 4,
+        "claude-opus-5-5": 5,
         "claude-sonnet-5-5": 6,
         "gpt-6-2-astra": 7,
-        "gpt-6-astra": 8,
-        "gemini-4-hydrogen": 9,
+        "gemini-4-hydrogen": 8,
+        "gpt-6-astra": 9,
         "muse-wonder-full": 10,
         "claude-fable-5-1": 11,
         "kimi-k3-1-pro": 12,
@@ -142628,25 +142594,25 @@
         "qwen4-max": 18,
         "grok-4-7": 19,
         "kimi-k3": 20,
-        "gpt-5-6-sol": 21,
-        "glm-5-3": 22,
-        "deepseek-v4-1-flash-1017": 23,
+        "glm-5-3": 21,
+        "deepseek-v4-1-flash-1017": 22,
+        "gpt-5-6-sol": 23,
         "claude-haiku-5-5": 24,
         "qwen3-8-2-4t-a95b": 25,
         "inkling-2-small": 26,
         "muse-ember": 27,
         "ernie-5-5-flash-preview": 28,
-        "mimo-v2-6-pro": 29,
-        "glm-5-3-flash": 30,
+        "glm-5-3-flash": 29,
+        "mimo-v2-6-pro": 30,
         "ling-3-1-flash": 31,
-        "step-5-preview": 32,
-        "hy4": 33,
-        "gpt-5-6-terra": 34,
+        "hy4": 32,
+        "gpt-5-6-terra": 33,
+        "step-5-preview": 34,
         "deepseek-v4-1-flash": 35,
         "ling-3-1-flash-1019": 36,
-        "muse-spark-open": 37,
-        "mistral-large-4": 38,
-        "qwen3-8-flash-next": 39,
+        "mistral-large-4": 37,
+        "qwen3-8-flash-next": 38,
+        "muse-spark-open": 39,
         "gpt-6-luna": 40,
         "minimax-m3-1-flash": 41,
         "mimo-v2-6-flash": 42,
@@ -142658,20 +142624,20 @@
         "deepseek-v4-flash": 48,
         "qwen3-8-27b": 49,
         "reflection-beam": 50,
-        "inkling-2-mini": 51,
-        "k2-horizon-375b-a23b": 52,
+        "k2-horizon-375b-a23b": 51,
+        "inkling-2-mini": 52,
         "deepseek-v4-flash-vision": 53,
         "kimi-k2-6": 54,
         "kimi-k2-7-code": 55,
         "inkling-small": 56,
         "mimo-v2-5-pro": 57,
         "nemotron-3-5-super-vl": 58,
-        "hy3": 59,
-        "nvidia-nemotron-3-ultra-550b-a55b": 60,
+        "nvidia-nemotron-3-ultra-550b-a55b": 59,
+        "hy3": 60,
         "inkling": 61,
         "k2-horizon-mova-36b-a4b": 62,
-        "muse-glimmer": 63,
-        "kimi-k2-5": 64,
+        "kimi-k2-5": 63,
+        "muse-glimmer": 64,
         "minimax-m2-7": 65,
         "k2-horizon-7b": 66,
         "mimo-v2-5-0424": 67,
@@ -142823,8 +142789,8 @@
         "gemini-4-argon": 9,
         "muse-wonder-full": 10,
         "claude-opus-5-5": 11,
-        "gpt-6-2-sol": 12,
-        "claude-fable-5-1": 13,
+        "claude-fable-5-1": 12,
+        "gpt-6-2-sol": 13,
         "gpt-6-astra": 14,
         "muse-wonder": 15,
         "glm-5-3-flash": 16,
@@ -142832,15 +142798,15 @@
         "gpt-6-1-sol": 18,
         "deepseek-v4-1-flash-1017": 19,
         "gpt-6-sol": 20,
-        "gpt-5-6-sol": 21,
-        "gpt-6-1-terra": 22,
+        "gpt-6-1-terra": 21,
+        "muse-ember": 22,
         "hy4": 23,
-        "muse-ember": 24,
+        "gpt-5-6-sol": 24,
         "ling-3-1-flash": 25,
-        "glm-5-3": 26,
-        "grok-4-7": 27,
-        "step-5-preview": 28,
-        "ling-3-1-flash-1019": 29,
+        "grok-4-7": 26,
+        "glm-5-3": 27,
+        "ling-3-1-flash-1019": 28,
+        "step-5-preview": 29,
         "mimo-v2-6-pro": 30,
         "minimax-m3-1-flash": 31,
         "kimi-k3": 32,
@@ -142850,117 +142816,109 @@
         "qwen3-8-flash-next": 36,
         "mimo-v2-6-flash": 37,
         "mistral-large-4": 38,
-        "ling-3-2-air": 39,
-        "nanbeige4-3-33b": 40,
-        "inkling-2-small": 41,
+        "inkling-2-small": 39,
+        "ling-3-2-air": 40,
+        "nanbeige4-3-33b": 41,
         "claude-haiku-5-5": 42,
         "deepseek-v4-flash-vision": 43,
-        "muse-spark-open": 44,
-        "gpt-6-luna": 45,
-        "deepseek-v4-pro": 46,
-        "deepseek-v4-flash": 47,
-        "mistral-large-4-medium": 48,
-        "gpt-5-6-luna": 49,
-        "qwen3-8-27b": 50,
+        "deepseek-v4-flash": 44,
+        "deepseek-v4-pro": 45,
+        "gpt-6-luna": 46,
+        "mistral-large-4-medium": 47,
+        "gpt-5-6-luna": 48,
+        "qwen3-8-27b": 49,
+        "muse-spark-open": 50,
         "motif-3": 51,
-        "ornith-1-5-397b": 52,
-        "glm-5-2": 53,
+        "glm-5-2": 52,
+        "reflection-beam": 53,
         "inkling-2-mini": 54,
-        "reflection-beam": 55,
-        "k2-horizon-375b-a23b": 56,
-        "minimax-m3": 57,
-        "dots3-note-prev": 58,
-        "kimi-k2-7-code": 59,
+        "k2-horizon-375b-a23b": 55,
+        "minimax-m3": 56,
+        "dots3-note-prev": 57,
+        "kimi-k2-7-code": 58,
+        "kimi-k2-6": 59,
         "hy3": 60,
-        "kimi-k2-6": 61,
-        "ornith-1-0-397b": 62,
-        "k2-horizon-7b": 63,
-        "inkling-small": 64,
-        "ripple-65b-preview": 65,
-        "nemotron-3-5-super-vl": 66,
-        "ornith-1-5-35b-a3b": 67,
-        "k2-horizon-mova-36b-a4b": 68,
-        "muse-glimmer": 69,
-        "ling-3-0-flash-vl": 70,
-        "ling-3-0-flash-fin": 71,
-        "mimo-v2-5-pro": 72,
-        "qwen3-5-27b": 73,
-        "ornith-1-0-35b": 74,
-        "inkling": 75,
-        "solar-open2-250b": 76,
-        "mimo-v2-5-0424": 77,
-        "nvidia-nemotron-3-ultra-550b-a55b": 78,
-        "qwen3-6-27b": 79,
-        "kolibri-1": 80,
+        "k2-horizon-7b": 61,
+        "inkling-small": 62,
+        "nemotron-3-5-super-vl": 63,
+        "k2-horizon-mova-36b-a4b": 64,
+        "ling-3-0-flash-vl": 65,
+        "muse-glimmer": 66,
+        "ling-3-0-flash-fin": 67,
+        "mimo-v2-5-pro": 68,
+        "qwen3-5-27b": 69,
+        "solar-open2-250b": 70,
+        "inkling": 71,
+        "mimo-v2-5-0424": 72,
+        "nvidia-nemotron-3-ultra-550b-a55b": 73,
+        "qwen3-6-27b": 74,
+        "kolibri-1": 75,
+        "qwen3-5-397b-a17b": 76,
+        "nemotron-3-5-bolt": 77,
+        "step-3-7-flash": 78,
+        "k2-horizon-3-7b": 79,
+        "kimi-k2-5": 80,
         "glm-4-7": 81,
-        "qwen3-5-397b-a17b": 82,
-        "step-3-7-flash": 83,
-        "ornith-1-5-9b": 84,
-        "k2-horizon-3-7b": 85,
-        "ling-3-0-flash": 86,
-        "qwen3-5-122b-a10b": 87,
-        "kimi-k2-5": 88,
-        "nemotron-3-5-bolt": 89,
-        "gemma-4-31b": 90,
-        "mistral-medium-3-5": 91,
-        "minimax-m2-7": 92,
-        "glm-4-6": 93,
-        "nemotron-labs-dory-1-0": 94,
-        "qwen3-5-35b-a3b": 95,
-        "a-x-k2": 96,
-        "qwen3-6-35b-a3b": 97,
-        "longcat-2-0": 98,
-        "ornith-1-0-9b": 99,
-        "lfm3-1-7b": 100,
-        "command-a-plus": 101,
-        "nemotron-3-5-lightning": 102,
-        "minicpm5-2b": 103,
-        "qwen3-5-9b": 104,
-        "trinity-large-thinking": 105,
-        "north-mini-code": 106,
-        "granite-4-2-30b": 107,
-        "gemma-4-26b-a4b": 108,
-        "devstral-2": 109,
-        "qwen3-5-4b": 110,
-        "nvidia-nemotron-3-super-120b-a12b": 111,
-        "devstral-small-2": 112,
-        "ling-3-0-tiny": 113,
-        "granite-4-2-8b": 114,
-        "diffusiongemma-26b-a4b": 115,
-        "qwen3-235b-a22b-instruct-2507-reasoning": 116,
-        "gemma-4-12b": 117,
-        "gpt-oss-120b": 118,
-        "qwen3-coder-next": 119,
-        "lfm2-5-2-6b": 120,
-        "qwen3-235b-a22b-instruct-2507": 121,
-        "qwen3-next-80b-a3b-reasoning": 122,
-        "mistral-large-3": 123,
-        "mistral-small-4": 124,
-        "gpt-oss-20b": 125,
-        "nvidia-nemotron-3-nano-30b-a3b-reasoning": 126,
-        "lfm3-vl-2b": 127,
-        "granite-4-2-3b": 128,
-        "ministral-3-14b": 129,
-        "qwen3-30b-a3b-2507-reasoning": 130,
-        "qwen3-32b-instruct": 131,
-        "granite-4-1-30b": 132,
-        "gemma-4-e4b": 133,
-        "ministral-3-8b": 134,
-        "qwen3-14b-instruct": 135,
-        "ministral-3-3b": 136,
-        "qwen3-5-2b": 137,
-        "gemma-4-e2b": 138,
-        "llama-4-maverick": 139,
-        "qwen3-8b-instruct": 140,
-        "nanbeige4-1-3b": 141,
-        "k2-horizon-0-9b": 142,
-        "minicpm-v4-6-1-3b": 143,
-        "granite-4-1-3b": 144,
-        "llama-4-scout": 145,
-        "gemma-3-27b": 146,
-        "gemma-3-12b": 147,
-        "qwen3-5-0-8b": 148,
-        "gemma-3-4b": 149
+        "qwen3-5-122b-a10b": 82,
+        "ling-3-0-flash": 83,
+        "gemma-4-31b": 84,
+        "mistral-medium-3-5": 85,
+        "minimax-m2-7": 86,
+        "glm-4-6": 87,
+        "nemotron-labs-dory-1-0": 88,
+        "qwen3-5-35b-a3b": 89,
+        "lfm3-1-7b": 90,
+        "a-x-k2": 91,
+        "qwen3-6-35b-a3b": 92,
+        "longcat-2-0": 93,
+        "command-a-plus": 94,
+        "nemotron-3-5-lightning": 95,
+        "minicpm5-2b": 96,
+        "qwen3-5-9b": 97,
+        "trinity-large-thinking": 98,
+        "north-mini-code": 99,
+        "granite-4-2-30b": 100,
+        "gemma-4-26b-a4b": 101,
+        "devstral-2": 102,
+        "qwen3-5-4b": 103,
+        "nvidia-nemotron-3-super-120b-a12b": 104,
+        "devstral-small-2": 105,
+        "ling-3-0-tiny": 106,
+        "granite-4-2-8b": 107,
+        "diffusiongemma-26b-a4b": 108,
+        "qwen3-235b-a22b-instruct-2507-reasoning": 109,
+        "gemma-4-12b": 110,
+        "gpt-oss-120b": 111,
+        "qwen3-coder-next": 112,
+        "lfm2-5-2-6b": 113,
+        "qwen3-next-80b-a3b-reasoning": 114,
+        "mistral-large-3": 115,
+        "mistral-small-4": 116,
+        "gpt-oss-20b": 117,
+        "nvidia-nemotron-3-nano-30b-a3b-reasoning": 118,
+        "lfm3-vl-2b": 119,
+        "granite-4-2-3b": 120,
+        "ministral-3-14b": 121,
+        "qwen3-30b-a3b-2507-reasoning": 122,
+        "qwen3-32b-instruct": 123,
+        "granite-4-1-30b": 124,
+        "gemma-4-e4b": 125,
+        "ministral-3-8b": 126,
+        "qwen3-14b-instruct": 127,
+        "ministral-3-3b": 128,
+        "qwen3-5-2b": 129,
+        "gemma-4-e2b": 130,
+        "llama-4-maverick": 131,
+        "qwen3-8b-instruct": 132,
+        "nanbeige4-1-3b": 133,
+        "k2-horizon-0-9b": 134,
+        "minicpm-v4-6-1-3b": 135,
+        "granite-4-1-3b": 136,
+        "llama-4-scout": 137,
+        "gemma-3-27b": 138,
+        "gemma-3-12b": 139,
+        "qwen3-5-0-8b": 140,
+        "gemma-3-4b": 141
       },
       "knowledge_index": {
         "claude-fable-5-2": 1,
@@ -143504,6 +143462,14 @@
         "index": "openbench_index",
         "model": "gemini-4-argon",
         "from": 6,
+        "to": 4,
+        "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "claude-opus-5-5",
+        "from": 4,
         "to": 5,
         "of": 98
       },
@@ -143526,16 +143492,16 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "gpt-6-astra",
-        "from": 7,
+        "model": "gemini-4-hydrogen",
+        "from": 10,
         "to": 8,
         "of": 98
       },
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "gemini-4-hydrogen",
-        "from": 10,
+        "model": "gpt-6-astra",
+        "from": 7,
         "to": 9,
         "of": 98
       },
@@ -143601,17 +143567,23 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "gpt-5-6-sol",
-        "from": 23,
+        "model": "glm-5-3",
+        "from": 22,
         "to": 21,
-        "of": 98
+        "of": 98,
+        "open": {
+          "from": 3,
+          "to": 3,
+          "of": 74,
+          "quiet": true
+        }
       },
       {
         "date": "2026-11-27",
         "index": "openbench_index",
         "model": "deepseek-v4-1-flash-1017",
         "from": 20,
-        "to": 23,
+        "to": 22,
         "of": 98,
         "open": {
           "from": 2,
@@ -143669,12 +143641,12 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "mimo-v2-6-pro",
-        "from": 25,
+        "model": "glm-5-3-flash",
+        "from": 32,
         "to": 29,
         "of": 98,
         "open": {
-          "from": 5,
+          "from": 10,
           "to": 8,
           "of": 74
         }
@@ -143682,12 +143654,12 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "glm-5-3-flash",
-        "from": 32,
+        "model": "mimo-v2-6-pro",
+        "from": 25,
         "to": 30,
         "of": 98,
         "open": {
-          "from": 10,
+          "from": 5,
           "to": 9,
           "of": 74
         }
@@ -143708,12 +143680,12 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "step-5-preview",
-        "from": 26,
+        "model": "hy4",
+        "from": 33,
         "to": 32,
         "of": 98,
         "open": {
-          "from": 6,
+          "from": 12,
           "to": 11,
           "of": 74
         }
@@ -143723,8 +143695,21 @@
         "index": "openbench_index",
         "model": "gpt-5-6-terra",
         "from": 28,
-        "to": 34,
+        "to": 33,
         "of": 98
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "step-5-preview",
+        "from": 26,
+        "to": 34,
+        "of": 98,
+        "open": {
+          "from": 6,
+          "to": 12,
+          "of": 74
+        }
       },
       {
         "date": "2026-11-27",
@@ -143742,13 +143727,39 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "muse-spark-open",
-        "from": 36,
+        "model": "mistral-large-4",
+        "from": 38,
         "to": 37,
         "of": 98,
         "open": {
-          "from": 14,
+          "from": 16,
           "to": 15,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "qwen3-8-flash-next",
+        "from": 39,
+        "to": 38,
+        "of": 98,
+        "open": {
+          "from": 17,
+          "to": 16,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "muse-spark-open",
+        "from": 36,
+        "to": 39,
+        "of": 98,
+        "open": {
+          "from": 14,
+          "to": 17,
           "of": 74
         }
       },
@@ -143770,6 +143781,32 @@
         "open": {
           "from": 27,
           "to": 23,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "k2-horizon-375b-a23b",
+        "from": 52,
+        "to": 51,
+        "of": 98,
+        "open": {
+          "from": 28,
+          "to": 27,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "inkling-2-mini",
+        "from": 51,
+        "to": 52,
+        "of": 98,
+        "open": {
+          "from": 27,
+          "to": 28,
           "of": 74
         }
       },
@@ -143802,32 +143839,6 @@
       {
         "date": "2026-11-27",
         "index": "openbench_index",
-        "model": "hy3",
-        "from": 60,
-        "to": 59,
-        "of": 98,
-        "open": {
-          "from": 36,
-          "to": 35,
-          "of": 74
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "openbench_index",
-        "model": "nvidia-nemotron-3-ultra-550b-a55b",
-        "from": 59,
-        "to": 60,
-        "of": 98,
-        "open": {
-          "from": 35,
-          "to": 36,
-          "of": 74
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "openbench_index",
         "model": "inkling",
         "from": 58,
         "to": 61,
@@ -143835,6 +143846,32 @@
         "open": {
           "from": 34,
           "to": 37,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "kimi-k2-5",
+        "from": 64,
+        "to": 63,
+        "of": 98,
+        "open": {
+          "from": 40,
+          "to": 39,
+          "of": 74
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "openbench_index",
+        "model": "muse-glimmer",
+        "from": 63,
+        "to": 64,
+        "of": 98,
+        "open": {
+          "from": 39,
+          "to": 40,
           "of": 74
         }
       },
@@ -144630,7 +144667,7 @@
         "model": "claude-fable-5-2",
         "from": 4,
         "to": 3,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
@@ -144638,7 +144675,7 @@
         "model": "claude-sonnet-5-5",
         "from": 6,
         "to": 4,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
@@ -144646,7 +144683,7 @@
         "model": "gpt-6-2-astra",
         "from": 3,
         "to": 6,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
@@ -144654,23 +144691,23 @@
         "model": "claude-opus-5-5",
         "from": 12,
         "to": 11,
-        "of": 149
-      },
-      {
-        "date": "2026-11-27",
-        "index": "tooling_index",
-        "model": "gpt-6-2-sol",
-        "from": 11,
-        "to": 12,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
         "model": "claude-fable-5-1",
         "from": 14,
+        "to": 12,
+        "of": 141
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "gpt-6-2-sol",
+        "from": 11,
         "to": 13,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
@@ -144678,7 +144715,7 @@
         "model": "gpt-6-astra",
         "from": 13,
         "to": 14,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
@@ -144686,11 +144723,11 @@
         "model": "ernie-5-5-flash-preview",
         "from": null,
         "to": 17,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": null,
           "to": 3,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -144699,11 +144736,11 @@
         "model": "deepseek-v4-1-flash-1017",
         "from": 17,
         "to": 19,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 3,
           "to": 4,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -144712,23 +144749,23 @@
         "model": "gpt-6-sol",
         "from": 23,
         "to": 20,
-        "of": 149
-      },
-      {
-        "date": "2026-11-27",
-        "index": "tooling_index",
-        "model": "gpt-5-6-sol",
-        "from": 22,
-        "to": 21,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
         "model": "gpt-6-1-terra",
         "from": 20,
+        "to": 21,
+        "of": 141
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "muse-ember",
+        "from": 24,
         "to": 22,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
@@ -144736,60 +144773,53 @@
         "model": "hy4",
         "from": 26,
         "to": 23,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 7,
           "to": 5,
-          "of": 125
+          "of": 117
         }
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
-        "model": "glm-5-3",
-        "from": 25,
-        "to": 26,
-        "of": 149,
-        "open": {
-          "from": 6,
-          "to": 7,
-          "of": 125
-        }
+        "model": "gpt-5-6-sol",
+        "from": 22,
+        "to": 24,
+        "of": 141
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
         "model": "grok-4-7",
         "from": 29,
+        "to": 26,
+        "of": 141
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "glm-5-3",
+        "from": 25,
         "to": 27,
-        "of": 149
+        "of": 141,
+        "open": {
+          "from": 6,
+          "to": 7,
+          "of": 117
+        }
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
         "model": "step-5-preview",
         "from": 27,
-        "to": 28,
-        "of": 149,
+        "to": 29,
+        "of": 141,
         "open": {
           "from": 8,
-          "to": 8,
-          "of": 125,
-          "quiet": true
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "tooling_index",
-        "model": "ling-3-1-flash-1019",
-        "from": 28,
-        "to": 29,
-        "of": 149,
-        "open": {
-          "from": 9,
           "to": 9,
-          "of": 125,
-          "quiet": true
+          "of": 117
         }
       },
       {
@@ -144798,11 +144828,11 @@
         "model": "mimo-v2-6-pro",
         "from": 28,
         "to": 30,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 9,
           "to": 10,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -144811,11 +144841,11 @@
         "model": "minimax-m3-1-flash",
         "from": 33,
         "to": 31,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 12,
           "to": 11,
-          "of": 125,
+          "of": 117,
           "quiet": true
         }
       },
@@ -144825,11 +144855,11 @@
         "model": "kimi-k3",
         "from": 35,
         "to": 32,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 14,
           "to": 12,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -144838,7 +144868,7 @@
         "model": "gpt-5-6-terra",
         "from": 30,
         "to": 34,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
@@ -144846,11 +144876,11 @@
         "model": "qwen3-8-2-4t-a95b",
         "from": 37,
         "to": 35,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 16,
           "to": 14,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -144859,11 +144889,11 @@
         "model": "qwen3-8-flash-next",
         "from": 38,
         "to": 36,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 17,
           "to": 15,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -144872,11 +144902,11 @@
         "model": "mimo-v2-6-flash",
         "from": 36,
         "to": 37,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 15,
           "to": 16,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -144885,11 +144915,11 @@
         "model": "mistral-large-4",
         "from": 41,
         "to": 38,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 19,
           "to": 17,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -144897,13 +144927,12 @@
         "index": "tooling_index",
         "model": "ling-3-2-air",
         "from": 38,
-        "to": 39,
-        "of": 149,
+        "to": 40,
+        "of": 141,
         "open": {
           "from": 17,
-          "to": 18,
-          "of": 125,
-          "quiet": true
+          "to": 19,
+          "of": 117
         }
       },
       {
@@ -144911,26 +144940,13 @@
         "index": "tooling_index",
         "model": "nanbeige4-3-33b",
         "from": 42,
-        "to": 40,
-        "of": 149,
+        "to": 41,
+        "of": 141,
         "open": {
           "from": 20,
-          "to": 19,
-          "of": 125,
-          "quiet": true
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "tooling_index",
-        "model": "inkling-2-small",
-        "from": 39,
-        "to": 41,
-        "of": 149,
-        "open": {
-          "from": 18,
           "to": 20,
-          "of": 125
+          "of": 117,
+          "quiet": true
         }
       },
       {
@@ -144939,7 +144955,7 @@
         "model": "claude-haiku-5-5",
         "from": 39,
         "to": 42,
-        "of": 149
+        "of": 141
       },
       {
         "date": "2026-11-27",
@@ -144947,11 +144963,38 @@
         "model": "deepseek-v4-flash-vision",
         "from": 42,
         "to": 43,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 20,
           "to": 21,
-          "of": 125
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "deepseek-v4-flash",
+        "from": 49,
+        "to": 44,
+        "of": 141,
+        "open": {
+          "from": 26,
+          "to": 22,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "deepseek-v4-pro",
+        "from": 46,
+        "to": 45,
+        "of": 141,
+        "open": {
+          "from": 23,
+          "to": 23,
+          "of": 117,
+          "quiet": true
         }
       },
       {
@@ -144959,33 +145002,20 @@
         "index": "tooling_index",
         "model": "gpt-6-luna",
         "from": 47,
-        "to": 45,
-        "of": 149
-      },
-      {
-        "date": "2026-11-27",
-        "index": "tooling_index",
-        "model": "deepseek-v4-flash",
-        "from": 49,
-        "to": 47,
-        "of": 149,
-        "open": {
-          "from": 26,
-          "to": 24,
-          "of": 125
-        }
+        "to": 46,
+        "of": 141
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
         "model": "mistral-large-4-medium",
         "from": 50,
-        "to": 48,
-        "of": 149,
+        "to": 47,
+        "of": 141,
         "open": {
           "from": 27,
-          "to": 25,
-          "of": 125
+          "to": 24,
+          "of": 117
         }
       },
       {
@@ -144993,20 +145023,34 @@
         "index": "tooling_index",
         "model": "gpt-5-6-luna",
         "from": 51,
-        "to": 49,
-        "of": 149
+        "to": 48,
+        "of": 141
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
         "model": "qwen3-8-27b",
         "from": 48,
-        "to": 50,
-        "of": 149,
+        "to": 49,
+        "of": 141,
         "open": {
           "from": 25,
+          "to": 25,
+          "of": 117,
+          "quiet": true
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "muse-spark-open",
+        "from": 44,
+        "to": 50,
+        "of": 141,
+        "open": {
+          "from": 22,
           "to": 26,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -145015,37 +145059,24 @@
         "model": "motif-3",
         "from": 53,
         "to": 51,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 29,
           "to": 27,
-          "of": 125
+          "of": 117
         }
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
-        "model": "ornith-1-5-397b",
-        "from": 50,
-        "to": 52,
-        "of": 149,
-        "open": {
-          "from": 26,
-          "to": 28,
-          "of": 125
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "tooling_index",
-        "model": "glm-5-2",
-        "from": 52,
+        "model": "reflection-beam",
+        "from": 51,
         "to": 53,
-        "of": 149,
+        "of": 141,
         "open": {
-          "from": 28,
+          "from": 27,
           "to": 29,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -145054,24 +145085,11 @@
         "model": "inkling-2-mini",
         "from": 56,
         "to": 54,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 32,
           "to": 30,
-          "of": 125
-        }
-      },
-      {
-        "date": "2026-11-27",
-        "index": "tooling_index",
-        "model": "reflection-beam",
-        "from": 51,
-        "to": 55,
-        "of": 149,
-        "open": {
-          "from": 27,
-          "to": 31,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -145079,12 +145097,12 @@
         "index": "tooling_index",
         "model": "minimax-m3",
         "from": 59,
-        "to": 57,
-        "of": 149,
+        "to": 56,
+        "of": 141,
         "open": {
           "from": 35,
-          "to": 33,
-          "of": 125
+          "to": 32,
+          "of": 117
         }
       },
       {
@@ -145092,25 +145110,25 @@
         "index": "tooling_index",
         "model": "dots3-note-prev",
         "from": 60,
-        "to": 58,
-        "of": 149,
+        "to": 57,
+        "of": 141,
         "open": {
           "from": 36,
-          "to": 34,
-          "of": 125
+          "to": 33,
+          "of": 117
         }
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
-        "model": "ornith-1-0-397b",
-        "from": 60,
-        "to": 62,
-        "of": 149,
+        "model": "kimi-k2-6",
+        "from": 61,
+        "to": 59,
+        "of": 141,
         "open": {
-          "from": 36,
-          "to": 38,
-          "of": 125
+          "from": 37,
+          "to": 35,
+          "of": 117
         }
       },
       {
@@ -145118,12 +145136,38 @@
         "index": "tooling_index",
         "model": "nemotron-3-5-super-vl",
         "from": 77,
-        "to": 66,
-        "of": 149,
+        "to": 63,
+        "of": 141,
         "open": {
           "from": 53,
+          "to": 39,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ling-3-0-flash-vl",
+        "from": 70,
+        "to": 65,
+        "of": 141,
+        "open": {
+          "from": 46,
+          "to": 41,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "muse-glimmer",
+        "from": 69,
+        "to": 66,
+        "of": 141,
+        "open": {
+          "from": 45,
           "to": 42,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -145131,12 +145175,12 @@
         "index": "tooling_index",
         "model": "ling-3-0-flash-fin",
         "from": 72,
-        "to": 71,
-        "of": 149,
+        "to": 67,
+        "of": 141,
         "open": {
           "from": 48,
-          "to": 47,
-          "of": 125
+          "to": 43,
+          "of": 117
         }
       },
       {
@@ -145144,12 +145188,12 @@
         "index": "tooling_index",
         "model": "mimo-v2-5-pro",
         "from": 73,
-        "to": 72,
-        "of": 149,
+        "to": 68,
+        "of": 141,
         "open": {
           "from": 49,
-          "to": 48,
-          "of": 125
+          "to": 44,
+          "of": 117
         }
       },
       {
@@ -145157,12 +145201,25 @@
         "index": "tooling_index",
         "model": "qwen3-5-27b",
         "from": 72,
-        "to": 73,
-        "of": 149,
+        "to": 69,
+        "of": 141,
         "open": {
           "from": 48,
-          "to": 49,
-          "of": 125
+          "to": 45,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "solar-open2-250b",
+        "from": 76,
+        "to": 70,
+        "of": 141,
+        "open": {
+          "from": 52,
+          "to": 46,
+          "of": 117
         }
       },
       {
@@ -145170,12 +145227,12 @@
         "index": "tooling_index",
         "model": "inkling",
         "from": 67,
-        "to": 75,
-        "of": 149,
+        "to": 71,
+        "of": 141,
         "open": {
           "from": 43,
-          "to": 51,
-          "of": 125
+          "to": 47,
+          "of": 117
         }
       },
       {
@@ -145183,12 +145240,64 @@
         "index": "tooling_index",
         "model": "kolibri-1",
         "from": 81,
-        "to": 80,
-        "of": 149,
+        "to": 75,
+        "of": 141,
         "open": {
           "from": 57,
+          "to": 51,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "qwen3-5-397b-a17b",
+        "from": 82,
+        "to": 76,
+        "of": 141,
+        "open": {
+          "from": 58,
+          "to": 52,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "nemotron-3-5-bolt",
+        "from": 89,
+        "to": 77,
+        "of": 141,
+        "open": {
+          "from": 65,
+          "to": 53,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "step-3-7-flash",
+        "from": 85,
+        "to": 78,
+        "of": 141,
+        "open": {
+          "from": 61,
+          "to": 54,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "kimi-k2-5",
+        "from": 85,
+        "to": 80,
+        "of": 141,
+        "open": {
+          "from": 61,
           "to": 56,
-          "of": 125
+          "of": 117
         }
       },
       {
@@ -145197,37 +145306,89 @@
         "model": "glm-4-7",
         "from": 82,
         "to": 81,
-        "of": 149,
+        "of": 141,
         "open": {
           "from": 58,
           "to": 57,
-          "of": 125
+          "of": 117
         }
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
-        "model": "step-3-7-flash",
-        "from": 85,
+        "model": "qwen3-5-122b-a10b",
+        "from": 87,
+        "to": 82,
+        "of": 141,
+        "open": {
+          "from": 63,
+          "to": 58,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ling-3-0-flash",
+        "from": 86,
         "to": 83,
-        "of": 149,
+        "of": 141,
         "open": {
-          "from": 61,
+          "from": 62,
           "to": 59,
-          "of": 125
+          "of": 117
         }
       },
       {
         "date": "2026-11-27",
         "index": "tooling_index",
-        "model": "kimi-k2-5",
-        "from": 85,
-        "to": 88,
-        "of": 149,
+        "model": "lfm3-1-7b",
+        "from": 100,
+        "to": 90,
+        "of": 141,
         "open": {
-          "from": 61,
-          "to": 64,
-          "of": 125
+          "from": 76,
+          "to": 66,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "a-x-k2",
+        "from": 96,
+        "to": 91,
+        "of": 141,
+        "open": {
+          "from": 72,
+          "to": 67,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "qwen3-6-35b-a3b",
+        "from": 97,
+        "to": 92,
+        "of": 141,
+        "open": {
+          "from": 73,
+          "to": 68,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "longcat-2-0",
+        "from": 98,
+        "to": 93,
+        "of": 141,
+        "open": {
+          "from": 74,
+          "to": 69,
+          "of": 117
         }
       },
       {
@@ -145235,12 +145396,12 @@
         "index": "tooling_index",
         "model": "nemotron-3-5-lightning",
         "from": 104,
-        "to": 102,
-        "of": 149,
+        "to": 95,
+        "of": 141,
         "open": {
           "from": 80,
-          "to": 78,
-          "of": 125
+          "to": 71,
+          "of": 117
         }
       },
       {
@@ -145248,11 +145409,115 @@
         "index": "tooling_index",
         "model": "llama-4-maverick",
         "from": 137,
-        "to": 139,
-        "of": 149,
+        "to": 131,
+        "of": 141,
         "open": {
           "from": 113,
-          "to": 115,
+          "to": 107,
+          "of": 117
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ornith-1-5-397b",
+        "from": 50,
+        "to": null,
+        "of": 149,
+        "open": {
+          "from": 26,
+          "to": null,
+          "of": 125
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ornith-1-0-397b",
+        "from": 60,
+        "to": null,
+        "of": 149,
+        "open": {
+          "from": 36,
+          "to": null,
+          "of": 125
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ripple-65b-preview",
+        "from": 65,
+        "to": null,
+        "of": 149,
+        "open": {
+          "from": 41,
+          "to": null,
+          "of": 125
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ornith-1-5-35b-a3b",
+        "from": 67,
+        "to": null,
+        "of": 149,
+        "open": {
+          "from": 43,
+          "to": null,
+          "of": 125
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ornith-1-0-35b",
+        "from": 74,
+        "to": null,
+        "of": 149,
+        "open": {
+          "from": 50,
+          "to": null,
+          "of": 125
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ornith-1-5-9b",
+        "from": 84,
+        "to": null,
+        "of": 149,
+        "open": {
+          "from": 60,
+          "to": null,
+          "of": 125
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "ornith-1-0-9b",
+        "from": 99,
+        "to": null,
+        "of": 149,
+        "open": {
+          "from": 75,
+          "to": null,
+          "of": 125
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "index": "tooling_index",
+        "model": "qwen3-235b-a22b-instruct-2507",
+        "from": 121,
+        "to": null,
+        "of": 149,
+        "open": {
+          "from": 97,
+          "to": null,
           "of": 125
         }
       },

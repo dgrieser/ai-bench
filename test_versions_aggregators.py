@@ -18,7 +18,8 @@ Covered here, one or two requests a test:
   Mercor's APEX-Agents board, which apex_agents_1_1 follows, still on 1.1.
 * llm-stats -- every fetch_llmstats.BOARD_FIELDS board answering, and no
   APEX-Agents note naming a revision newer than the ones it splits into.
-* OpenRouter -- the model pages still carrying fetch_openrouter.BENCHMARK.
+* OpenRouter -- retired as a GPQA Diamond source; the model pages still
+  carrying exactly fetch_openrouter.CARRIED_AT_RETIREMENT, and not BENCHMARK.
 
 Each test's docstring says why it exists and what to do when it fails. A host
 that cannot be reached skips; an HTTP error fails, since a page that moved is
@@ -334,25 +335,35 @@ class TestLlmStats(Live):
 
 
 class TestOpenRouter(Live):
-    def test_model_pages_still_carry_the_benchmark_read(self):
-        """fetch_openrouter reads rows whose benchmark_type is BENCHMARK
-        ("gpqa_diamond"); rows of any other type are skipped, so a rename
-        leaves every model with no score and nothing failing. On failure: see
-        what the pages carry now (the message lists it); a different question
-        set or grading (e.g. "gpqa_diamond_unsat") is a different measurement,
-        so decide whether gpqa_diamond may take it before renaming BENCHMARK."""
+    def test_model_pages_still_carry_what_they_did_at_retirement(self):
+        """OpenRouter stopped publishing gpqa_diamond in November 2026; its
+        pages carry fetch_openrouter.CARRIED_AT_RETIREMENT instead
+        ("gpqa_diamond_unsat", an undocumented ~93-question subset, and two
+        routing signals), and update.py no longer reads the source
+        (OPENROUTER_RETIRED). Fails when the probed pages carry anything else.
+
+        On failure: if BENCHMARK ("gpqa_diamond") is back, check it is the
+        198-question set again before setting OPENROUTER_RETIRED to False. If
+        a type was added or renamed, read what it is (the page bundle's label
+        map, OpenRouter's docs) -- a documented benchmark may deserve a column
+        -- then re-pin CARRIED_AT_RETIREMENT."""
         carried: dict[str, list[str]] = {}
         for model in OPENROUTER_PROBES:
             url = fetch_openrouter.MODEL_PAGE_URL.format(model=model)
             query = fetch_openrouter.benchmark_query(self.body(url))
             self.assertIsNotNone(query, f"{url} has no benchmarkScores query")
-            rows = ((query.get("state") or {}).get("data") or {}).get("scores") or []
-            types = sorted({row.get("benchmark_type") for row in rows if isinstance(row, dict)}, key=str)
-            if fetch_openrouter.BENCHMARK in types:
-                return
-            carried[url] = types
-        self.fail(f"no probed OpenRouter page carries benchmark_type "
-                  f"{fetch_openrouter.BENCHMARK!r}; they carry {carried}")
+            carried[url] = fetch_openrouter.benchmark_types(query)
+        seen = {t for types in carried.values() for t in types}
+        self.assertNotIn(
+            fetch_openrouter.BENCHMARK, seen,
+            f"OpenRouter publishes {fetch_openrouter.BENCHMARK!r} again ({carried}); "
+            "the source is retired -- see this test's docstring",
+        )
+        self.assertEqual(
+            seen, set(fetch_openrouter.CARRIED_AT_RETIREMENT),
+            f"OpenRouter's model pages carry {carried}; pinned at retirement: "
+            f"{fetch_openrouter.CARRIED_AT_RETIREMENT}",
+        )
 
 
 if __name__ == "__main__":

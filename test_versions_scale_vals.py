@@ -324,21 +324,26 @@ class TestMcpAtlas(ScaleTestCase):
     def expected_config(self) -> dict[str, str]:
         entry = llm_benchmark("mcp_atlas")
         settings = " | ".join(entry.get("settings", []))
-        subset = re.search(r"public (\d+)-task subset", settings)
+        tasks = re.search(r"all ([\d,]+) tasks", settings)
+        held_out = re.search(r"(\d+) held out", settings)
         budget = re.search(r"(\d+) tool calls/task", settings)
         since = re.search(r"under the (\w+ \d{4}) configuration", entry["description"])
         self.assertTrue(
-            subset and budget and since,
-            "llm.json's mcp_atlas no longer states its task subset, tool-call budget and "
+            tasks and held_out and budget and since,
+            "llm.json's mcp_atlas no longer states its task set, tool-call budget and "
             "configuration date in the form this test reads; update expected_config()",
         )
-        return {"subset": subset.group(1), "budget": budget.group(1), "since": since.group(1)}
+        total = tasks.group(1).replace(",", "")
+        return {
+            "total": total, "public": str(int(total) - int(held_out.group(1))),
+            "held_out": held_out.group(1), "budget": budget.group(1), "since": since.group(1),
+        }
 
     def test_page_still_describes_the_configuration_read(self):
         """Scale re-scores MCP-Atlas in place under the same URL and slug: in
         April 2026 it swapped the 20-turn cap for a 100-tool-call budget and a
         new judge, and said so in a dated paragraph. A second such paragraph,
-        a changed budget, a dropped public-subset description, a revision
+        a changed budget, a changed public/held-out split, a revision
         number, or a second live MCP Atlas board would all leave mcp_atlas
         quietly blending two configurations.
 
@@ -364,11 +369,23 @@ class TestMcpAtlas(ScaleTestCase):
             f"{url} states a tool-call budget of {sorted(budgets) or 'none'}; "
             f"mcp_atlas holds {expected['budget']} tool calls/task",
         )
+        splits = {
+            (total.replace(",", ""), public, private)
+            for total, public, private in re.findall(
+                r"([\d,]+) Tasks \((\d+) public \+ (\d+) private\)", text
+            )
+        }
+        split = (expected["total"], expected["public"], expected["held_out"])
+        self.assertEqual(
+            splits, {split},
+            f"{url} describes the task set as {sorted(splits) or 'no stated split'}; "
+            f"mcp_atlas holds all {split[0]} tasks ({split[1]} public + {split[2]} held out)",
+        )
         subsets = set(re.findall(r"public leaderboard subset contains (\d+) tasks", text))
         self.assertEqual(
-            subsets, {expected["subset"]},
+            subsets, {expected["public"]},
             f"{url} describes a public subset of {sorted(subsets) or 'no stated size'}; "
-            f"mcp_atlas holds the public {expected['subset']}-task subset",
+            f"mcp_atlas says {expected['public']} of its tasks are public",
         )
         versions = [m.group(0) for m in _MCP_VERSION_RE.finditer(decoded)]
         self.assertEqual(versions, [], f"{url} names an MCP-Atlas revision: {sorted(set(versions))}")
@@ -387,14 +404,15 @@ class TestMcpAtlas(ScaleTestCase):
         beside "Pass Rate % (Public <n>)", for a dozen models. Whichever
         column the leaderboard's own scores reproduce is the task set the
         leaderboard -- and so mcp_atlas -- actually ranks. Fails when that is
-        not the public subset llm.json says mcp_atlas holds.
+        not the full task set llm.json says mcp_atlas holds (it was all 1,000
+        in November 2026, when llm.json still claimed the public 500).
 
         When it fails: either Scale moved the leaderboard to another task set
         (a new configuration: see the test above), or llm.json's mcp_atlas
         description and settings were wrong about which set it holds and
         should be corrected -- the scores are what they are."""
         url = fetch_mcp_atlas.URL
-        expected = self.expected_config()["subset"]
+        expected = self.expected_config()["total"]
         body, rows = self.get_with_rows(url, fetch_mcp_atlas.extract_rows)
         decoded = decode_flight(body)
         scores = {round(float(r["score"]), 1) for r in rows}
@@ -414,10 +432,10 @@ class TestMcpAtlas(ScaleTestCase):
             matches[name] = sum(round(v, 1) in scores for v in values)
         ranked = max(matches, key=matches.get)
         self.assertRegex(
-            ranked, rf"\bPublic {expected}\b",
+            ranked, rf"\bAll {expected}\b",
             f"{url}: the leaderboard's scores reproduce the {ranked!r} column "
             f"(matches per column: {matches}); llm.json's mcp_atlas says it holds "
-            f"the public {expected}-task subset",
+            f"all {expected} tasks",
         )
 
 

@@ -67,7 +67,9 @@ The rungs, strongest first:
      one of rungs 6 and 7 below, the fetcher rungs that yield to it.
   6. ``RANK_ENDPOINT_RUN`` -- OpenRouter's own GPQA Diamond runs, one per
      provider endpoint serving a model, of which fetch_openrouter.py reports
-     the median. A run rather than a republished number, but of whatever
+     the median. Retired as a source on 2026-11-27 (the pages dropped
+     gpqa_diamond; update.OPENROUTER_RETIRED), so the rank now only holds
+     the values it wrote before. A run rather than a republished number, but of whatever
      deployment each provider serves -- quantized, on its own inference stack,
      now and then plainly broken -- so the number is the model as the API
      market serves it rather than as its lab or a uniform harness measured it.

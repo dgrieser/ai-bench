@@ -169,6 +169,11 @@ SWE_MARATHON_SCRIPT = Path(__file__).resolve().with_name("fetch_swe_marathon.py"
 SPHERON_SCRIPT = Path(__file__).resolve().with_name("fetch_spheron.py")
 LLMSTATS_SCRIPT = Path(__file__).resolve().with_name("fetch_llmstats.py")
 OPENROUTER_SCRIPT = Path(__file__).resolve().with_name("fetch_openrouter.py")
+# OpenRouter stopped publishing gpqa_diamond on its model pages in November
+# 2026 (they now carry an undocumented "GPQA Unsat" subset instead; see
+# fetch_openrouter.py's docstring), so it is retired as a GPQA Diamond source:
+# not read unless --openrouter asks for it. The values it wrote stay.
+OPENROUTER_RETIRED = True
 EPOCH_SCRIPT = Path(__file__).resolve().with_name("fetch_epoch.py")
 DEFAULT_LLM_JSON = Path(__file__).resolve().with_name("llm.json")
 JSON_DUMP_KWARGS = {"indent": 2, "ensure_ascii": False}
@@ -622,7 +627,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-openrouter",
         action="store_true",
-        help="Skip fetching GPQA Diamond scores from OpenRouter's model pages.",
+        help="Skip fetching GPQA Diamond scores from OpenRouter's model pages. "
+        "A no-op while OPENROUTER_RETIRED holds: the source is skipped anyway.",
+    )
+    parser.add_argument(
+        "--openrouter",
+        action="store_true",
+        help="Read OpenRouter's model pages although the source is retired "
+        "(OPENROUTER_RETIRED): it fails until they publish gpqa_diamond again.",
     )
     parser.add_argument(
         "--skip-epoch",
@@ -630,6 +642,12 @@ def parse_args() -> argparse.Namespace:
         help="Skip fetching scores from Epoch AI's Benchmarking Hub.",
     )
     return parser.parse_args()
+
+
+def skip_retired_sources(args: argparse.Namespace) -> None:
+    """Skip a retired source unless the run asked for it by name."""
+    if OPENROUTER_RETIRED and not args.openrouter:
+        args.skip_openrouter = True
 
 
 def unique_names(models: list[dict[str, Any]]) -> list[str]:
@@ -3789,6 +3807,7 @@ def main() -> int:
     global RUN_REPORTS
     RUN_REPORTS = RunReports()
     args = parse_args()
+    skip_retired_sources(args)
     if args.fill_source_urls:
         # Spheron carries VRAM estimates, not benchmark scores; the URL
         # backfill has nothing to attribute there.
