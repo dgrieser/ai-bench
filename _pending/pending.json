@@ -4,97 +4,204 @@
       "candidates": [
         {
           "confidence": "weak",
-          "option": "apex_agents",
-          "reason": "exact to APEX-Agents 1.1, most components match"
+          "option": "arena_text",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
         },
         {
           "confidence": "weak",
-          "option": "agents_last_exam_1_1",
-          "reason": "the same name without its first 1 word(s): exact to agents-1-1, all components match"
+          "option": "exploitgym",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
         },
         {
           "confidence": "weak",
-          "option": "agents_last_exam_1_0",
-          "reason": "the same name without its first 1 word(s): exact to agents-1-1, all components match"
+          "option": "exploitbench",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_cyber_index",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_legal_index",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
         }
       ],
       "context": {
-        "known": 1708,
+        "known": 1724,
         "mapped": {
-          "agents_last_exam_1_0": [
-            "Agent's Last Exam (Pass@1)",
-            "Agents' Last Exam",
-            "Agents' Last Exam (ALL)",
-            "Agents’ Last Exam",
-            "Frontier agentic tasks Agents' Last Exam",
-            "agents-last-exam/agents-last-exam (overall-pass-rate)"
+          "exploitbench": [
+            "ExploitBench"
           ],
-          "apex_agents": [
-            "APEX-Agents",
-            "Apex-Agents",
-            "Apex-Agents (pass@1) Long-horizon professional workflows",
-            "mercor/apex-agents"
+          "exploitgym": [
+            "ExploitGym",
+            "ExploitGym (Pass@1)"
           ]
         },
-        "siblings": [
-          {
-            "mapped_to": [
-              "apex_agents"
-            ],
-            "name": "Apex-Agents (pass@1) Long-horizon professional workflows"
-          },
-          {
-            "mapped_to": [
-              "apex_agents"
-            ],
-            "name": "APEX-Agents"
-          },
-          {
-            "mapped_to": [
-              "apex_agents"
-            ],
-            "name": "Apex-Agents"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Apex (Pass@1)"
-          },
-          {
-            "mapped_to": [
-              "apex_agents"
-            ],
-            "name": "mercor/apex-agents"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Apex Bench v1.1"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "Apex Shortlist (Pass@1)"
-          },
-          {
-            "mapped_to": [
-              "__unmappable__"
-            ],
-            "name": "MathArena Apex (Pass@1)"
-          }
-        ]
+        "siblings": []
       },
       "default": null,
       "if_previous": null,
       "note": null,
-      "question": "Map HF label 'APEX-Agents 1.1' to llm.json benchmark",
+      "question": "Map HF label 'X-LANCE/SynthDCB (Car)' to llm.json benchmark",
       "route": "update_huggingface_mapping.py",
       "route_kind": "mapping",
-      "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
-      "subject": "APEX-Agents 1.1",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-27B",
+      "subject": "X-LANCE/SynthDCB (Car)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "arena_text",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exploitgym",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exploitbench",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_cyber_index",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_legal_index",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        }
+      ],
+      "context": {
+        "known": 1724,
+        "mapped": {
+          "exploitbench": [
+            "ExploitBench"
+          ],
+          "exploitgym": [
+            "ExploitGym",
+            "ExploitGym (Pass@1)"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'X-LANCE/SynthDCB (Home)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-27B",
+      "subject": "X-LANCE/SynthDCB (Home)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "arena_text",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exploitgym",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exploitbench",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_cyber_index",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_legal_index",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        }
+      ],
+      "context": {
+        "known": 1724,
+        "mapped": {
+          "exploitbench": [
+            "ExploitBench"
+          ],
+          "exploitgym": [
+            "ExploitGym",
+            "ExploitGym (Pass@1)"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'X-LANCE/SynthDCB (Overall)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-27B",
+      "subject": "X-LANCE/SynthDCB (Overall)",
+      "universe": "benchmarks"
+    },
+    {
+      "candidates": [
+        {
+          "confidence": "weak",
+          "option": "arena_text",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exploitgym",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "exploitbench",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_cyber_index",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        },
+        {
+          "confidence": "weak",
+          "option": "aa_legal_index",
+          "reason": "the first 1 word(s) of the label: exact to x, substring match"
+        }
+      ],
+      "context": {
+        "known": 1724,
+        "mapped": {
+          "exploitbench": [
+            "ExploitBench"
+          ],
+          "exploitgym": [
+            "ExploitGym",
+            "ExploitGym (Pass@1)"
+          ]
+        },
+        "siblings": []
+      },
+      "default": null,
+      "if_previous": null,
+      "note": null,
+      "question": "Map HF label 'X-LANCE/SynthDCB (Phone)' to llm.json benchmark",
+      "route": "update_huggingface_mapping.py",
+      "route_kind": "mapping",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-27B",
+      "subject": "X-LANCE/SynthDCB (Phone)",
       "universe": "benchmarks"
     }
   ]
