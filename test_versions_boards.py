@@ -586,11 +586,15 @@ class TestArcPrize(BoardTestCase):
 # ---------------------------------------------------------------------- Arena
 
 # Agent Arena signals Arena has retired, with where it said so. arena.ai's
-# changelog renders client-side and refuses scripts, so this is kept by hand.
+# changelog is kept by hand here (verified 2026-11-27: the page payload served
+# to a browser UA carries the entry's text under "November 18, 2026").
 # The dataset subset may keep publishing after retirement (it still did on
 # 2026-11-27), which is why nothing else notices.
 ARENA_RETIRED_SUBSETS = {
-    "agent_tool_hallucination": "arena.ai/changelog, 2026-11-18: tool-hallucination signal retired",
+    "agent_tool_hallucination": (
+        "https://arena.ai/blog/leaderboard-changelog/, 2026-11-18: "
+        "'We are retiring the Tool Hallucination signal'"
+    ),
 }
 
 
