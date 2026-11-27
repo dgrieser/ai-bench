@@ -162,7 +162,44 @@ BOARD_FIELDS = {
     "tau2_airline": "tau2-airline",
     "hmmt_feb_2026": "hmmt-feb-26",
     "nl2repo": "nl2repo",
+    # APEX-Agents changed revision under the same name: Mercor's board moved
+    # to 1.1 on 2026-09-08 (new judge, re-audited tasks, scores not
+    # comparable), and the flat field folds both together. The board is read
+    # twice, each row going to the revision apex_revision() gives it.
+    "apex_agents_1_0": "apex-agents",
+    "apex_agents_1_1": "apex-agents",
 }
+
+# Flat fields that must not be ingested as-is because the board labels above
+# split them; popped alongside the board labels.
+SPLIT_FLAT_FIELDS = ("apex_agents",)
+
+# APEX-Agents 1.1 replaced 1.0 on Mercor's board on this date; nothing
+# announced before it can have been run on 1.1 at announcement.
+APEX_AGENTS_1_1_DATE = "2026-09-08"
+_APEX_1_1_RE = re.compile(r"\b(?:v\s*)?1\.1\b", re.IGNORECASE)
+_APEX_1_0_RE = re.compile(r"\b(?:v\s*1(?:\.0)?|1\.0)\b(?!\.\d)", re.IGNORECASE)
+
+
+def apex_revision(method: str | None, announced: str | None) -> str | None:
+    """"1.0", "1.1" or None (unknowable) for one APEX-Agents row.
+
+    A note naming the revision decides. Otherwise the model's announcement
+    date does: a self-report published before 1.1 existed is a 1.0 number,
+    and one published after it -- including "cited from Mercor's
+    leaderboard" -- is the board's current 1.1.
+    """
+    text = method if isinstance(method, str) else ""
+    if _APEX_1_1_RE.search(text):
+        return "1.1"
+    if _APEX_1_0_RE.search(text):
+        return "1.0"
+    if isinstance(announced, str) and len(announced) >= 10:
+        return "1.1" if announced[:10] >= APEX_AGENTS_1_1_DATE else "1.0"
+    return None
+
+
+_APEX_LABEL_REVISIONS = {"apex_agents_1_0": "1.0", "apex_agents_1_1": "1.1"}
 
 # Board rows whose note says they are not what the column holds: label ->
 # pattern a row's analysis_method must match (keep) or must not match (drop).
@@ -218,8 +255,11 @@ SCORE_EXCLUSIONS: dict[tuple[str, str], str] = {
 }
 
 
-def board_row_kept(label: str, method: str | None) -> bool:
+def board_row_kept(label: str, method: str | None, entry: dict | None = None) -> bool:
     """Whether a board row's note allows it into the label's column."""
+    if label in _APEX_LABEL_REVISIONS:
+        announced = (entry or {}).get("announcement_date")
+        return apex_revision(method, announced) == _APEX_LABEL_REVISIONS[label]
     rule = BOARD_METHOD_FILTERS.get(label)
     if rule is None:
         return True
@@ -331,6 +371,7 @@ def benchmark_labels() -> list[str]:
     for item in fetch_leaderboard():
         if isinstance(item, dict):
             labels.update(_flat_scores(item))
+    labels.difference_update(SPLIT_FLAT_FIELDS)
     if HLE_LABEL in labels:
         labels.discard(HLE_LABEL)
         labels.add(HLE_NO_TOOLS_LABEL)
@@ -509,7 +550,7 @@ def board_scores(
             continue
         if not isinstance(score, (int, float)) or isinstance(score, bool):
             continue
-        if label is not None and not board_row_kept(label, entry.get("analysis_method")):
+        if label is not None and not board_row_kept(label, entry.get("analysis_method"), entry):
             continue
         out.setdefault(model_id, float(score))
     return out
@@ -552,7 +593,7 @@ def get_scores(resolve_hle: bool = True) -> list[dict]:
     # name carries no note to filter it by, so it gives way even where the
     # board drops the model's row.
     for record in results:
-        for label in BOARD_FIELDS:
+        for label in (*BOARD_FIELDS, *SPLIT_FLAT_FIELDS):
             record["scores"].pop(label, None)
 
     # One request per board, however many labels it serves.

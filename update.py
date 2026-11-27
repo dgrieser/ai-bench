@@ -1797,6 +1797,35 @@ def hf_label_rank(label: str) -> int:
     return 1 if _HF_QUALIFIED_LABEL_RE.search(label) else 0
 
 
+# Revision columns a model card's *unversioned* label can only be placed in by
+# date. APEX-Agents moved to 1.1 on Mercor's board on 2026-09-08 under the same
+# name, and the cards rarely say which they ran. A label naming no revision is
+# mapped to the older column and kept there only for a model added before the
+# cutoff (its llm.json date_added), when 1.1 did not exist yet; for a later
+# model it is ambiguous and dropped. Release date alone cannot promote it to
+# 1.1: Step-5-Preview's card (October) prints Opus 5 at 41.8 beside its own
+# "Apex-Agents" score, where Mercor's 1.1 board has 65.8. A label that names
+# its revision maps straight to its column and is never touched.
+# old column -> cutoff date.
+HF_DATED_REVISIONS: dict[str, str] = {
+    "apex_agents_1_0": "2026-09-08",
+}
+_DATED_SUFFIX = "@dated"
+_NAMES_A_REVISION_RE = re.compile(r"\bv?\d+\.\d+\b|\bv\d+\b", re.IGNORECASE)
+
+
+def dated_revision_key(key: str, model: dict[str, Any]) -> str | None:
+    """The column an unversioned card label's ``key@dated`` resolves to, or
+    None when the model is too recent to tell which revision it ran."""
+    if not key.endswith(_DATED_SUFFIX):
+        return key
+    base = key[: -len(_DATED_SUFFIX)]
+    added = model.get("date_added")
+    if isinstance(added, str) and added[:10] < HF_DATED_REVISIONS[base]:
+        return base
+    return None
+
+
 def fetch_huggingface_data(
     script: Path, mapping_path: Path
 ) -> dict[str, dict[str, Any]]:
@@ -1835,6 +1864,8 @@ def fetch_huggingface_data(
             key = hf_to_key.get(label)
             if not key or value is None or label in ruled_out:
                 continue
+            if key in HF_DATED_REVISIONS and not _NAMES_A_REVISION_RE.search(label):
+                key += _DATED_SUFFIX
             # Several card labels can alias one llm.json benchmark, and they do
             # not all name the same run. Three things decide between them, in
             # this order:
@@ -1890,6 +1921,9 @@ def update_huggingface_scores(
 
         matched += 1
         for benchmark_key, (new_value, url) in hf_scores.items():
+            benchmark_key = dated_revision_key(benchmark_key, model)
+            if benchmark_key is None:
+                continue
             # HF self-reports are lowest-trust: only fill nulls, never overwrite.
             updated += apply_score(
                 doc, model, slug, benchmark_key, new_value, url, changes,

@@ -216,7 +216,9 @@ BENCHMARKS: dict[str, Benchmark] = {
     # ARC-AGI-2 is ARC Prize's semi-private set. ALE-Bench and Vending-Bench 2
     # are not fractions: a contest performance rating, and the money balance a
     # simulated year of running the business ends on.
-    "apex-agents": Benchmark("apex_agents_external.csv", "Pass@1 score", key="apex_agents"),
+    # Epoch's copy follows Mercor's board, which has been APEX-Agents 1.1 since
+    # 2026-09-08; every row in the file matches the 1.1 board.
+    "apex-agents": Benchmark("apex_agents_external.csv", "Pass@1 score", key="apex_agents_1_1"),
     "arc-agi-2": Benchmark("arc_agi_2_external.csv", "Score", key="arc_agi_2"),
     "ale-bench": Benchmark("ale_bench_external.csv", "Performance", key="ale_bench", bounds=(0, 5000)),
     "vending-bench-2": Benchmark(

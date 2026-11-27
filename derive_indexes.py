@@ -464,7 +464,10 @@ INDEXES: list[IndexDef] = [
             # APEX-Agents: professional-services work in simulated apps, 46
             # tracked models off Mercor's board (via Epoch) with card and
             # llm-stats fill, a 13.8-point head, 0.82 with this index.
-            ("apex_agents", 0.5),
+            # 1.1 since 2026-11-27: Mercor re-graded its board as 1.1 on
+            # 2026-09-08 and the column had been mixing both. 1.0 (pre-switch
+            # self-reports only) reaches it through REVISION_FALLBACKS.
+            ("apex_agents_1_1", 0.5),
             # A simulated year of running a business: the only member that
             # tests coherence over thousands of steps. Scored in dollars and
             # noisy run to run, 27 models, so below the anchors.
@@ -914,6 +917,10 @@ REVISION_FALLBACKS: dict[str, str] = {
     # AA re-graded its 4.0 runs, so nearly every model sits on both and the
     # factor lands close to 1; it covers the few on 4.0 alone.
     "terminal_bench_4_1": "terminal_bench_4_0",
+    # APEX-Agents: 1.0's self-reports onto 1.1, Mercor's re-graded board (new
+    # judge, re-audited tasks). A model on 1.0 alone -- most of the open
+    # models that self-reported before 2026-09-08 -- keeps its evidence.
+    "apex_agents_1_1": "apex_agents_1_0",
     # Real-SWE needs none: 1.1 already scores three times 1.0's field.
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's

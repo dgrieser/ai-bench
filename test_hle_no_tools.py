@@ -608,6 +608,12 @@ class TestLlmStatsResolution(unittest.TestCase):
         # CyberGym's board serves two labels, split by the note: one E2E row
         # scores the second.
         boards["cybergym"].append({"model_id": "b", "score": 0.3, "analysis_method": "CyberGym-E2E (AA)"})
+        # APEX-Agents' board serves 1.0 and 1.1, split by note and date: one
+        # row of each.
+        boards["apex-agents"] = [
+            {"model_id": "a", "score": 0.2, "analysis_method": "APEX-Agents v1.1"},
+            {"model_id": "b", "score": 0.3, "analysis_method": "", "announcement_date": "2026-03-01"},
+        ]
         resolved = self._run(payload, lambda _mid: detail, boards)
         expected = sorted({label for scores in resolved.values() for label in scores})
 
