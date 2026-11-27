@@ -381,7 +381,7 @@ def _route_prefixes() -> dict[str, tuple[str, ...]]:
         "update_swe_marathon_mapping.py": [p.SWE_MARATHON_SOURCE_URL],
         "update_toolathlon_mapping.py": [p.TOOLATHLON_SOURCE_URL],
         "update_programbench_mapping.py": [p.PROGRAMBENCH_SOURCE_URL],
-        "update_kernelbench_mapping.py": [p.KERNELBENCH_SOURCE_URL],
+        "update_kernelbench_mapping.py": [p.KERNELBENCH_SOURCE_URL, *p.KERNELBENCH_KEY_URLS.values()],
         "update_real_swe_mapping.py": [p.REAL_SWE_SOURCE_URL],
         "update_zerobench_mapping.py": [p.ZEROBENCH_SOURCE_URL],
         "update_arc_prize_mapping.py": p.ARC_PRIZE_KEY_URLS.values(),

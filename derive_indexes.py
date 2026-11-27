@@ -402,6 +402,13 @@ INDEXES: list[IndexDef] = [
             # the 17 models sitting at 1.70 of scored weight drop through the
             # evidence bar, and that cost is taken knowingly. See README, "Why
             # KernelBench Hard enters at 0.40".
+            #
+            # Frozen since 2026-11-23: the site retired Hard to an archive page
+            # and no new model will be run on it. Its values stay valid, so it
+            # keeps 0.4. kernelbench_mega, the live successor read beside it,
+            # is not a member: one problem, so one run per model, where Hard
+            # averages six -- revisit when that deck grows. CUDA mixes units
+            # and is not read. Different problem sets, so no REVISION_FALLBACKS.
             ("kernelbench_hard", 0.4),
             # 0.1 since 2026-10-03, from 0.15: 96.4 at the top.
             ("swe_bench_verified", 0.1),

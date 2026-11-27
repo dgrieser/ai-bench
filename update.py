@@ -69,6 +69,7 @@ from _precedence import (
     SWE_BENCH_PRO_V2_SOURCE_URL,
     OSWORLD_KEY_URLS,
     OSWORLD_SOURCE_URL,
+    KERNELBENCH_KEY_URLS,
     KERNELBENCH_SOURCE_URL,
     PROGRAMBENCH_SOURCE_URL,
     REAL_SWE_SOURCE_URL,
@@ -2051,7 +2052,9 @@ def build_fetch_kernelbench_cmd(script: Path) -> list[str]:
 
 def fetch_kernelbench_data(
     script: Path, mapping_path: Path
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """Column -> slug -> row: fetch_kernelbench.py names the column on every row
+    (Mega from the homepage, Hard from its frozen archive)."""
     cmd = build_fetch_kernelbench_cmd(script)
     proc = run_fetch(cmd)
     if proc.returncode != 0:
@@ -2064,9 +2067,12 @@ def fetch_kernelbench_data(
         raise RuntimeError("Unexpected kernelbench JSON format: expected a list")
 
     kernelbench_to_slug = load_kernelbench_to_slug_mapping(mapping_path)
-    by_slug: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, dict[str, dict[str, Any]]] = {}
     for row in payload:
         if not isinstance(row, dict):
+            continue
+        key = row.get("benchmark")
+        if key not in KERNELBENCH_KEY_URLS:
             continue
         kernelbench_name = row.get("model")
         if not isinstance(kernelbench_name, str) or not kernelbench_name:
@@ -2076,35 +2082,20 @@ def fetch_kernelbench_data(
             continue
         # The board shows one row per model today, but a slug that collects two
         # names (a dated snapshot beside its alias) keeps the best reported run.
-        keep_best_row(by_slug, slug, row, "score")
-    return by_slug
+        keep_best_row(by_key.setdefault(key, {}), slug, row, "score")
+    return by_key
 
 
 def update_kernelbench_scores(
     doc: dict[str, Any],
-    by_slug: dict[str, dict[str, Any]],
+    by_key: dict[str, dict[str, dict[str, Any]]],
     fill_urls_only: bool = False,
 ) -> tuple[int, int, list[tuple[str, str, Any, Any]]]:
-    models = doc.get("models", [])
-    matched = 0
-    updated = 0
-    changes: list[tuple[str, str, Any, Any]] = []
-
-    for model in models:
-        slug = model.get("name")
-        if not isinstance(slug, str) or not slug:
-            continue
-        kernelbench_model = by_slug.get(slug)
-        if kernelbench_model is None:
-            continue
-
-        matched += 1
-        updated += apply_score(
-            doc, model, slug, "kernelbench_hard", kernelbench_model.get("score"),
-            KERNELBENCH_SOURCE_URL, changes, fill_urls_only=fill_urls_only,
-        )
-
-    return matched, updated, changes
+    # Each column cites its own board: Mega the homepage, Hard the /hard archive.
+    return apply_revision_scores(
+        doc, by_key, KERNELBENCH_SOURCE_URL,
+        key_urls=KERNELBENCH_KEY_URLS, fill_urls_only=fill_urls_only,
+    )
 
 
 def build_fetch_real_swe_cmd(script: Path) -> list[str]:
@@ -4180,14 +4171,15 @@ def main() -> int:
         )
         changes.extend(programbench_changes)
 
-    # kernelbench.com: the Hard deck on the RTX PRO 6000, as each model's mean
-    # fraction of roofline over the full deck. The board is the column's
-    # first-hand source; see fetch_kernelbench.py for why that deck and number.
-    kernelbench_by_slug: dict[str, dict[str, Any]] = {}
+    # kernelbench.com: the Mega deck on the RTX PRO 6000 as each model's mean
+    # speedup over the torch baseline, and the retired Hard deck's frozen
+    # archive as its mean fraction of roofline. Each board is its column's
+    # first-hand source; see fetch_kernelbench.py for why those decks and numbers.
+    kernelbench_by_key: dict[str, dict[str, dict[str, Any]]] = {}
     kernelbench_matched = 0
     kernelbench_updated = 0
     if not args.skip_kernelbench:
-        kernelbench_by_slug = source_data(
+        kernelbench_by_key = source_data(
             fetch_failures, fetch_kernelbench_data,
             kernelbench_path, kernelbench_mapping_path
         )
@@ -4195,7 +4187,7 @@ def main() -> int:
             failed_sources, (0, 0, []),
             "update_kernelbench_scores",
             update_kernelbench_scores,
-            doc, kernelbench_by_slug, fill_urls_only=args.fill_source_urls
+            doc, kernelbench_by_key, fill_urls_only=args.fill_source_urls
         )
         changes.extend(kernelbench_changes)
 
@@ -4593,7 +4585,7 @@ def main() -> int:
     if not args.skip_programbench:
         print(f"models returned by programbench: {len(programbench_by_slug)}")
     if not args.skip_kernelbench:
-        print(f"models returned by kernelbench: {len(kernelbench_by_slug)}")
+        print(f"models returned by kernelbench: {revision_model_count(kernelbench_by_key)}" + revision_breakdown(kernelbench_by_key))
     if not args.skip_real_swe:
         print(f"models returned by real-swe: {revision_model_count(real_swe_by_slug)}" + revision_breakdown(real_swe_by_slug))
     if not args.skip_deepswe:
