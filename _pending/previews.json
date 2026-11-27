@@ -1,6 +1,31 @@
 {
   "cases": [
     {
+      "name": "ernie-5-5-flash",
+      "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview",
+      "new_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash",
+      "creator": "Baidu",
+      "date_added": "2026-11-27",
+      "reference": false,
+      "released": null,
+      "evidence": [],
+      "hints": [],
+      "watch": null,
+      "renames": [],
+      "mappings": [],
+      "scores": [],
+      "queue": [
+        {
+          "route": "update_artificialanalysis_mapping.py",
+          "route_kind": "aa-mapping",
+          "subject": "ernie-5-5-flash-preview",
+          "if_previous": null,
+          "source_url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+          "preview": true
+        }
+      ]
+    },
+    {
       "name": "ernie-5-5-flash-preview",
       "url": "https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
       "new_url": null,
@@ -43,7 +68,7 @@
         {
           "name": "ernie-5-5-flash",
           "why": "the name without 'preview'",
-          "taken": false
+          "taken": true
         }
       ],
       "mappings": [
