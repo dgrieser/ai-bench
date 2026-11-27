@@ -1127,7 +1127,7 @@
       "name": "Terminal-Bench 4.1",
       "short_name": "Term 4.1",
       "category": "Agentic Tool Use",
-      "description": "Current Terminal-Bench release: 4.0's 66 tasks under hardened verifiers. Nothing the agent sees changed; 44 tasks that run agent-written code now grade it as an untrusted user in a separate process, and several verifier flakes were fixed. The maintainers re-graded every 4.0 trial with the new verifiers (about 1.2% of rewards flipped, every agent inside its 4.0 95% interval), and new submissions are scored on 4.1 only. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials. Read from tbench.ai's board and from Artificial Analysis' Coding Agent Index (each model under its vendor's own agent, three attempts per task), which outranks the board where both report a model. Not aggregated into any index yet: Artificial Analysis' model pages, which feed 4.0's index weight, still run 4.0.",
+      "description": "Current Terminal-Bench release: 4.0's 66 tasks under hardened verifiers. Nothing the agent sees changed; 44 tasks that run agent-written code now grade it as an untrusted user in a separate process, and several verifier flakes were fixed. The maintainers re-graded every 4.0 trial with the new verifiers (about 1.2% of rewards flipped, every agent inside its 4.0 95% interval), and new submissions are scored on 4.1 only. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials. Read from Artificial Analysis' model pages (its own mini-swe-agent run, pass@1 over three repeats, re-graded from its 4.0 runs when Intelligence Index v5.0.2 switched to 4.1), from its Coding Agent Index (each model under its vendor's own agent) and from tbench.ai's board, in that order of precedence. Aggregated into the Coding and Tooling indices in 4.0's place, with 4.0 scores carried onto this scale for models without a 4.1 run.",
       "settings": [
         "Resolved %",
         "66 tasks",
@@ -1142,6 +1142,7 @@
         "https://www.tbench.ai/leaderboard/terminal-bench/4.1",
         "https://www.tbench.ai/news/terminal-bench-4-1",
         "https://github.com/harbor-framework/terminal-bench/releases/tag/v4.1.0",
+        "https://artificialanalysis.ai/evaluations/terminalbench-4-1",
         "https://artificialanalysis.ai/agents/coding-agents"
       ]
     },
@@ -1149,7 +1150,7 @@
       "name": "Terminal-Bench 4.0",
       "short_name": "Term 4.0",
       "category": "Agentic Tool Use",
-      "description": "The Terminal-Bench release before 4.1: 66 tasks in sandboxed terminal environments, each with its own verifier. 4.0 recalibrated every task's time, CPU and memory budget to an 8-hour flat agent timeout, removed 8 tasks (2 saturated, 2 refused, 2 with public solutions, 2 unresolved) and fixed 19 others, so it has measurably fewer agent timeouts and errors than 3.0. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials. 4.1 re-graded the same trials with hardened verifiers, so 4.0 stays the column Artificial Analysis and Vals still run against.",
+      "description": "The Terminal-Bench release before 4.1: 66 tasks in sandboxed terminal environments, each with its own verifier. 4.0 recalibrated every task's time, CPU and memory budget to an 8-hour flat agent timeout, removed 8 tasks (2 saturated, 2 refused, 2 with public solutions, 2 unresolved) and fixed 19 others, so it has measurably fewer agent timeouts and errors than 3.0. Scored as the share of tasks resolved, reported with a 95% interval over repeated trials. 4.1 re-graded the same trials with hardened verifiers. Vals still runs 4.0; Artificial Analysis publishes both but moved its Intelligence Index to 4.1 (v5.0.2), so this column is no longer aggregated into an index except through 4.1’s revision fallback.",
       "settings": [
         "Resolved %",
         "66 tasks",

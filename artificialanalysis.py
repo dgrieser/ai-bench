@@ -655,6 +655,10 @@ _PAGE_FLOAT_FIELDS = [
     # free tier depends on entirely. Both revisions are read here, under the
     # names the payload uses today.
     ("terminalBench40", "terminalbench_4_0"),
+    # Intelligence Index v5.0.2 (2026-11) replaced 4.0 with 4.1: the same 66
+    # tasks re-graded under 4.1's hardened verifiers. The pages carry both
+    # fields side by side, each naming its revision.
+    ("terminalBench41", "terminalbench_4_1"),
     ("terminalBench21", "terminalbench_v2_1"),
     ("terminalbenchHard", "terminalbench_hard"),
     # AA's own runs of two outside boards, both on every model page since
@@ -1116,6 +1120,7 @@ _PAGE_EVALS = [
     "tau_banking",
     "lcr",
     "terminalbench_4_0",
+    "terminalbench_4_1",
     "terminalbench_v2_1",
     "terminalbench_hard",
     "frontiercode_1_1",
@@ -1353,6 +1358,7 @@ def _print_table(models, output):
         ("CyberGym-E2E-AA", lambda m: _extract_cyber_metric(m, "cybergym_e2e")),
         ("AA-Omniscience", lambda m: _extract_metric(m, "omniscience")),
         ("Terminal-Bench 4.0", lambda m: _extract_eval_or_page(m, ["terminalbench_4_0", "terminal_bench_4_0", "terminalbench_v4_0"], "terminalbench_4_0")),
+        ("Terminal-Bench 4.1", lambda m: _extract_eval_or_page(m, ["terminalbench_4_1", "terminal_bench_4_1", "terminalbench_v4_1"], "terminalbench_4_1")),
         ("Terminal-Bench v2.1", lambda m: _extract_eval_or_page(m, ["terminalbench_v2_1"], "terminalbench_v2_1")),
         ("Terminal-Bench-Science", lambda m: _extract_metric(m, "terminalbench_science")),
         ("FrontierCode 2.0", lambda m: _extract_metric(m, "frontiercode_2_0")),
@@ -1391,6 +1397,7 @@ def _print_table(models, output):
     rows = []
     percent_cols = {
         "Terminal-Bench 4.0",
+        "Terminal-Bench 4.1",
         "Terminal-Bench v2.1",
         "Terminal-Bench-Science",
         "FrontierCode 2.0",

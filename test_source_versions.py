@@ -65,11 +65,12 @@ HEADERS = {
 }
 
 # The Terminal-Bench revisions this repository reads from Artificial Analysis:
-# update.py's terminal_bench_4_0 off the model records' terminalbench_4_0,
-# terminal_bench_4_1 off the coding-agents page's terminal-bench-v4, and
-# terminal_bench_science_0_1. terminal_bench_2_1 is read too but is older, so
-# it can never be "newer".
-AA_TERMINAL_BENCH = "4.0"
+# update.py's terminal_bench_4_1 off the model records' terminalbench_4_1 (and
+# 4.0 beside it, which the pages still carry) and off the coding-agents page's
+# terminal-bench-v4, and terminal_bench_science_0_1. terminal_bench_2_1 is read
+# too but is older, so it can never be "newer". The model pages moved to 4.1
+# with Intelligence Index v5.0.2 (2026-11).
+AA_TERMINAL_BENCH = "4.1"
 AA_CODING_AGENTS_TERMINAL_BENCH = "4.1"
 AA_TERMINAL_BENCH_SCIENCE = "0.1"
 
@@ -173,9 +174,10 @@ class TestVersionParsing(unittest.TestCase):
 
 class TestArtificialAnalysis(LiveTestCase):
     def test_aa_still_runs_the_terminal_bench_revision_its_column_holds(self):
-        """AA feeds terminal_bench_4_0 (107 values, model pages) and
-        terminal_bench_4_1 (coding-agents page) under ids that name no minor
-        revision, so a move would land in the old column unannounced. This
+        """AA feeds terminal_bench_4_1 from the model pages' terminalBench41
+        and the coding-agents page's terminal-bench-v4, the latter under an id
+        that names no minor revision, so a move would land in the old column
+        unannounced. This
         fails as soon as an AA page names a Terminal-Bench newer than the one
         AA_PAGES expects of it, or stops naming that one: check AA's runs,
         then see this file's docstring for what to change."""

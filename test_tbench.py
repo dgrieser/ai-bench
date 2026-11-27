@@ -164,15 +164,18 @@ class TestBoards(unittest.TestCase):
                          [("Alpha", 58.18), ("Beta", 41.21)])
         self.assertNotIn(58.18, [e["score"] for e in on("terminal_bench_4_0", got)])
 
-    def test_4_1_is_not_aggregated_yet(self):
+    def test_4_1_took_4_0s_slot(self):
         """A re-grade of 4.0's own trials (Spearman 0.998 over the 52 runs on
-        both): weighting it beside 4.0 would count one measurement twice. When
-        AA moves to 4.1 it takes 4.0's slot instead; until then it is shown,
-        not voted on."""
+        both): weighting it beside 4.0 would count one measurement twice. AA
+        moved to 4.1 with Intelligence Index v5.0.2, so 4.1 took 4.0's slot;
+        4.0 reaches the index only through REVISION_FALLBACKS."""
         import derive_indexes
         for index in derive_indexes.INDEXES:
             with self.subTest(index=index.key):
-                self.assertNotIn("terminal_bench_4_1", dict(index.contributing))
+                self.assertNotIn("terminal_bench_4_0", dict(index.contributing))
+        self.assertEqual(
+            derive_indexes.REVISION_FALLBACKS.get("terminal_bench_4_1"), "terminal_bench_4_0"
+        )
 
     def test_terminal_bench_science_rows_land_in_its_column(self):
         got = on("terminal_bench_science_0_1", scores(keys=["terminal_bench_science_0_1"]))

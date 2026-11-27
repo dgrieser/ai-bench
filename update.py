@@ -274,6 +274,12 @@ SCORE_MAPPINGS: dict[str, tuple[tuple[str, ...], Callable[[Any], Any]]] = {
     # report. The pages' value lands under the first spelling; the v2 API
     # sends "terminalbench_v4_0", the third, and the two agree.
     "terminal_bench_4_0": (("terminalbench_4_0", "terminal_bench_4_0", "terminalbench_v4_0"), to_percent),
+    # Intelligence Index v5.0.2 moved AA's own run to 4.1 (the same 66 tasks
+    # under 4.1's hardened verifiers); the model pages carry it as
+    # "terminalBench41" beside "terminalBench40". It lands in the column
+    # tbench.ai's 4.1 board and the Coding Agent Index also feed, above both
+    # (_precedence.RANK_AA), as the 4.0 run does in its own column.
+    "terminal_bench_4_1": (("terminalbench_4_1", "terminal_bench_4_1", "terminalbench_v4_1"), to_percent),
     "terminal_bench_2_1": (("terminalbench_v2_1",), to_percent),
     # Terminal-Bench-Science 0.1, AA's own run (mini-SWE-agent, pass@1 over
     # three repeats) beside tbench.ai's board, which runs each model under its

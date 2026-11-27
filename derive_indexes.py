@@ -179,7 +179,7 @@ INDEXES: list[IndexDef] = [
             # DeepSWE, FrontierSWE, FrontierCode and SWE-Marathon each keep a
             # column per published revision, and only the current one is
             # aggregated -- the same treatment terminal_bench_2_0 already gets
-            # beside terminal_bench_2_1 and terminal_bench_4_0. A superseded
+            # beside terminal_bench_2_1 and terminal_bench_4_1. A superseded
             # revision measured a
             # different task set, so it compares a model against a
             # field that no longer exists; aggregating both would also count
@@ -258,7 +258,13 @@ INDEXES: list[IndexDef] = [
             # down to 0.25 (from 0.4) since 2026-10-03: it has saturated (91.4
             # at the top, 3.8 points to the fifth), and with 4.0 that wide it
             # is no longer the coverage backbone it was kept for.
-            ("terminal_bench_4_0", 0.85),
+            #
+            # 4.1 since 2026-11-27: AA's Intelligence Index v5.0.2 replaced
+            # 4.0 with it and re-graded its existing runs under 4.1's hardened
+            # verifiers (the same 66 tasks), so the model pages now carry both
+            # and the column moved with them, at 4.0's weight. A model with 4.0
+            # alone reaches it through REVISION_FALLBACKS.
+            ("terminal_bench_4_1", 0.85),
             ("terminal_bench_2_1", 0.25),
             # The only member that measures building rather than maintaining:
             # every other board here sets its tasks inside a repository that
@@ -435,7 +441,8 @@ INDEXES: list[IndexDef] = [
             ("automation_bench_aa", 1.0),
             # Level with the anchor, as in the coding group: 85 scored models,
             # 84 AA-run, with a live 7.5-point head on AA's own harness. 2.1, saturated, is coverage at 0.2.
-            ("terminal_bench_4_0", 1.0),
+            # 4.1 since 2026-11-27, in 4.0's place: see the coding group.
+            ("terminal_bench_4_1", 1.0),
             ("toolathlon", 0.8),
             ("gdpval_aa", 0.7),
             ("mcp_atlas", 0.7),
@@ -902,6 +909,11 @@ REVISION_FALLBACKS: dict[str, str] = {
     "frontiercode_2_0": "frontiercode_extended_1_1",
     # ALE: v1.0, the legacy board, onto v1.1.
     "agents_last_exam_1_1": "agents_last_exam_1_0",
+    # Terminal-Bench: 4.0 onto 4.1, the same 66 tasks under hardened
+    # verifiers (about 1.2% of rewards flipped on the maintainers' re-grade).
+    # AA re-graded its 4.0 runs, so nearly every model sits on both and the
+    # factor lands close to 1; it covers the few on 4.0 alone.
+    "terminal_bench_4_1": "terminal_bench_4_0",
     # Real-SWE needs none: 1.1 already scores three times 1.0's field.
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's
