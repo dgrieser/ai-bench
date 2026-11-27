@@ -79,7 +79,6 @@ class TestRowFetchers(unittest.TestCase):
     CASES = [
         ("toolathlon", "score", "fetch_toolathlon_data"),
         ("programbench", "score", "fetch_programbench_data"),
-        ("kernelbench", "score", "fetch_kernelbench_data"),
         ("mcp_atlas", "score", "fetch_mcp_atlas_data"),
         ("bfcl", "score", "fetch_bfcl_data"),
         ("openrouter", "score", "fetch_openrouter_data"),
@@ -150,6 +149,22 @@ class TestRowFetchers(unittest.TestCase):
                     by_key = update.fetch_osworld_data(SCRIPT, mapping)
                 self.assertEqual(by_key["osworld_2_0_2026_06_24"]["m"]["score"], 4.6)
                 self.assertEqual(by_key["osworld_verified"]["m"]["score"], 70.0)
+
+    def test_kernelbench_best_row_wins_within_its_board_in_either_payload_order(self) -> None:
+        # fetch_kernelbench.py names the column on every row, the Mega deck and
+        # the Hard archive alike, so the fold is per column.
+        mapping = write_json({"Model": "m", "Model [high]": "m"})
+        rows = [
+            {"benchmark": "kernelbench_mega", "model": "Model", "score": 20.0},
+            {"benchmark": "kernelbench_mega", "model": "Model [high]", "score": 31.0},
+            {"benchmark": "kernelbench_hard", "model": "Model", "score": 18.1},
+        ]
+        for order in (rows, list(reversed(rows))):
+            with self.subTest(first=order[0]["model"]):
+                with stub_run(order):
+                    by_key = update.fetch_kernelbench_data(SCRIPT, mapping)
+                self.assertEqual(by_key["kernelbench_mega"]["m"]["score"], 31.0)
+                self.assertEqual(by_key["kernelbench_hard"]["m"]["score"], 18.1)
 
     def test_cybergym_best_row_wins_within_its_board_in_either_payload_order(self) -> None:
         # fetch_cybergym.py names the column on every row, CyberGym and

@@ -126,7 +126,7 @@ def route_pages() -> dict[str, list[str]]:
         "update_swe_marathon_mapping.py *": [P.SWE_MARATHON_SOURCE_URL],
         "update_toolathlon_mapping.py *": [P.TOOLATHLON_SOURCE_URL],
         "update_programbench_mapping.py *": [P.PROGRAMBENCH_SOURCE_URL],
-        "update_kernelbench_mapping.py *": [P.KERNELBENCH_SOURCE_URL],
+        "update_kernelbench_mapping.py *": [P.KERNELBENCH_SOURCE_URL, *_values(P.KERNELBENCH_KEY_URLS)],
         "update_real_swe_mapping.py *": [P.REAL_SWE_SOURCE_URL],
         "update_zerobench_mapping.py *": [P.ZEROBENCH_SOURCE_URL],
         "update_arc_prize_mapping.py *": _values(P.ARC_PRIZE_KEY_URLS),

@@ -35,7 +35,7 @@ A comprehensive system for collecting, normalizing, and aggregating LLM benchmar
 | **Terminal-Bench** | Research (benchmark's own leaderboard) | RSC flight payload |
 | **Agents' Last Exam (Berkeley RDI)** | Research (benchmark's own leaderboard) | JSON API |
 | **ProgramBench** | Research (benchmark's own leaderboard) | Leaderboard table in the served HTML |
-| **kernelbench.com** | Research (benchmark's own leaderboard: the Hard deck on the RTX PRO 6000) | RSC flight payload (every deck's audited cells) |
+| **kernelbench.com** | Research (benchmark's own leaderboard: the Mega deck and the frozen Hard archive, both on the RTX PRO 6000) | RSC flight payload (every deck's audited cells; the homepage for Mega, `/hard` for Hard) |
 | **Vals AI** | Independent evaluator (and first-party for Vibe Code Bench and CyberBench) | Astro island props |
 | **cybergym.io (Berkeley RDI)** | Research (benchmark's own leaderboards: CyberGym, ExploitGym) | One static JSON file per board |
 | **SEC-bench Pro** | Research (benchmark's own leaderboard) | The site build's `results.json`, every snapshot in one file |
@@ -469,7 +469,7 @@ current address.
 ./fetch_agents_last_exam.py             # Agents' Last Exam, Overall Pass Rate
 ./fetch_agents_last_exam.py --split full/last-exam   # or another tier, on its own scale
 ./fetch_programbench.py                 # ProgramBench Almost Resolved %, from the extended board
-./fetch_kernelbench.py                  # KernelBench Hard mean % of roofline, from kernelbench.com
+./fetch_kernelbench.py                  # KernelBench Mega mean speedup and the frozen Hard archive's mean % of roofline
 ./fetch_vals.py                         # every Vals AI board llm.json has a column for
 ./fetch_cybergym.py                     # CyberGym Level 1 and ExploitGym (6h, on target), model-focused rows only
 ./fetch_sec_bench.py                    # SEC-bench Pro, the 183-task 260505 snapshot vendors report
@@ -2623,6 +2623,34 @@ lab's model card starts reporting V2 Hard: either can widen it enough to move
 the weight, and either moves the bar with it.
 
 ### Why KernelBench Hard enters at 0.40
+
+> **Hard is frozen since 2026-11-23, and keeps its 0.40.** kernelbench.com
+> retired the Hard deck from its homepage and rankings ("superseded by
+> KernelBench Mega and KernelBench CUDA, no longer updated for new models") and
+> keeps its final snapshot at [/hard](https://kernelbench.com/hard), which
+> `fetch_kernelbench.py` now reads. The archive lists five RTX PRO 6000 rows,
+> fewer than the live deck did; it agrees with every stored value it still
+> carries, and the rows it dropped keep the numbers read before the retirement,
+> since an update never deletes a score. The column stays in the coding index
+> because its values are still valid measurements of the models they belong to;
+> no new model will get one.
+>
+> **The successor decks, and why neither takes the weight.**
+> `kernelbench_mega` (KernelBench Mega) is read as a new column: the Mega deck
+> on the RTX PRO 6000, one whole-model decode megakernel (Kimi-Linear), each
+> audited cell scored as its speedup over the torch baseline, the column the
+> mean over the deck with a failed problem at zero. It is absolute and in one
+> unit, so it is stored the way Hard is; 13 rows, 11 of them mapped here
+> (Claude, Gemini, GPT, GLM, Qwen, DeepSeek and Kimi models). It does not take
+> Hard's index weight: one problem is one run per model, a single sample where
+> Hard averaged six, and on the four models the two boards share it agrees
+> with Hard at Spearman 0.8, which on four points says little. Revisit when the
+> deck grows past one problem. The CUDA deck is still not read, for the reason
+> it lost to Hard in October: its three problems are in two units (fraction of
+> roofline for the fused MoE and the MegaQwen decode, a latency-derived score
+> for DeepSeek NSA), so the only average the site offers is share of best,
+> which moves every model when a new one leads. No `REVISION_FALLBACKS` entry
+> joins any of them: they are different problem sets, not revisions of one.
 
 [kernelbench.com](https://kernelbench.com/) is an agentic GPU-kernel board: a
 coding agent gets a reference PyTorch module and an unlimited budget to replace

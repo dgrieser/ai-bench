@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch KernelBench Hard scores from https://kernelbench.com
+Fetch KernelBench scores from https://kernelbench.com
 
 kernelbench.com (Elliot Arledge, 2026) is an agentic GPU-kernel board: a coding
 agent -- Claude Code, Codex, an OpenRouter harness, whichever the row names --
@@ -14,33 +14,48 @@ Stanford KernelBench". Stanford's own board
 models -- gpt-4o, claude-3.5-sonnet, llama-3.1-405b -- so it scores nothing in
 llm.json and is not read.
 
-The site publishes decks of problems, each on one or more GPUs:
+The site publishes decks of problems, each on one or more GPUs. Two are read,
+each into its own column, both on the RTX PRO 6000 the site calls canonical:
 
-  * **Mega**  one problem, a whole-model decode megakernel, scored as speedup
-              over the torch baseline.
-  * **CUDA**  four problems, each on its own native scale -- fraction of the
-              roofline for most, inverse latency for NSA.
-  * **Hard**  six problems (FP8 GEMM, KDA CUTLASS, paged attention, top-k
-              bitonic, Sonic MoE SwiGLU, W4A16 GEMM), every one scored as the
-              fraction of the board's roofline the submitted kernel reaches.
-  * **Multi** announced, empty.
+  * **Mega** (``kernelbench_mega``, the homepage) -- one problem today, a
+    whole-model Kimi-Linear decode megakernel, every cell scored as its
+    speedup over the torch baseline ("36.66x vs baseline"). The column is the
+    mean speedup over the full deck, a failed, flagged or missing cell
+    counting as zero. An absolute number in one unit, so it moves only when a
+    model's own kernel does.
+  * **Hard** (``kernelbench_hard``, /hard) -- six problems (FP8 GEMM, KDA
+    CUTLASS, paged attention, top-k bitonic, Sonic MoE SwiGLU, W4A16 GEMM),
+    every one scored as the fraction of the board's roofline the submitted
+    kernel reaches. Retired from the homepage on 2026-11-23 ("superseded by
+    KernelBench Mega and KernelBench CUDA, no longer updated for new models")
+    and kept at /hard as a frozen archive, which is what is read now. The
+    archive lists fewer rows than the live deck did; update.py never deletes a
+    stored score, so the models it dropped keep the values read from the
+    homepage before the retirement.
 
-**The score is the Hard deck on the RTX PRO 6000, as the mean fraction of
-roofline over the full deck -- an absolute number, not the site's "share of
-best".** Because every Hard cell is in the same unit, the cells can be averaged
-as they are: a failed, hacked or missing cell counts as zero, and the mean is
-reported as a percentage of peak. That is the quantity vendors publish for
-"KernelBench Hard" (MiniMax: "operator TFLOPs relative to theoretical peak of
-current hardware ... average of [the] questions"), so a lab's claim lands on
-the column's own scale. It is also what keeps the column still between real
-changes: the site's bars divide each cell by the best pass on its problem, so a
-new leader moves every other model, where a fraction of roofline moves only
-when the model's own kernel does. The share of best is reported beside it on
-every row as ``share`` and never stored.
+Not read:
 
-The RTX PRO 6000 is the board the site calls canonical; Hard also runs on an
-H100 and a B200 for a handful of models, and those boards are not read --
-another GPU is another roofline.
+  * **CUDA** -- three problems in two units: fraction of roofline for the
+    fused MoE and MegaQwen decode, a latency-derived speedup for DeepSeek NSA
+    ("0.072 ms geomean latency"). Cells in different units only average as
+    the site's share of best, which moves every model whenever a new one
+    leads, so the deck has no absolute score to store -- the reason it lost to
+    Hard when the column was first admitted.
+  * **Multi** -- announced, no GPU and no rows.
+  * the H100 and B200 boards of any deck -- another GPU is another roofline.
+
+**Hard's score is the mean fraction of roofline over the full deck -- an
+absolute number, not the site's "share of best".** Because every Hard cell is
+in the same unit, the cells can be averaged as they are and the mean reported
+as a percentage of peak. That is the quantity vendors publish for "KernelBench
+Hard" (MiniMax: "operator TFLOPs relative to theoretical peak of current
+hardware ... average of [the] questions"), so a lab's claim lands on the
+column's own scale. The share of best is reported beside every row of both
+decks as ``share`` and never stored.
+
+Every passing cell's caption is checked for its deck's unit ("% of roofline",
+"x vs baseline") before its number is used, so a deck that changes unit is
+refused rather than averaged.
 
 Rows name the harness the run used and, where it did, an effort ("claude ·
 max", "codex · xhigh"); both are reported beside the published model name and
@@ -56,18 +71,53 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from dataclasses import dataclass
 from typing import Any
 
+import _source_pages
 from _fetch_checks import check_fractions, check_percentages, require_rows
 
 
 SITE_URL = "https://kernelbench.com"
-# The homepage carries every deck's cells, for every GPU, in its flight payload.
+# The homepage carries every active deck's cells, for every GPU, in its flight
+# payload; the retired Hard deck has its own archive page in the same shape.
 LEADERBOARD_URL = f"{SITE_URL}/"
+HARD_URL = f"{SITE_URL}/hard"
 
-# The deck the column reads, and the GPU it reads it on.
-DECK = "hard"
+# The GPU every column reads, the one the site calls canonical.
 GPU = "rtxpro6000"
+
+# Cell units. The caption on a passing cell names the unit ("21.80% of
+# roofline", "36.66× vs baseline"); a cell whose caption does not is refused.
+ROOFLINE = "roofline"
+SPEEDUP = "speedup"
+_UNIT_CAPTIONS = {ROOFLINE: "of roofline", SPEEDUP: "× vs baseline"}
+
+HARD_KEY = "kernelbench_hard"
+MEGA_KEY = "kernelbench_mega"
+
+
+@dataclass(frozen=True)
+class Board:
+    """One deck on one GPU, read into one llm.json column."""
+
+    key: str
+    url: str
+    deck: str
+    unit: str
+    gpu: str = GPU
+
+
+# The live deck first: a name on both boards is linked to the one still updated.
+BOARDS: tuple[Board, ...] = (
+    Board(MEGA_KEY, LEADERBOARD_URL, "mega", SPEEDUP),
+    Board(HARD_KEY, HARD_URL, "hard", ROOFLINE),
+)
+BOARDS_BY_KEY = {board.key: board for board in BOARDS}
+KEYS = tuple(BOARDS_BY_KEY)
+
+# A mean speedup this large is a board that changed what it reports, not a kernel.
+MAX_SPEEDUP = 1000.0
 
 HEADERS = {
     "User-Agent": (
@@ -79,10 +129,16 @@ HEADERS = {
 _PUSH_RE = re.compile(r'self\.__next_f\.push\(\[1,(".*?")\]\)', re.DOTALL)
 _DECKS_RE = re.compile(r'"decks":\s*\[')
 _DECODER = json.JSONDecoder()
+_NO_DECKS = 'No "decks" array'
 
 # The one cell kind that counts. "fail", "numerics", "no_kernel" and "hack"
 # score zero, and so does a cell the board does not print a number for.
 PASS = "pass"
+
+
+def source_url(key: str) -> str:
+    """The page a column's scores are read from, and cite."""
+    return BOARDS_BY_KEY[key].url
 
 
 def fetch_html(url: str = LEADERBOARD_URL, retries: int = 3, delay: float = 2.0) -> str:
@@ -114,8 +170,8 @@ def decode_flight(html: str) -> str:
     return decoded
 
 
-def extract_decks(html: str) -> list[dict]:
-    """The homepage's "decks" array.
+def extract_decks(html: str, url: str = LEADERBOARD_URL) -> list[dict]:
+    """The page's "decks" array.
 
     Every `"decks":[...]` in the payload is decoded with a real JSON decoder;
     the page may repeat it, but two *different* arrays cannot be told apart and
@@ -132,37 +188,59 @@ def extract_decks(html: str) -> list[dict]:
             found.append(value)
     if not found:
         raise ValueError(
-            f'No "decks" array in the flight payload of {LEADERBOARD_URL} -- the page '
+            f"{_NO_DECKS} in the flight payload of {url} -- the page "
             "layout changed; refusing to report an empty leaderboard."
         )
     if len(found) > 1:
         raise ValueError(
-            f'{LEADERBOARD_URL} carries {len(found)} different "decks" arrays; '
+            f'{url} carries {len(found)} different "decks" arrays; '
             "refusing to guess which one is the board."
         )
     return [deck for deck in found[0] if isinstance(deck, dict)]
 
 
-def select_board(decks: list[dict], deck: str = DECK, gpu: str = GPU) -> dict:
+def fetch_decks(url: str, attempts: int = 3, delay: float = 3.0) -> list[dict]:
+    """A page's decks, re-fetched when the page came back without them.
+
+    Vercel sometimes answers with a bot checkpoint instead of the page; that
+    page has no flight payload, and a later request usually gets through. A
+    page that still has no decks after the last attempt raises.
+    """
+    for attempt in range(1, attempts + 1):
+        try:
+            return extract_decks(fetch_html(url), url)
+        except ValueError as exc:
+            if attempt == attempts or _NO_DECKS not in str(exc):
+                raise
+            wait = delay * attempt
+            print(
+                f"  {url}: no decks on attempt {attempt}/{attempts}; retrying in {wait:.0f}s ...",
+                file=sys.stderr,
+            )
+            time.sleep(wait)
+    raise AssertionError("unreachable")
+
+
+def select_board(decks: list[dict], deck: str, gpu: str = GPU, url: str = LEADERBOARD_URL) -> dict:
     """One deck's board on one GPU: its problem list and its rows."""
     matches = [d for d in decks if d.get("key") == deck]
     if len(matches) != 1:
         raise ValueError(
-            f"{LEADERBOARD_URL} names deck {deck!r} {len(matches)} times "
+            f"{url} names deck {deck!r} {len(matches)} times "
             f"(decks: {[d.get('key') for d in decks]}); refusing to guess."
         )
     by_gpu = matches[0].get("byGpu")
     board = by_gpu.get(gpu) if isinstance(by_gpu, dict) else None
     if not isinstance(board, dict):
         raise ValueError(
-            f"Deck {deck!r} on {LEADERBOARD_URL} has no {gpu!r} board -- the layout "
+            f"Deck {deck!r} on {url} has no {gpu!r} board -- the layout "
             "or the canonical GPU changed; refusing to read another GPU's numbers."
         )
     problems = board.get("problems")
     rows = board.get("rows")
     if not isinstance(problems, list) or not problems or not isinstance(rows, list):
         raise ValueError(
-            f"Deck {deck!r} on {gpu!r} at {LEADERBOARD_URL} has no problem list or "
+            f"Deck {deck!r} on {gpu!r} at {url} has no problem list or "
             "no rows -- the layout changed."
         )
     return board
@@ -191,6 +269,35 @@ def _passed_score(cell: dict | None) -> float | None:
         return None
     score = _number(cell.get("score"))
     return score if score is not None and score >= 0 else None
+
+
+def _passed_cells(board: dict) -> list[dict]:
+    return [
+        cell
+        for row in board["rows"] if isinstance(row, dict)
+        for cell in _cells(row).values() if _passed_score(cell) is not None
+    ]
+
+
+def check_units(board: dict, spec: Board) -> None:
+    """Raise unless every passing cell's caption names the deck's unit.
+
+    A deck that mixes units -- CUDA's NSA problem reports a latency beside two
+    fractions of roofline -- cannot be averaged, and a deck that switches unit
+    would otherwise be read on the old one.
+    """
+    caption = _UNIT_CAPTIONS[spec.unit]
+    bad = sorted({
+        str(cell.get("title"))
+        for cell in _passed_cells(board)
+        if caption not in str(cell.get("title") or "")
+    })
+    if bad:
+        raise ValueError(
+            f"Deck {spec.deck!r} on {spec.gpu!r} at {spec.url}: passing cells are expected "
+            f"in {spec.unit} ({caption!r}) but read {bad[:3]} -- the deck's unit changed; "
+            "refusing to average them."
+        )
 
 
 def best_per_problem(board: dict) -> dict[str, float]:
@@ -232,11 +339,11 @@ def _harness_and_effort(subtitle: Any) -> tuple[str | None, str | None]:
     return harness, effort
 
 
-def fraction_of_roofline(row: dict, problems: list[str]) -> float:
-    """Mean fraction of the roofline over the full deck, as a percentage.
+def mean_cell(row: dict, problems: list[str]) -> float:
+    """Mean audited-pass score over the full deck, in the deck's own unit.
 
-    The Hard deck scores every cell in that unit, so the cells average as they
-    are; a cell that is not an audited pass counts as zero.
+    Every cell of a read deck is in one unit (check_units), so the cells
+    average as they are; a cell that is not an audited pass counts as zero.
     """
     cells = _cells(row)
     total = 0.0
@@ -244,15 +351,22 @@ def fraction_of_roofline(row: dict, problems: list[str]) -> float:
         score = _passed_score(cells.get(problem))
         if score is not None:
             total += score
-    return 100.0 * total / len(problems)
+    return total / len(problems)
 
 
-def read_rows(board: dict, deck: str = DECK, gpu: str = GPU) -> list[dict]:
+def fraction_of_roofline(row: dict, problems: list[str]) -> float:
+    """Mean fraction of the roofline over the full deck, as a percentage."""
+    return 100.0 * mean_cell(row, problems)
+
+
+def read_rows(board: dict, spec: Board) -> list[dict]:
     problems = [
         p["id"] for p in board["problems"] if isinstance(p, dict) and isinstance(p.get("id"), str)
     ]
     if not problems:
-        raise ValueError(f"Deck {deck!r} on {gpu!r} names no problems -- the layout changed.")
+        raise ValueError(
+            f"Deck {spec.deck!r} on {spec.gpu!r} names no problems -- the layout changed."
+        )
     best = best_per_problem(board)
 
     rows: list[dict] = []
@@ -264,59 +378,79 @@ def read_rows(board: dict, deck: str = DECK, gpu: str = GPU) -> list[dict]:
             continue
         harness, effort = _harness_and_effort(row.get("subtitle"))
         cells = _cells(row)
+        score = (
+            fraction_of_roofline(row, problems) if spec.unit == ROOFLINE
+            else mean_cell(row, problems)
+        )
         rows.append(
             {
+                "benchmark": spec.key,
                 "model": name.strip(),
                 "site_slug": row.get("slug") if isinstance(row.get("slug"), str) else None,
                 "harness": harness,
                 "effort": effort,
-                "score": round(fraction_of_roofline(row, problems), 2),
+                "score": round(score, 2),
                 "share": round(share_of_best(row, problems, best), 2),
                 "passed": sum(_passed_score(cells.get(p)) is not None for p in problems),
                 "problems": len(problems),
                 "flagged": row.get("flagged") if isinstance(row.get("flagged"), int) else None,
-                "deck": deck,
-                "gpu": gpu,
+                "deck": spec.deck,
+                "gpu": spec.gpu,
             }
         )
     return rows
 
 
-def get_scores(deck: str = DECK, gpu: str = GPU) -> list[dict]:
-    """Return a list of score dicts for one kernelbench.com board.
-
-    Keys: model (the board's display name), site_slug, harness, effort, score
-    (mean fraction of roofline over the full deck, 0-100), share (mean share of
-    each problem's best, 0-100, the site's bars; reported, never stored),
-    passed, problems, flagged (audited sessions the reward-hack review
-    flagged), deck, gpu.
-    """
-    print(f"Fetching {LEADERBOARD_URL} ...", file=sys.stderr)
-    board = select_board(extract_decks(fetch_html()), deck, gpu)
-    check_fractions(
-        (chip.get("score") for row in board["rows"] if isinstance(row, dict)
-         for chip in _cells(row).values() if chip.get("kind") == PASS),
-        LEADERBOARD_URL,
-        f"{deck} cell score (fraction of roofline)",
-    )
-    scores = read_rows(board, deck, gpu)
+def read_board(decks: list[dict], spec: Board) -> list[dict]:
+    """One board's rows, after the unit and scale checks."""
+    board = select_board(decks, spec.deck, spec.gpu, spec.url)
+    check_units(board, spec)
+    if spec.unit == ROOFLINE:
+        check_fractions(
+            (cell.get("score") for cell in _passed_cells(board)),
+            spec.url,
+            f"{spec.deck} cell score (fraction of roofline)",
+        )
+    scores = read_rows(board, spec)
     print(
-        f"  parsed {len(scores)} KernelBench {deck} row(s) on {gpu} "
+        f"  parsed {len(scores)} KernelBench {spec.deck} row(s) on {spec.gpu} "
         f"over {len(board['problems'])} problem(s)",
         file=sys.stderr,
     )
-    require_rows(scores, LEADERBOARD_URL)
-    check_percentages(scores, LEADERBOARD_URL)
+    require_rows(scores, spec.url)
+    check_percentages(scores, spec.url, high=100.0 if spec.unit == ROOFLINE else MAX_SPEEDUP)
+    return scores
+
+
+def get_scores(keys: tuple[str, ...] = KEYS) -> list[dict]:
+    """Return a list of score dicts, every read board's rows in BOARDS order.
+
+    Keys: benchmark (the llm.json column), model (the board's display name),
+    site_slug, harness, effort, score (Hard: mean fraction of roofline over the
+    full deck, 0-100; Mega: mean speedup over the torch baseline, x), share
+    (mean share of each problem's best, 0-100, the site's bars; reported, never
+    stored), passed, problems, flagged (audited sessions the reward-hack review
+    flagged), deck, gpu.
+    """
+    pages: dict[str, list[dict]] = {}
+    scores: list[dict] = []
+    for spec in BOARDS:
+        if spec.key not in keys:
+            continue
+        if spec.url not in pages:
+            print(f"Fetching {spec.url} ...", file=sys.stderr)
+            pages[spec.url] = fetch_decks(spec.url)
+        scores.extend(read_board(pages[spec.url], spec))
     return scores
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Fetch kernelbench.com scores (Hard deck, RTX PRO 6000, mean %% of roofline)."
+        description="Fetch kernelbench.com scores (Mega and the archived Hard deck, RTX PRO 6000)."
     )
     parser.add_argument(
         "--format",
-        choices=["table", "json", "names"],
+        choices=["table", "json", "names", "pages"],
         default="table",
         help="Output format (default: table).",
     )
@@ -329,6 +463,8 @@ def main() -> int:
 
     if args.format == "json":
         print(json.dumps(scores, ensure_ascii=False))
+    elif args.format == "pages":
+        _source_pages.emit(scores, lambda e: source_url(e["benchmark"]))
     elif args.format == "names":
         for name in sorted({entry["model"] for entry in scores}):
             print(name)
@@ -336,18 +472,25 @@ def main() -> int:
         width = max([len("MODEL"), *(len(e["model"]) for e in scores)])
         harness_width = max([len("HARNESS"), *(len(e.get("harness") or "") for e in scores)])
         fmt = f"{{:<{width}}}  {{:>9}}  {{:>6}}  {{:>6}}  {{:<{harness_width}}}  {{}}"
-        print(fmt.format("MODEL", "ROOFLINE", "SHARE", "PASSED", "HARNESS", "EFFORT"))
-        for entry in sorted(scores, key=lambda e: -e["score"]):
-            print(
-                fmt.format(
-                    entry["model"],
-                    f"{entry['score']:.1f}%",
-                    f"{entry['share']:.1f}",
-                    f"{entry['passed']}/{entry['problems']}",
-                    entry.get("harness") or "",
-                    entry.get("effort") or "",
+        for spec in BOARDS:
+            print(f"\n{spec.key} ({spec.deck} deck, {spec.gpu}, {spec.url})")
+            print(fmt.format("MODEL", spec.unit.upper(), "SHARE", "PASSED", "HARNESS", "EFFORT"))
+            board_rows = [e for e in scores if e["benchmark"] == spec.key]
+            for entry in sorted(board_rows, key=lambda e: -e["score"]):
+                value = (
+                    f"{entry['score']:.1f}%" if spec.unit == ROOFLINE
+                    else f"{entry['score']:.2f}x"
                 )
-            )
+                print(
+                    fmt.format(
+                        entry["model"],
+                        value,
+                        f"{entry['share']:.1f}",
+                        f"{entry['passed']}/{entry['problems']}",
+                        entry.get("harness") or "",
+                        entry.get("effort") or "",
+                    )
+                )
     return 0
 
 

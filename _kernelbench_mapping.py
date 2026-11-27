@@ -11,7 +11,6 @@ from typing import Any
 from _openness import CLOSED_WEIGHTS, PENDING, SENTINELS, UNMAPPABLE, reopened
 from _prompts import freeze_decisions
 import _source_pages
-import fetch_kernelbench
 
 KERNELBENCH_SCRIPT = Path(__file__).resolve().with_name("fetch_kernelbench.py")
 KERNELBENCH_MAPPING = Path(__file__).resolve().with_name(
@@ -33,8 +32,11 @@ def fetch_kernelbench_model_names() -> list[str]:
 
 
 def fetch_kernelbench_model_pages() -> dict[str, str | None]:
-    """Name -> the page it was read from: one board, so one page for every name."""
-    return _source_pages.same_page(fetch_kernelbench_model_names(), fetch_kernelbench.LEADERBOARD_URL)
+    """Name -> the board it was read from (Mega on the homepage, or the Hard archive).
+
+    The same names fetch_kernelbench_model_names() lists.
+    """
+    return _source_pages.run(KERNELBENCH_SCRIPT)
 
 
 def _load_raw_mapping(path: Path = KERNELBENCH_MAPPING) -> dict[str, str]:

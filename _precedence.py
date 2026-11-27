@@ -189,9 +189,14 @@ REAL_SWE_SOURCE_URL = canonical(fetch_real_swe.URL)
 # root is the top ten of the same runs and prefix-matches everything under
 # the host, including the per-run pages.
 PROGRAMBENCH_SOURCE_URL = canonical(fetch_programbench.LEADERBOARD_URL)
-# kernelbench.com's homepage, which ships every deck's cells; the column reads
-# its Hard deck on the RTX PRO 6000.
-KERNELBENCH_SOURCE_URL = canonical(fetch_kernelbench.LEADERBOARD_URL)
+# kernelbench.com, ranked as a host: the homepage carries the live decks (Mega
+# is read) and /hard the retired Hard deck's frozen archive. As a prefix the
+# host covers both, and the scores read before Hard's retirement, which cite
+# the homepage. A score cites its own board's page (KERNELBENCH_KEY_URLS).
+KERNELBENCH_SOURCE_URL = canonical(fetch_kernelbench.SITE_URL)
+KERNELBENCH_KEY_URLS = {
+    key: canonical(fetch_kernelbench.source_url(key)) for key in fetch_kernelbench.KEYS
+}
 # The board's own run only. The same page's externally-reported table is model
 # cards under another roof, which is RANK_MODEL_CARD; fetch_zerobench.py never reads it.
 ZEROBENCH_SOURCE_URL = canonical(fetch_zerobench.URL)

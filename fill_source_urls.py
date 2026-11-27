@@ -196,7 +196,10 @@ def build_inventory() -> list[tuple[str, tuple[str, ...]]]:
         (fetch_swe_marathon.URL, ("swe_marathon_1_0", "swe_marathon_1_1")),
         (fetch_real_swe.URL, ("real_swe_1_1", "real_swe_1_0")),
         (fetch_programbench.LEADERBOARD_URL, ("programbench_almost",)),
-        (fetch_kernelbench.LEADERBOARD_URL, ("kernelbench_hard",)),
+        # The homepage carries the live Mega deck; Hard was retired to its own
+        # frozen archive page on 2026-11-23.
+        (fetch_kernelbench.source_url(fetch_kernelbench.MEGA_KEY), (fetch_kernelbench.MEGA_KEY,)),
+        (fetch_kernelbench.source_url(fetch_kernelbench.HARD_KEY), (fetch_kernelbench.HARD_KEY,)),
         (fetch_toolathlon.URL, ("toolathlon",)),
         (fetch_mcp_atlas.URL, ("mcp_atlas",)),
         # Full and Hard are two tables of one page, so the page covers both.
