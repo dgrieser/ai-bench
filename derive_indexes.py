@@ -335,9 +335,18 @@ INDEXES: list[IndexDef] = [
             # widest field (27 models) with the narrowest head, takes 0.55;
             # Refactoring, the track that edits code, 0.6; Test Writing, on 11
             # models, 0.4. See README, "Why SWE Atlas contributes two tracks".
-            ("swe_atlas_qna", 0.55),
-            ("swe_atlas_rf", 0.6),
-            ("swe_atlas_tw", 0.4),
+            #
+            # Since 2026-11-27 the weights sit on Scale's v1.1 columns (the
+            # same 284 tasks, every model re-run with a new judge; 32 models
+            # per track, where v1.0 had 21/12/11), with v1.0's legacy boards
+            # carried onto them by REVISION_FALLBACKS. Not aggregated: the
+            # v1.1 Overall table (swe_atlas_1_1), the mean of the three tracks
+            # already here, and AA's SWE-Atlas-QnA-AA (swe_atlas_qna_aa), a
+            # second judging of the same 124 Q&A tasks -- either would count a
+            # track twice for every model on both.
+            ("swe_atlas_qna_1_1", 0.55),
+            ("swe_atlas_rf_1_1", 0.6),
+            ("swe_atlas_tw_1_1", 0.4),
             # ProgramBench rebuilt from its binary: the agent gets a
             # reference executable and its documentation, nothing else, and has
             # to produce a codebase whose behaviour matches across 200 tasks
@@ -902,6 +911,13 @@ REVISION_FALLBACKS: dict[str, str] = {
     "frontiercode_2_0": "frontiercode_extended_1_1",
     # ALE: v1.0, the legacy board, onto v1.1.
     "agents_last_exam_1_1": "agents_last_exam_1_0",
+    # SWE Atlas: each track's v1.0 legacy board onto its v1.1 table. Same
+    # tasks, new judge, so a ratio is the right shape for the drift. At
+    # 2026-11-27 Q&A and Refactoring have 5 models on both; Test Writing has
+    # 2 and stays unconverted until a third.
+    "swe_atlas_qna_1_1": "swe_atlas_qna_1_0",
+    "swe_atlas_rf_1_1": "swe_atlas_rf_1_0",
+    "swe_atlas_tw_1_1": "swe_atlas_tw_1_0",
     # Real-SWE needs none: 1.1 already scores three times 1.0's field.
     # FrontierSWE 2.0 deliberately has no fallback. A conversion carries a
     # score from one scale onto another, and 1.0 published no score on 2.0's

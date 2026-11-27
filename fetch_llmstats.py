@@ -145,10 +145,11 @@ BOARD_FIELDS = {
     "toolathlon_verified": "toolathlon-verified",
     # Lab self-reports for columns no first-party board reaches for the
     # current field: Anthropic's system cards are the main contributors
-    # (Opus/Sonnet/Haiku 5.5 on both SWE-bench sets), and a launch table or
-    # two on SWE Atlas Q&A, where Scale's own board and AA's coding agents
-    # outrank them. OSWorld 2.1 is the third release of OSWorld 2.0 and lands
-    # in the vendor column beside osworld_2_0.
+    # (Opus/Sonnet/Haiku 5.5 on both SWE-bench sets). The SWE Atlas Q&A board
+    # is still read, but its label is parked on __unmappable__ since Scale's
+    # v1.1 (2026-11-06): the board names no revision, and v1.0 and v1.1 are
+    # separate columns. OSWorld 2.1 is the third release of OSWorld 2.0 and
+    # lands in the vendor column beside osworld_2_0.
     "swe_bench_multilingual": "swe-bench-multilingual",
     "swe_bench_multimodal": "swe-bench-multimodal",
     "swe_atlas_qna": "swe-atlas-codebase-qna",

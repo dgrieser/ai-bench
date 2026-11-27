@@ -236,9 +236,9 @@ class TestAaCodingAgentsMerge(unittest.TestCase):
     def test_best_variant_wins_per_key_in_either_order(self) -> None:
         mapping = write_json({"model": "m", "model [high]": "m"})
         rows = [
-            {"model": "model", "key": "swe_atlas_qna", "score": 30.0},
+            {"model": "model", "key": "swe_atlas_qna_aa", "score": 30.0},
             {"model": "model", "key": "terminal_bench_2_1", "score": 80.0},
-            {"model": "model [high]", "key": "swe_atlas_qna", "score": 45.0},
+            {"model": "model [high]", "key": "swe_atlas_qna_aa", "score": 45.0},
             {"model": "model [high]", "key": "terminal_bench_2_1", "score": 70.0},
         ]
         for order in (rows, list(reversed(rows))):
@@ -246,7 +246,7 @@ class TestAaCodingAgentsMerge(unittest.TestCase):
                 with stub_run(order):
                     by_slug = update.fetch_aa_coding_agents_data(SCRIPT, mapping)
                 self.assertEqual(
-                    by_slug["m"], {"swe_atlas_qna": 45.0, "terminal_bench_2_1": 80.0}
+                    by_slug["m"], {"swe_atlas_qna_aa": 45.0, "terminal_bench_2_1": 80.0}
                 )
 
 

@@ -1,6 +1,6 @@
 """Benchmark revisions: their labels, their order, and the column each feeds.
 
-Four benchmarks in this table have published more than one revision of
+Five benchmarks in this table have published more than one revision of
 themselves, and in every case the revisions are *not* comparable -- a re-run
 changes the task set, the verification or the scoring, so a 1.0 number and a
 1.1 number are two different measurements that happen to share a name:
@@ -25,6 +25,10 @@ changes the task set, the verification or the scoring, so a 1.0 number and a
     the "v1.1 Current" one; 1.1 updated all 20 tasks with tighter verification
     and closed-internet execution, and its leader sits 21 points above the
     archive's.
+  * **SWE Atlas** -- Scale's v1.1 (2026-11-06) re-ran the same 284 tasks with
+    a new judge and refined criteria on one page (Overall plus a table per
+    track) and keeps the v1.0 per-track boards as "Legacy"; Fable 5.1 reads
+    59.95 on v1.0's Q&A and 79.03 on v1.1's.
 
 llm.json therefore gives each revision its own column, the way
 ``terminal_bench_2_0`` and ``terminal_bench_2_1`` are already separate, rather
@@ -71,6 +75,16 @@ KNOWN_REVISIONS: dict[str, tuple[str, ...]] = {
     # read before the switch.
     "real_swe": ("1.0", "1.1"),
     "swe_marathon": ("1.0", "1.1"),
+    # SWE Atlas v1.1 (2026-11-06) re-ran every model on the same 284 tasks
+    # with a new judge (GPT-6.1 Sol), refined criteria and restricted network,
+    # and Scale says the scores are not comparable with v1.0, whose per-track
+    # boards it keeps as "Legacy". Each track keeps a column per revision;
+    # the Overall table exists only from 1.1, on the one page that replaced
+    # the three boards.
+    "swe_atlas": ("1.1",),
+    "swe_atlas_qna": ("1.0", "1.1"),
+    "swe_atlas_rf": ("1.0", "1.1"),
+    "swe_atlas_tw": ("1.0", "1.1"),
 }
 
 

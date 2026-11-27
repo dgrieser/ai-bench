@@ -99,7 +99,7 @@ class OneTrackDown(unittest.TestCase):
         with mock.patch.object(atlas, "fetch_board_rows", fetch_board_rows), \
                 mock.patch.object(atlas.time, "sleep"), \
                 contextlib.redirect_stderr(io.StringIO()):
-            return atlas.get_scores(list(atlas.TRACKS))
+            return atlas.get_scores(list(atlas.LEGACY_TRACKS))
 
     def test_the_other_tracks_still_land(self):
         gone = urllib.error.HTTPError("u", 404, "Not Found", None, None)
@@ -117,7 +117,7 @@ class OneTrackDown(unittest.TestCase):
     def test_every_track_down_still_fails_the_source(self):
         gone = urllib.error.URLError("down")
         with self.assertRaises(urllib.error.URLError):
-            self.scores({t: gone for t in atlas.TRACKS})
+            self.scores({t: gone for t in atlas.LEGACY_TRACKS})
 
     def test_another_board_is_still_refused(self):
         with self.assertRaises(ValueError):
@@ -142,7 +142,7 @@ class SecondPass(unittest.TestCase):
                 mock.patch.object(atlas, "fetch_board_rows", fetch_board_rows), \
                 mock.patch.object(atlas.time, "sleep") as slept, \
                 contextlib.redirect_stderr(io.StringIO()):
-            return atlas.get_scores(list(atlas.TRACKS)), slept
+            return atlas.get_scores(list(atlas.LEGACY_TRACKS)), slept
 
     def test_a_track_back_on_the_second_pass_lands(self):
         gone = urllib.error.HTTPError("u", 404, "Not Found", None, None)
@@ -166,6 +166,100 @@ class SecondPass(unittest.TestCase):
     def test_another_board_is_not_given_a_second_pass(self):
         with self.assertRaises(ValueError):
             self.run_with({"tw": [ValueError("the page does not identify itself as board")]})
+
+
+def _flight(*chunks: str) -> str:
+    return "".join(
+        f"<script>self.__next_f.push([1,{json.dumps(chunk)}])</script>" for chunk in chunks
+    )
+
+
+def _current_page(table: str | None = "sweatlas_1.1 Overall", variants=None) -> str:
+    """The v1.1 page as Scale serves it: its slug, the site's board list naming
+    the table behind each board, and one variant table per track."""
+    variants = variants or {v: [_row(f"Opus 5 ({v}) max", 50.0)] for v in atlas.CURRENT_VARIANTS}
+    boards = [{"name": "SWE Atlas - Codebase QnA", "id": "sweatlas-qna",
+               "airtableTableName": "sweatlas-qna", "deprecated": True}]
+    if table is not None:
+        boards.append({"name": "SWE Atlas", "id": "swe-atlas",
+                       "airtableTableName": table, "deprecated": False})
+    items = [{"key": k, "label": k, "entries": rows} for k, rows in variants.items()]
+    return _flight(
+        '0:{"query":{"slug":"swe-atlas"}}\n',
+        "2:" + json.dumps({"boards": boards}, separators=(",", ":")) + "\n",
+        '1c:["$","div",null,{"variants":' + json.dumps(items) + "}]\n",
+    )
+
+
+class Revisions(unittest.TestCase):
+    """v1.1 (2026-11-06) re-ran every model with a new judge on one page; the
+    v1.0 track boards stay up as Legacy. Each revision has its own columns."""
+
+    def current_rows(self, html: str) -> tuple[list[dict], Path]:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        warnings = Path(tmp.name) / "w.jsonl"
+        with mock.patch.dict(os.environ, {_fetch_warnings.ENV_VAR: str(warnings)}), \
+                mock.patch.object(atlas, "fetch_html", return_value=html), \
+                contextlib.redirect_stderr(io.StringIO()):
+            return atlas.get_scores([atlas.CURRENT_BOARD]), warnings
+
+    def test_legacy_boards_are_v1_0(self):
+        with mock.patch.object(atlas, "fetch_board_rows", return_value=[_row("Opus 5", 50.0)]), \
+                contextlib.redirect_stderr(io.StringIO()):
+            rows = atlas.get_scores(list(atlas.LEGACY_TRACKS))
+        self.assertEqual(
+            sorted(r["key"] for r in rows),
+            ["swe_atlas_qna_1_0", "swe_atlas_rf_1_0", "swe_atlas_tw_1_0"],
+        )
+
+    def test_the_current_page_names_its_revision(self):
+        self.assertEqual(atlas.current_revision(_current_page()), "1.1")
+        self.assertIsNone(atlas.current_revision(_current_page(table=None)))
+
+    def test_current_page_rows_land_in_the_1_1_columns(self):
+        rows, _ = self.current_rows(_current_page())
+        self.assertEqual(
+            sorted(r["key"] for r in rows),
+            ["swe_atlas_1_1", "swe_atlas_qna_1_1", "swe_atlas_rf_1_1", "swe_atlas_tw_1_1"],
+        )
+        self.assertEqual({r["model"] for r in rows}, {"opus 5"})
+        self.assertEqual({r["url"] for r in rows}, {atlas.CURRENT_URL})
+
+    def test_an_unknown_or_missing_revision_is_not_filed(self):
+        for table in ("sweatlas_1.2 Overall", None):
+            with self.subTest(table=table):
+                rows, warnings = self.current_rows(_current_page(table=table))
+                self.assertTrue(rows)
+                self.assertEqual({r["key"] for r in rows}, {None})
+                [entry] = _fetch_warnings.load(warnings)
+                self.assertEqual(entry["source"], "swe_atlas (current)")
+
+    def test_a_missing_track_refuses_the_page(self):
+        variants = {"overall": [_row("Opus 5", 50.0)], "qna": [_row("Opus 5", 50.0)]}
+        with mock.patch.object(atlas, "fetch_html", return_value=_current_page(variants=variants)):
+            with self.assertRaises(ValueError):
+                atlas.fetch_current()
+
+    def test_every_column_has_a_page_and_a_benchmark(self):
+        benchmarks = json.loads(
+            Path(__file__).with_name("llm.json").read_text(encoding="utf-8")
+        )["benchmarks"]
+        self.assertEqual(
+            set(atlas.COLUMN_URLS),
+            {"swe_atlas_1_1", "swe_atlas_qna_1_1", "swe_atlas_rf_1_1", "swe_atlas_tw_1_1",
+             "swe_atlas_qna_1_0", "swe_atlas_rf_1_0", "swe_atlas_tw_1_0"},
+        )
+        for key in atlas.COLUMN_URLS:
+            self.assertIn(key, benchmarks)
+        for old in ("swe_atlas_qna", "swe_atlas_rf", "swe_atlas_tw"):
+            self.assertNotIn(old, benchmarks)
+
+    def test_a_max_in_the_name_survives_a_trailing_effort(self):
+        # v1.1 writes the name with a space and the effort after the harness.
+        self.assertEqual(atlas.normalize_model("Qwen 3.8 Max (mini-swe-agent) max"), "qwen 3.8 max")
+        self.assertEqual(atlas.normalize_model("Claude Fable 5.2 (Claude Code) max"), "claude fable 5.2")
+        self.assertEqual(atlas.normalize_model("Gemini 4 Carbon (Antigravity CLI) high"), "gemini 4 carbon")
 
 
 class Retries(unittest.TestCase):

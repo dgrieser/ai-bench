@@ -330,7 +330,7 @@ class TestPerBenchmarkUrls(unittest.TestCase):
         import fetch_vals
 
         self.assertEqual(
-            set(update.SWE_ATLAS_KEY_URLS), set(fetch_swe_atlas.TRACKS.values())
+            set(update.SWE_ATLAS_KEY_URLS), set(fetch_swe_atlas.COLUMN_URLS)
         )
         self.assertEqual(
             set(update.EVALS_REPORT_KEY_URLS),
