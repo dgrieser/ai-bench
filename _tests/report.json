@@ -1,88 +1,17 @@
 {
  "version": 1,
- "checked_at": "2026-11-27T14:10:25Z",
- "commit": "56f950c76d5bd40b1ca586b0f2d09760ea1ec856",
- "run_url": "https://github.com/dgrieser/ai-bench/actions/runs/46013132065",
+ "checked_at": "2026-11-28T13:28:15Z",
+ "commit": "d076f371184cd7c22f09762294f3d40eeefc7719",
+ "run_url": "https://github.com/dgrieser/ai-bench/actions/runs/46149468896",
  "python": "3.13.18",
- "duration_s": 128.1,
+ "duration_s": 210.8,
  "totals": {
-  "files": 67,
+  "files": 72,
   "files_broken": 0,
-  "tests": 1656,
-  "failed": 4,
-  "skipped": 0,
-  "passed": 1652
+  "tests": 1775,
+  "failed": 0,
+  "skipped": 2,
+  "passed": 1773
  },
- "failures": [
-  {
-   "test": "test_propose.TestMatcher.test_never_proposes_a_wrong_mapping",
-   "kind": "failure",
-   "message": "AssertionError: Lists differ: [('model-name-mapping-spheron-to-artificia[91 chars]ew')] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n('model-name-mapping-spheron-to-artificialanalysis.json', 'baidu/ERNIE-5.5-Flash-Preview', 'ernie-5-5-flash', 'ernie-5-5-flash-preview')\n\n+ []\n- [('model-name-mapping-spheron-to-artificialanalysis.json',\n-   'baidu/ERNIE-5.5-Flash-Preview',\n-   'ernie-5-5-flash',\n-   'ernie-5-5-flash-preview')] : 1 proposal(s) contradict a human mapping",
-   "traceback": "Traceback (most recent call last):\n  File \"test_propose.py\", line 95, in test_never_proposes_a_wrong_mapping\n    self.assertEqual(wrong, [], f\"{len(wrong)} proposal(s) contradict a human mapping\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [('model-name-mapping-spheron-to-artificia[91 chars]ew')] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n('model-name-mapping-spheron-to-artificialanalysis.json', 'baidu/ERNIE-5.5-Flash-Preview', 'ernie-5-5-flash', 'ernie-5-5-flash-preview')\n\n+ []\n- [('model-name-mapping-spheron-to-artificialanalysis.json',\n-   'baidu/ERNIE-5.5-Flash-Preview',\n-   'ernie-5-5-flash',\n-   'ernie-5-5-flash-preview')] : 1 proposal(s) contradict a human mapping\n",
-   "stdout": "",
-   "stderr": "",
-   "duration_s": 17.725,
-   "doc": "Replay every human-made mapping; a disagreeing proposal is a bug.",
-   "line": 67,
-   "file": "test_propose.py",
-   "since": "2026-11-27T14:10:25Z",
-   "since_commit": "56f950c76d5bd40b1ca586b0f2d09760ea1ec856"
-  },
-  {
-   "test": "test_remap.TestShippedMappings.test_no_mapping_names_a_model_other_than_the_one_it_matches",
-   "kind": "failure",
-   "message": "AssertionError: Lists differ: [\"model-name-mapping-spheron-to-artificial[86 chars]iew\"] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n\"model-name-mapping-spheron-to-artificialanalysis.json: 'baidu/ERNIE-5.5-Flash-Preview' ernie-5-5-flash -> ernie-5-5-flash-preview\"\n\n+ []\n- ['model-name-mapping-spheron-to-artificialanalysis.json: '\n-  \"'baidu/ERNIE-5.5-Flash-Preview' ernie-5-5-flash -> ernie-5-5-flash-preview\"]",
-   "traceback": "Traceback (most recent call last):\n  File \"test_remap.py\", line 223, in test_no_mapping_names_a_model_other_than_the_one_it_matches\n    self.assertEqual([str(o) for o in offenders], [])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [\"model-name-mapping-spheron-to-artificial[86 chars]iew\"] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n\"model-name-mapping-spheron-to-artificialanalysis.json: 'baidu/ERNIE-5.5-Flash-Preview' ernie-5-5-flash -> ernie-5-5-flash-preview\"\n\n+ []\n- ['model-name-mapping-spheron-to-artificialanalysis.json: '\n-  \"'baidu/ERNIE-5.5-Flash-Preview' ernie-5-5-flash -> ernie-5-5-flash-preview\"]\n",
-   "stdout": "",
-   "stderr": "",
-   "duration_s": 3.735,
-   "doc": "The invariant test_propose.py enforces, checked from this side too.\n\nThere it is \"a proposal must not contradict a human mapping\"; here it\nis \"no mapping contradicts a model already in the index\". Same fact,\nand this one names the model that would fix it.",
-   "line": 211,
-   "file": "test_remap.py",
-   "since": "2026-11-27T14:10:25Z",
-   "since_commit": "56f950c76d5bd40b1ca586b0f2d09760ea1ec856"
-  },
-  {
-   "test": "test_source_collisions.TestHuggingfaceMerge.test_the_card_exclusions_name_cards_the_index_reads (repo='nex-agi/nex-n2.5-max')",
-   "kind": "failure",
-   "message": "[... 4888 characters cut ...]\ninimax-m2.5', 'ifm/k2-horizon-375b-a23b', 'ifm/k2-horizon-mova-36b-a4b', 'qwen/qwen3-235b-a22b-instruct-2507', 'zai-org/glm-5.3', 'openbmb/minicpm5-2b', 'inclusionai/ling-3.2-air', 'nex-agi/nex-n2.5-mini', 'qwen/qwen3-4b', 'deepseek-ai/deepseek-v4.1-flash', 'https://artificialanalysis.ai/models/muse-wonder-full', 'allenai/olmo-3-32b-think', 'ibm-granite/granite-4.1-30b', 'openbmb/minicpm-v-4.6', 'qwen/qwen3-coder-30b-a3b-instruct', 'qwen/qwq-32b', 'qwen/qwen3-32b', 'moonshotai/kimi-k2.5', 'ibm-granite/granite-4.2-30b', 'ifm/k2-horizon-0.9b', 'liquidai/lfm2.5-24b-a2b', 'qwen/qwen3-235b-a22b-thinking-2507', 'https://artificialanalysis.ai/models/gpt-6-1-terra', 'thinkingmachines/inkling-small', 'https://artificialanalysis.ai/models/gpt-6-luna', 'qwen/qwen3.5-27b', 'ibm-granite/granite-4.1-8b', 'mistralai/mistral-large-4-1t-a52b', 'meituan-longcat/longcat-flash-thinking', 'inclusionai/ling-3.0-flash', 'google/gemma-3-27b-it', 'https://artificialanalysis.ai/models/gemini-4-hydrogen', 'moonshotai/kimi-linear-48b-a3b-instruct', 'https://artificialanalysis.ai/models/gpt-6-sol', 'liquidai/lfm2.5-2.6b', 'mistralai/mistral-large-3-675b-instruct-2512', 'https://artificialanalysis.ai/models/gpt-5-6-terra', 'internlm/atria-dawn-preview', 'recursivesi/flint', 'minimaxai/minimax-m1-80k', 'inclusionai/ling-flash-2.0', 'qwen/qwen3.8-27b', 'xingchen-agi/xing4.0-29b-a4b', 'thinkingmachines/inkling', 'ornith-ai/ornith-1.5-9b', 'moonshotai/kimi-k2.6', 'stepfun-ai/step-3.5-flash', 'google/gemma-3-12b-it', 'qwen/qwen3.5-0.8b', 'nousresearch/hermes-4-70b', 'lgai-exaone/exaone-4.0-32b', 'meituan-longcat/longcat-flash-lite', 'xiaomimimo/mimo-v2.5', 'https://artificialanalysis.ai/models/gpt-5-6-luna', 'moonshotai/kimi-k3.1-pro', 'openai/gpt-oss-120b', 'mistralai/devstral-small-2-24b-instruct-2512', 'qwen/qwen3.5-35b-a3b', 'qwen/qwen3.5-122b-a10b', 'nanbeige/nanbeige4.1-3b', 'prism-ml/ternary-bonsai-2-27b-gguf', 'stepfun-ai/step-3.7-flash', 'motif-technologies/motif-3', 'aleph-alpha/kolibri-1'}",
-   "traceback": "Traceback (most recent call last):\n  File \"test_source_collisions.py\", line 591, in test_the_card_exclusions_name_cards_the_index_reads\n    self.assertIn(repo, cards)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^\nAssertionError: 'nex-agi/nex-n2.5-max' not found in {'', 'radixark/daisyrose-27b', 'moonshotai/kimi-k3', 'meituan-longcat/longcat-2.0', 'deepseek-ai/deepseek-v4-flash-vision-exp', 'ai21labs/ai21-jamba-mini-1.7', 'https://artificialanalysis.ai/models/gpt-6-1-sol', 'https://artificialanalysis.ai/models/qwen4-max', 'qwen/qwen3.5-2b', 'deepseek-ai/deepseek-v4-flash-0731', 'qwen/qwen3-14b', 'meta-llama/llama-4-scout-17b-16e-instruct', 'qwen/qwen3-8b', 'ifm/k2-horizon-7b', 'https://artificialanalysis.ai/models/claude-opus-5-5', 'nanbeige/nanbeige4.3-33b', 'google/gemma-4-26b-a4b-it', 'https://artificialanalysis.ai/models/gemini-4-carbon', 'ai9stars/g9v3-3b', 'naver-hyperclovax/hyperclovax-seed-think-32b', 'https://artificialanalysis.ai/models/gpt-6-astra', 'dots-studio/dots3-note-prev', 'google/gemma-3-270m-it', 'xiaomimimo/mimo-v2.5-pro', 'xiaomimimo/mimo-v2.6-flash-rl', 'ornith-ai/ornith-1.5-397b', 'tencent/hy4', 'ibm-granite/granite-4.2-3b', 'nousresearch/hermes-4-405b', 'google/gemma-4-e4b-it', 'allenai/olmo-3-7b-think', 'https://artificialanalysis.ai/models/muse-wonder', 'qwen/qwen3-coder-next', 'databricks/dbrx-instruct', 'liquidai/lfm2.5-8b-a1b', 'zai-org/glm-5.2', 'ornith-ai/ornith-1.5-35b-a3b', 'qwen/qwen3-next-80b-a3b-thinking', 'zai-org/glm-4.6', 'sarvamai/sarvam-105b', 'allenai/olmo-3.1-32b-instruct', 'inclusionai/ling-3.0-flash-vl', 'google/gemma-3-1b-it', 'nvidia/nvidia-nemotron-3-super-120b-a12b-bf16', 'https://artificialanalysis.ai/models/gemini-4-neon', 'liquidai/lfm3-1.7b', 'xai-org/grok-2', 'ornith-ai/ornith-1.0-9b', 'ibm-granite/granite-4.2-8b', 'mistralai/devstral-2-123b-instruct-2512', 'rekaai/reka-flash-3', 'mistralai/ministral-3-8b-instruct-2512', 'minimaxai/minimax-m3.1-flash', 'meta-models/muse-spark-open-816b-a42b', 'upstage/solar-open-100b', 'google/gemma-3-4b-it', 'nvidia/nvidia-nemotron-3-nano-30b-a3b-bf16', 'shslab/step-5-preview-bf16', 'meta-models/muse-glimmer-30b', 'nvidia/nvidia-nemotron-3.5-super-vl-120b-a12b-bf16', 'xiaomimimo/mimo-v2.6-pro-rl', 'mistralai/mistral-medium-3.5-128b', 'https://microsoft.ai/models/mai-code-2/', 'openai/gpt-oss-20b', 'https://artificialanalysis.ai/models/gpt-6-2-astra', 'qwen/qwen3.8-2.4t-a95b', 'inclusionai/ling-3.1-flash', 'ifm/k2-horizon-3.7b', 'google/diffusiongemma-26b-a4b-it', 'qwen/qwen3-30b-a3b-thinking-2507', 'meta-llama/llama-4-maverick-17b-128e-instruct', 'mistralai/mistral-small-4-119b-2603', 'zai-org/glm-4.5-air', 'mistralai/ministral-3-14b-instruct-2512', 'ricursiveai/ripple-65b-preview', 'ai21labs/ai21-jamba-large-1.7', 'nvidia/nvidia-nemotron-3.5-lightning-30b-a3b-bf16', 'meituan-longcat/longcat-flash-chat', 'https://artificialanalysis.ai/models/claude-fable-5-2', 'inclusionai/ring-flash-2.0', 'liquidai/lfm2.5-1.2b-thinking', 'qwen/qwen3.6-35b-a3b', 'https://artificialanalysis.ai/models/gpt-5-6-sol', 'ornith-ai/ornith-1.0-397b', 'https://artificialanalysis.ai/models/grok-4-7', 'nvidia/nvidia-nemotron-labs-dory1.0-4b-bf16', 'baidu/ernie-5.5-flash-base', 'ibm-granite/granite-4.1-3b', 'nvidia/nvidia-nemotron-3-ultra-550b-a55b-bf16', 'qwen/qwen3.8-flash-next', 'baidu/ernie-5.5-flash-preview', 'tencent/hy3', 'qwen/qwen3-coder-480b-a35b-instruct', 'minimaxai/minimax-m2.7', 'nex-agi/nex-n2.5-pro', 'https://artificialanalysis.ai/models/muse-ember', 'qwen/qwen3.6-27b', 'coherelabs/north-mini-code-1.0', 'zai-org/glm-4.5', 'minimaxai/minimax-m3', 'qwen/qwen3.5-9b', 'google/gemma-4-31b-it', 'deepseek-ai/deepseek-v4-pro', 'https://artificialanalysis.ai/models/claude-fable-5-1', 'thinkingmachines/inkling-2-mini', 'liquidai/lfm3-vl-2b', 'inclusionai/ling-mini-2.0', 'reflection/beam-1.0-501b-a23b', 'https://artificialanalysis.ai/models/gemini-4-argon', 'prism-ml/ternary-bonsai-2-9b-gguf', 'sarvamai/sarvam-30b', 'ai9stars/g9v3-39a5b', 'lgai-exaone/exaone-4.0-1.2b', 'zai-org/glm-4.7-flash', 'bytedance-seed/seed-oss-36b-instruct', 'inclusionai/ling-3.0-flash-fin', 'https://artificialanalysis.ai/models/claude-haiku-5-5', 'https://artificialanalysis.ai/models/gpt-6-2-sol', 'upstage/solar-open2-250b', 'google/gemma-4-e2b-it', 'zai-org/glm-5.3-flash', 'skt/a.x-k2', 'qwen/qwen3.5-397b-a17b', 'deepseek-ai/deepseek-v3.2-exp', 'baidu/ernie-4.5-300b-a47b-pt', 'ornith-ai/ornith-1.0-35b', 'nvidia/nvidia-nemotron-3.5-bolt-74b-a9b-24gb', 'tiiuae/falcon-h1r-7b', 'moonshotai/kimi-k2.7-code', 'microsoft/phi-4', 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning-bf16', 'servicenow-ai/apriel-1.6-15b-thinker', 'inclusionai/ling-3.0-tiny', 'https://artificialanalysis.ai/models/claude-sonnet-5-5', 'mistralai/ministral-3-3b-instruct-2512', 'zai-org/glm-4.7', 'allenai/olmo-3-7b-instruct', 'deepseek-ai/deepseek-r1-0528', 'arcee-ai/trinity-large-thinking', 'google/gemma-4-12b-it', 'qwen/qwen3.5-4b', 'deepseek-ai/deepseek-v4.1-flash-1017', 'moonshotai/kimi-k2-thinking', 'nex-agi/nex-n2.6', 'coherelabs/command-a-plus-05-2026-bf16', 'xiaomimimo/mimo-v2-flash', 'minimaxai/minimax-m2.5', 'ifm/k2-horizon-375b-a23b', 'ifm/k2-horizon-mova-36b-a4b', 'qwen/qwen3-235b-a22b-instruct-2507', 'zai-org/glm-5.3', 'openbmb/minicpm5-2b', 'inclusionai/ling-3.2-air', 'nex-agi/nex-n2.5-mini', 'qwen/qwen3-4b', 'deepseek-ai/deepseek-v4.1-flash', 'https://artificialanalysis.ai/models/muse-wonder-full', 'allenai/olmo-3-32b-think', 'ibm-granite/granite-4.1-30b', 'openbmb/minicpm-v-4.6', 'qwen/qwen3-coder-30b-a3b-instruct', 'qwen/qwq-32b', 'qwen/qwen3-32b', 'moonshotai/kimi-k2.5', 'ibm-granite/granite-4.2-30b', 'ifm/k2-horizon-0.9b', 'liquidai/lfm2.5-24b-a2b', 'qwen/qwen3-235b-a22b-thinking-2507', 'https://artificialanalysis.ai/models/gpt-6-1-terra', 'thinkingmachines/inkling-small', 'https://artificialanalysis.ai/models/gpt-6-luna', 'qwen/qwen3.5-27b', 'ibm-granite/granite-4.1-8b', 'mistralai/mistral-large-4-1t-a52b', 'meituan-longcat/longcat-flash-thinking', 'inclusionai/ling-3.0-flash', 'google/gemma-3-27b-it', 'https://artificialanalysis.ai/models/gemini-4-hydrogen', 'moonshotai/kimi-linear-48b-a3b-instruct', 'https://artificialanalysis.ai/models/gpt-6-sol', 'liquidai/lfm2.5-2.6b', 'mistralai/mistral-large-3-675b-instruct-2512', 'https://artificialanalysis.ai/models/gpt-5-6-terra', 'internlm/atria-dawn-preview', 'recursivesi/flint', 'minimaxai/minimax-m1-80k', 'inclusionai/ling-flash-2.0', 'qwen/qwen3.8-27b', 'xingchen-agi/xing4.0-29b-a4b', 'thinkingmachines/inkling', 'ornith-ai/ornith-1.5-9b', 'moonshotai/kimi-k2.6', 'stepfun-ai/step-3.5-flash', 'google/gemma-3-12b-it', 'qwen/qwen3.5-0.8b', 'nousresearch/hermes-4-70b', 'lgai-exaone/exaone-4.0-32b', 'meituan-longcat/longcat-flash-lite', 'xiaomimimo/mimo-v2.5', 'https://artificialanalysis.ai/models/gpt-5-6-luna', 'moonshotai/kimi-k3.1-pro', 'openai/gpt-oss-120b', 'mistralai/devstral-small-2-24b-instruct-2512', 'qwen/qwen3.5-35b-a3b', 'qwen/qwen3.5-122b-a10b', 'nanbeige/nanbeige4.1-3b', 'prism-ml/ternary-bonsai-2-27b-gguf', 'stepfun-ai/step-3.7-flash', 'motif-technologies/motif-3', 'aleph-alpha/kolibri-1'}\n",
-   "stdout": "",
-   "stderr": "",
-   "duration_s": 0.056,
-   "doc": "",
-   "line": 582,
-   "file": "test_source_collisions.py",
-   "since": "2026-11-27T14:10:25Z",
-   "since_commit": "56f950c76d5bd40b1ca586b0f2d09760ea1ec856"
-  },
-  {
-   "test": "test_source_versions.TestArtificialAnalysis.test_aa_still_runs_the_terminal_bench_revision_its_column_holds (page='evaluations')",
-   "kind": "failure",
-   "message": "AssertionError: Lists differ: ['4.1'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'4.1'\n\n- ['4.1']\n+ [] : AA's evaluations page (https://artificialanalysis.ai/evaluations) names Terminal-Bench 4.1, newer than the 4.0 it is read as",
-   "traceback": "Traceback (most recent call last):\n  File \"test_source_versions.py\", line 186, in test_aa_still_runs_the_terminal_bench_revision_its_column_holds\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        newer_than(found, expected), [],\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        f\"{expected} it is read as\",\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\nAssertionError: Lists differ: ['4.1'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'4.1'\n\n- ['4.1']\n+ [] : AA's evaluations page (https://artificialanalysis.ai/evaluations) names Terminal-Bench 4.1, newer than the 4.0 it is read as\n",
-   "stdout": "",
-   "stderr": "",
-   "duration_s": 0.155,
-   "doc": "AA feeds terminal_bench_4_0 (107 values, model pages) and\nterminal_bench_4_1 (coding-agents page) under ids that name no minor\nrevision, so a move would land in the old column unannounced. This\nfails as soon as an AA page names a Terminal-Bench newer than the one\nAA_PAGES expects of it, or stops naming that one: check AA's runs,\nthen see this file's docstring for what to change.",
-   "line": 175,
-   "file": "test_source_versions.py",
-   "since": "2026-11-25T14:49:53Z",
-   "since_commit": "e2008278323fbdd1037de7d30b945c3be3e9044d"
-  },
-  {
-   "test": "test_source_versions.TestArtificialAnalysis.test_aa_still_runs_the_terminal_bench_revision_its_column_holds (page='methodology')",
-   "kind": "failure",
-   "message": "AssertionError: Lists differ: ['4.1'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'4.1'\n\n- ['4.1']\n+ [] : AA's methodology page (https://artificialanalysis.ai/methodology/intelligence-benchmarking) names Terminal-Bench 4.1, newer than the 4.0 it is read as",
-   "traceback": "Traceback (most recent call last):\n  File \"test_source_versions.py\", line 186, in test_aa_still_runs_the_terminal_bench_revision_its_column_holds\n    self.assertEqual(\n    ~~~~~~~~~~~~~~~~^\n        newer_than(found, expected), [],\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        f\"{expected} it is read as\",\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\nAssertionError: Lists differ: ['4.1'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'4.1'\n\n- ['4.1']\n+ [] : AA's methodology page (https://artificialanalysis.ai/methodology/intelligence-benchmarking) names Terminal-Bench 4.1, newer than the 4.0 it is read as\n",
-   "stdout": "",
-   "stderr": "",
-   "duration_s": 0.301,
-   "doc": "AA feeds terminal_bench_4_0 (107 values, model pages) and\nterminal_bench_4_1 (coding-agents page) under ids that name no minor\nrevision, so a move would land in the old column unannounced. This\nfails as soon as an AA page names a Terminal-Bench newer than the one\nAA_PAGES expects of it, or stops naming that one: check AA's runs,\nthen see this file's docstring for what to change.",
-   "line": 175,
-   "file": "test_source_versions.py",
-   "since": "2026-11-25T14:49:53Z",
-   "since_commit": "e2008278323fbdd1037de7d30b945c3be3e9044d"
-  }
- ]
+ "failures": []
 }
