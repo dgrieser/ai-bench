@@ -13168,6 +13168,10 @@
    "WorldVQA ForceAnswer": "__unmappable__",
    "Writing Bench": "__unmappable__",
    "WritingBench": "__unmappable__",
+   "X-LANCE/SynthDCB (Car)": "__unmappable__",
+   "X-LANCE/SynthDCB (Home)": "__unmappable__",
+   "X-LANCE/SynthDCB (Overall)": "__unmappable__",
+   "X-LANCE/SynthDCB (Phone)": "__unmappable__",
    "XBench-DS-2510": "__unmappable__",
    "XLRS-Bench": "__unmappable__",
    "XSTest": "__unmappable__",
@@ -14945,6 +14949,7 @@
    "Claude Sonnet 5": "claude-sonnet-5",
    "Claude Sonnet 5.5": "claude-sonnet-5-5",
    "DeepSeek V4 Pro": "deepseek-v4-pro",
+   "DeepSeek V4.1 Flash": "deepseek-v4-1-flash",
    "GLM 5.1": "__unmappable__",
    "GLM 5.2": "glm-5-2",
    "GLM 5.3": "glm-5-3",
@@ -14970,6 +14975,7 @@
    "Inkling 2 Small": "inkling-2-small",
    "Kimi K2.6": "kimi-k2-6",
    "Kimi K3": "kimi-k3",
+   "Kimi K3.1 Pro": "kimi-k3-1-pro",
    "MiniMax M2.7": "minimax-m2-7",
    "Muse Wonder": "muse-wonder",
    "Muse Wonder Full": "muse-wonder-full"
@@ -20363,6 +20369,220 @@
      0
     ]
    ],
+   "osworld_2_0": [
+    [
+     "claude-fable-5-1",
+     77.9,
+     2
+    ],
+    [
+     "claude-fable-5-2",
+     89.3,
+     2
+    ],
+    [
+     "claude-haiku-5-5",
+     72.4,
+     2
+    ],
+    [
+     "claude-opus-5-5",
+     81.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     80.1,
+     2
+    ],
+    [
+     "gemini-4-argon",
+     69.2,
+     2
+    ],
+    [
+     "gemini-4-carbon",
+     81.5,
+     2
+    ],
+    [
+     "gemini-4-hydrogen",
+     77.6,
+     2
+    ],
+    [
+     "gpt-5-6-luna",
+     45.6,
+     2
+    ],
+    [
+     "gpt-5-6-sol",
+     62.6,
+     2
+    ],
+    [
+     "gpt-5-6-terra",
+     50.2,
+     2
+    ],
+    [
+     "gpt-6-1-sol",
+     71.4,
+     2
+    ],
+    [
+     "gpt-6-astra",
+     72.6,
+     2
+    ],
+    [
+     "gpt-6-luna",
+     52.7,
+     2
+    ],
+    [
+     "gpt-6-sol",
+     64.4,
+     2
+    ],
+    [
+     "hy4-flash",
+     68.1,
+     2
+    ],
+    [
+     "minimax-m3-1-flash",
+     61.7,
+     2
+    ],
+    [
+     "muse-ember",
+     69.5,
+     2
+    ],
+    [
+     "muse-wonder",
+     72.6,
+     2
+    ],
+    [
+     "muse-wonder-full",
+     78.4,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     19.4,
+     2
+    ]
+   ],
+   "osworld_2_1_partial": [
+    [
+     "claude-fable-5-1",
+     77.9,
+     2
+    ],
+    [
+     "claude-fable-5-2",
+     89.3,
+     2
+    ],
+    [
+     "claude-haiku-5-5",
+     72.4,
+     2
+    ],
+    [
+     "claude-opus-5-5",
+     81.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     80.1,
+     2
+    ],
+    [
+     "gemini-4-argon",
+     69.2,
+     2
+    ],
+    [
+     "gemini-4-carbon",
+     81.5,
+     2
+    ],
+    [
+     "gemini-4-hydrogen",
+     77.6,
+     2
+    ],
+    [
+     "gpt-5-6-luna",
+     45.6,
+     2
+    ],
+    [
+     "gpt-5-6-sol",
+     62.6,
+     2
+    ],
+    [
+     "gpt-5-6-terra",
+     50.2,
+     2
+    ],
+    [
+     "gpt-6-1-sol",
+     71.4,
+     2
+    ],
+    [
+     "gpt-6-astra",
+     72.6,
+     2
+    ],
+    [
+     "gpt-6-luna",
+     52.7,
+     2
+    ],
+    [
+     "gpt-6-sol",
+     64.4,
+     2
+    ],
+    [
+     "hy4-flash",
+     68.1,
+     2
+    ],
+    [
+     "minimax-m3-1-flash",
+     61.7,
+     2
+    ],
+    [
+     "muse-ember",
+     69.5,
+     2
+    ],
+    [
+     "muse-wonder",
+     72.6,
+     2
+    ],
+    [
+     "muse-wonder-full",
+     78.4,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     19.4,
+     2
+    ]
+   ],
    "scicode": [
     [
      "glm-4-5-air",
@@ -20932,6 +21152,90 @@
      "qwen3-next-80b-a3b-reasoning",
      67.8,
      0
+    ]
+   ],
+   "toolathlon": [
+    [
+     "claude-opus-5-5",
+     77.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     77.8,
+     2
+    ],
+    [
+     "glm-5-3",
+     73,
+     2
+    ],
+    [
+     "glm-5-3-flash",
+     78.4,
+     2
+    ],
+    [
+     "muse-spark-open",
+     72.8,
+     2
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     26.9,
+     2
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     72.5,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     73.5,
+     2
+    ]
+   ],
+   "toolathlon_verified": [
+    [
+     "claude-opus-5-5",
+     77.8,
+     2
+    ],
+    [
+     "claude-sonnet-5-5",
+     77.8,
+     2
+    ],
+    [
+     "glm-5-3",
+     73,
+     2
+    ],
+    [
+     "glm-5-3-flash",
+     78.4,
+     2
+    ],
+    [
+     "muse-spark-open",
+     72.8,
+     2
+    ],
+    [
+     "qwen3-6-35b-a3b",
+     26.9,
+     2
+    ],
+    [
+     "qwen3-8-2-4t-a95b",
+     72.5,
+     2
+    ],
+    [
+     "qwen3-8-flash-next",
+     73.5,
+     2
     ]
    ]
   }
